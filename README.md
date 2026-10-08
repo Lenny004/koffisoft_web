@@ -54,6 +54,7 @@ Forma parte del sistema junto con `koffisoft_api`, responsable de PostgreSQL, Pr
 - Node.js `24.13.0`, fijado en `.nvmrc` y en `engines` de `package.json`.
 - pnpm `11.1.3`, fijado en `packageManager` y `engines` de `package.json`.
 - Chromium instalado con Playwright para ejecutar las pruebas E2E.
+- Stylelint `17.16.0` con `stylelint-config-standard` `40.0.0` para revisar CSS.
 
 Las versiones directas anteriores están fijadas sin rangos en `package.json`; `pnpm-lock.yaml` fija el árbol completo de dependencias.
 
@@ -106,7 +107,7 @@ No agregues tokens, contraseñas, cookies, claves privadas ni credenciales SMTP 
 ```text
 .
 ├── .agents/
-│   └── skills/                 # Recetas para agentes, incluida readme-standard
+│   └── skills/                 # Recetas para agentes, incluida css-bem-estandar
 ├── .github/
 │   └── workflows/              # Automatización de CI
 ├── docs/
@@ -150,6 +151,7 @@ pnpm start
 pnpm check
 pnpm typecheck
 pnpm lint
+pnpm lint:css
 pnpm format
 ```
 
@@ -160,6 +162,7 @@ pnpm format
 - `pnpm check`: sincroniza SvelteKit y ejecuta `svelte-check` en modo estricto.
 - `pnpm typecheck`: ejecuta el script `check`.
 - `pnpm lint`: ejecuta ESLint sin advertencias y comprueba el formato con Prettier.
+- `pnpm lint:css`: revisa los archivos CSS con Stylelint y la convención BEM.
 - `pnpm format`: aplica Prettier.
 
 Las funciones `load` y las acciones de formulario deben vivir junto a su ruta (`+page.ts`, `+page.server.ts` o `+layout.server.ts`) y consumir la API mediante contratos, sin acceso directo a PostgreSQL. Las reglas de documentación están en [docs/reglas-documentacion.md](docs/reglas-documentacion.md).

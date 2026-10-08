@@ -13,6 +13,8 @@ Estas reglas aplican a Codex, Cursor, Claude y cualquier otro agente que modifiq
 
 ## Documentación
 
+Al crear o modificar CSS o estilos, aplica la skill `css-bem-estandar`.
+
 Leer [docs/reglas-documentacion.md](docs/reglas-documentacion.md) antes de documentar código. Los comentarios deben estar en español y explicar propósito, flujo de datos y decisiones no evidentes. Las skills de `.agents/skills/` contienen recetas concretas para este stack.
 
 Cuando cambies dependencias, scripts, variables de entorno, estructura de carpetas o funcionalidades, aplica el estándar `readme-standard` (`.agents/skills/readme-standard/SKILL.md`) en modo Actualizar sobre `README.md`. Edita solo las secciones afectadas; no reescribas el archivo.
