@@ -68,6 +68,12 @@ static/
 
 Las imágenes de productos permanecen preparadas para una futura URL opcional `imageUrl` del contrato público. Si no existe, el frontend usa una fotografía de categoría como fallback sin inventar datos comerciales.
 
+## Componentes y formularios
+
+`Button`, `Dialog`, `Card`, `Table`, `Badge`, `Alert` y `FormField` son la única fuente de UI compartida. Sus variantes, tamaños, radios, colores y estados se consumen desde tokens; las rutas no deben recrearlos con clases o estilos propios.
+
+Todo formulario muestra la leyenda `* Campo obligatorio`. Cada campo usa `FormField`, etiqueta con `*` cuando corresponde, placeholder realista en español, mensaje de error junto al control y los límites documentados en `src/lib/validation/limits.ts`, que deben coincidir con la API. Los modales respetan header, body desplazable y footer con cancelar `outline` y confirmar `primary` o `destructive`.
+
 ## Decisiones de contenido
 
 `src/lib/content/site.ts` marca con `editorialPlaceholder = true` las páginas que todavía no tienen endpoint o información aprobada: promociones, contacto, nosotros, senderismo, ubicación y textos legales. No se publican precios ficticios ni se modifican contratos de `koffisoft_api`.

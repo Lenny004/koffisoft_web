@@ -5,10 +5,11 @@
   import StatusMessage from '$lib/components/public/status-message.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
   import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
+  import FormField from '$lib/components/ui/form-field.svelte';
   import { Input } from '$lib/components/ui/input/index.js';
-  import { Label } from '$lib/components/ui/label/index.js';
   import { Select } from '$lib/components/ui/select/index.js';
   import { Textarea } from '$lib/components/ui/textarea/index.js';
+  import { FORM_LIMITS, FORM_PATTERNS } from '$lib/validation/limits';
   import type { PageData } from './$types';
 
   type EventActionForm = {
@@ -146,103 +147,156 @@
     <Card>
       <CardContent>
         <form class="form-layout" method="POST" use:enhance>
-          <div class="form-field">
-            <Label for="event-type">Tipo de evento</Label>
+          <p class="form-legend">
+            <span class="form-field__required" aria-hidden="true">*</span> Campo obligatorio
+          </p>
+          <FormField
+            id="event-type"
+            label="Tipo de evento"
+            required
+            error={form?.errors?.eventType}
+          >
             <Select id="event-type" name="eventType" required>
               <option value="">Selecciona una opción</option>
               {#each eventTypes as eventType (eventType.value)}
                 <option value={eventType.value}>{eventType.label}</option>
               {/each}
             </Select>
-            {#if form?.errors?.eventType}<span class="form-field__error"
-                >{form.errors.eventType}</span
-              >{/if}
-          </div>
-          <div class="form-field">
-            <Label for="event-title">Título del evento</Label>
-            <Input id="event-title" name="title" placeholder="Ej. Celebración familiar" required />
-            {#if form?.errors?.title}<span class="form-field__error">{form.errors.title}</span>{/if}
-          </div>
-          <div class="form-field">
-            <Label for="event-contact-name">Nombre de contacto</Label>
-            <Input id="event-contact-name" name="contactName" autocomplete="name" required />
-            {#if form?.errors?.contactName}<span class="form-field__error"
-                >{form.errors.contactName}</span
-              >{/if}
-          </div>
-          <div class="form-field">
-            <Label for="event-contact-phone">Teléfono</Label>
+          </FormField>
+          <FormField
+            id="event-title"
+            label="Título del evento"
+            required
+            error={form?.errors?.title}
+          >
+            <Input
+              id="event-title"
+              name="title"
+              placeholder="Ej. Celebración familiar"
+              maxlength={FORM_LIMITS.event.titleMaxLength}
+              required
+              aria-invalid={Boolean(form?.errors?.title)}
+            />
+          </FormField>
+          <FormField
+            id="event-contact-name"
+            label="Nombre de contacto"
+            required
+            error={form?.errors?.contactName}
+          >
+            <Input
+              id="event-contact-name"
+              name="contactName"
+              autocomplete="name"
+              placeholder="Ej. Ana Martínez"
+              maxlength={FORM_LIMITS.event.contactNameMaxLength}
+              required
+              aria-invalid={Boolean(form?.errors?.contactName)}
+            />
+          </FormField>
+          <FormField
+            id="event-contact-phone"
+            label="Teléfono"
+            required
+            error={form?.errors?.contactPhone}
+          >
             <Input
               id="event-contact-phone"
               name="contactPhone"
               type="tel"
+              inputmode="tel"
               autocomplete="tel"
+              placeholder="Ej. +503 7000 0000"
+              maxlength={FORM_LIMITS.event.contactPhoneMaxLength}
               required
+              aria-invalid={Boolean(form?.errors?.contactPhone)}
             />
-            {#if form?.errors?.contactPhone}<span class="form-field__error"
-                >{form.errors.contactPhone}</span
-              >{/if}
-          </div>
-          <div class="form-field">
-            <Label for="event-contact-email"
-              >Correo electrónico <span class="form-field__optional">(opcional)</span></Label
-            >
-            <Input id="event-contact-email" name="contactEmail" type="email" autocomplete="email" />
-            {#if form?.errors?.contactEmail}<span class="form-field__error"
-                >{form.errors.contactEmail}</span
-              >{/if}
-          </div>
-          <div class="form-field">
-            <Label for="event-guests">Invitados estimados</Label>
+          </FormField>
+          <FormField
+            id="event-contact-email"
+            label="Correo electrónico (opcional)"
+            error={form?.errors?.contactEmail}
+          >
+            <Input
+              id="event-contact-email"
+              name="contactEmail"
+              type="email"
+              autocomplete="email"
+              placeholder="Ej. ana@correo.com"
+              maxlength={FORM_LIMITS.event.contactEmailMaxLength}
+              aria-invalid={Boolean(form?.errors?.contactEmail)}
+            />
+          </FormField>
+          <FormField
+            id="event-guests"
+            label="Invitados estimados"
+            required
+            error={form?.errors?.estimatedGuestCount}
+          >
             <Input
               id="event-guests"
               name="estimatedGuestCount"
               type="number"
-              min="1"
-              max="10000"
+              min={FORM_LIMITS.event.estimatedGuestCountMin}
+              max={FORM_LIMITS.event.estimatedGuestCountMax}
+              step="1"
+              inputmode="numeric"
+              placeholder="Ej. 80"
               required
+              aria-invalid={Boolean(form?.errors?.estimatedGuestCount)}
             />
-            {#if form?.errors?.estimatedGuestCount}<span class="form-field__error"
-                >{form.errors.estimatedGuestCount}</span
-              >{/if}
-          </div>
-          <div class="form-field">
-            <Label for="event-start">Inicio</Label>
-            <Input id="event-start" name="startsAt" type="datetime-local" required />
-            {#if form?.errors?.startsAt}<span class="form-field__error">{form.errors.startsAt}</span
-              >{/if}
-          </div>
-          <div class="form-field">
-            <Label for="event-end">Finalización</Label>
-            <Input id="event-end" name="endsAt" type="datetime-local" required />
-            {#if form?.errors?.endsAt}<span class="form-field__error">{form.errors.endsAt}</span
-              >{/if}
-          </div>
-          <div class="form-field">
-            <Label for="event-budget"
-              >Presupuesto estimado <span class="form-field__optional">(opcional)</span></Label
-            >
+          </FormField>
+          <FormField id="event-start" label="Inicio" required error={form?.errors?.startsAt}>
+            <Input
+              id="event-start"
+              name="startsAt"
+              type="datetime-local"
+              required
+              aria-invalid={Boolean(form?.errors?.startsAt)}
+            />
+          </FormField>
+          <FormField id="event-end" label="Finalización" required error={form?.errors?.endsAt}>
+            <Input
+              id="event-end"
+              name="endsAt"
+              type="datetime-local"
+              required
+              aria-invalid={Boolean(form?.errors?.endsAt)}
+            />
+          </FormField>
+          <FormField
+            id="event-budget"
+            label="Presupuesto estimado (opcional)"
+            error={form?.errors?.budgetTarget}
+          >
             <Input
               id="event-budget"
               name="budgetTarget"
+              type="number"
               inputmode="decimal"
+              min="0"
+              max={FORM_LIMITS.event.budgetMax}
+              step="0.01"
+              pattern={FORM_PATTERNS.decimal2.source}
               placeholder="Ej. 500.00"
+              aria-invalid={Boolean(form?.errors?.budgetTarget)}
             />
-            {#if form?.errors?.budgetTarget}<span class="form-field__error"
-                >{form.errors.budgetTarget}</span
-              >{/if}
-          </div>
-          <div class="form-field form-field--wide">
-            <Label for="event-requirements"
-              >Requisitos especiales <span class="form-field__optional">(opcional)</span></Label
-            >
+          </FormField>
+          <FormField
+            id="event-requirements"
+            label="Requisitos especiales (opcional)"
+            error={form?.errors?.specialRequirements}
+            class="form-field--wide"
+          >
             <Textarea
               id="event-requirements"
               name="specialRequirements"
               rows="5"
+              maxlength={FORM_LIMITS.event.specialRequirementsMaxLength}
               placeholder="Cuéntanos sobre montaje, alimentación, accesibilidad o cualquier detalle importante."
+              aria-invalid={Boolean(form?.errors?.specialRequirements)}
             />
-          </div>
+          </FormField>
           <Button type="submit" size="lg" class="form-layout__submit form-field--wide">
             Solicitar cotización <ArrowRight size={17} aria-hidden="true" />
           </Button>
@@ -381,21 +435,6 @@
     gap: var(--space-md);
   }
 
-  .form-field {
-    display: grid;
-    gap: 0.45rem;
-  }
-
-  .form-field__optional {
-    color: var(--muted-foreground);
-    font-weight: 400;
-  }
-
-  .form-field__error {
-    color: var(--destructive);
-    font-size: 0.8rem;
-  }
-
   :global(.form-layout__submit) {
     display: inline-flex;
     align-items: center;
@@ -433,7 +472,7 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .form-field--wide {
+    :global(.form-field--wide) {
       grid-column: 1 / -1;
     }
   }

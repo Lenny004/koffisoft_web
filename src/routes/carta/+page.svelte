@@ -6,6 +6,7 @@
   import SectionHeading from '$lib/components/public/section-heading.svelte';
   import StatusMessage from '$lib/components/public/status-message.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
+  import { FORM_LIMITS } from '$lib/validation/limits';
   import type { PageData } from './$types';
 
   let { data }: { data: PageData } = $props();
@@ -35,6 +36,9 @@
       <h2 id="menu-filter-title">Filtrar la carta</h2>
     </div>
     <form class="menu-filter__form" method="GET">
+      <p class="form-legend">
+        <span class="form-field__required" aria-hidden="true">*</span> Campo obligatorio
+      </p>
       <label class="menu-filter__field">
         <span>Categoría</span>
         <select name="category" value={data.filters.category}>
@@ -50,7 +54,8 @@
           name="allergen"
           value={data.filters.allergen}
           placeholder="Ej. GLUTEN"
-          maxlength="40"
+          maxlength={FORM_LIMITS.menu.allergenMaxLength}
+          autocomplete="off"
         />
       </label>
       <Button type="submit">Aplicar filtros</Button>

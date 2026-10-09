@@ -58,6 +58,28 @@ describe('validación server-side de formularios públicos', () => {
     });
   });
 
+  it('rechaza un contacto que supera los límites de Prisma', () => {
+    const form = new FormData();
+    form.set('name', 'A'.repeat(201));
+    form.set('email', 'ana@example.com');
+    form.set('message', 'Un mensaje suficientemente largo.');
+
+    expect(validateContactForm(form).errors.name).toContain('200');
+  });
+
+  it('rechaza solicitudes especiales que superan el Text acotado por el DTO', () => {
+    const form = new FormData();
+    form.set('contactName', 'Ana');
+    form.set('contactPhone', '+503 0000-0000');
+    form.set('date', '2026-10-24');
+    form.set('time', '18:30');
+    form.set('partySize', '2');
+    form.set('durationMinutes', '120');
+    form.set('specialRequests', 'A'.repeat(10_001));
+
+    expect(validateReservationForm(form).errors.specialRequests).toContain('10,000');
+  });
+
   it('normaliza un mensaje de contacto válido', () => {
     const form = new FormData();
     form.set('name', ' Ana ');

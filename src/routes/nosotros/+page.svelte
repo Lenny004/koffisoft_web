@@ -107,7 +107,7 @@
     border-radius: var(--radius-lg);
   }
 
-  .about-page__hero-icon {
+  :global(.about-page__hero-icon) {
     inline-size: 5.75rem;
     block-size: 5.75rem;
   }
@@ -125,7 +125,7 @@
     transform: rotate(12deg);
   }
 
-  .about-page__hero-icon {
+  :global(.about-page__hero-icon) {
     position: relative;
     z-index: 1;
   }
@@ -155,7 +155,7 @@
     border-radius: var(--radius-lg);
   }
 
-  .about-value__icon {
+  :global(.about-value__icon) {
     color: var(--primary);
   }
 

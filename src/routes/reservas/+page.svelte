@@ -5,10 +5,11 @@
   import StatusMessage from '$lib/components/public/status-message.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
   import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
+  import FormField from '$lib/components/ui/form-field.svelte';
   import { Input } from '$lib/components/ui/input/index.js';
-  import { Label } from '$lib/components/ui/label/index.js';
   import { Select } from '$lib/components/ui/select/index.js';
   import { Textarea } from '$lib/components/ui/textarea/index.js';
+  import { FORM_LIMITS } from '$lib/validation/limits';
   import type { PublicAvailabilityResponse } from '$lib/api/types';
 
   type ReservationActionForm = {
@@ -64,42 +65,58 @@
       </CardHeader>
       <CardContent>
         <form class="form-layout" method="POST" action="?/availability" use:enhance>
-          <div class="form-field">
-            <Label for="availability-date">Fecha</Label>
-            <Input id="availability-date" name="date" type="date" required />
-            {#if form?.errors?.date}<span class="form-field__error">{form.errors.date}</span>{/if}
-          </div>
-          <div class="form-field">
-            <Label for="availability-time">Hora</Label>
-            <Input id="availability-time" name="time" type="time" required />
-            {#if form?.errors?.time}<span class="form-field__error">{form.errors.time}</span>{/if}
-          </div>
-          <div class="form-field">
-            <Label for="availability-party-size">Personas</Label>
+          <p class="form-legend">
+            <span class="form-field__required" aria-hidden="true">*</span> Campo obligatorio
+          </p>
+          <FormField id="availability-date" label="Fecha" required error={form?.errors?.date}>
+            <Input
+              id="availability-date"
+              name="date"
+              type="date"
+              required
+              aria-invalid={Boolean(form?.errors?.date)}
+            />
+          </FormField>
+          <FormField id="availability-time" label="Hora" required error={form?.errors?.time}>
+            <Input
+              id="availability-time"
+              name="time"
+              type="time"
+              required
+              aria-invalid={Boolean(form?.errors?.time)}
+            />
+          </FormField>
+          <FormField
+            id="availability-party-size"
+            label="Personas"
+            required
+            error={form?.errors?.partySize}
+          >
             <Input
               id="availability-party-size"
               name="partySize"
               type="number"
-              min="1"
-              max="100"
+              min={FORM_LIMITS.reservation.partySizeMin}
+              max={FORM_LIMITS.reservation.partySizeMax}
+              step="1"
+              inputmode="numeric"
+              placeholder="Ej. 2"
               value="2"
               required
+              aria-invalid={Boolean(form?.errors?.partySize)}
             />
-            {#if form?.errors?.partySize}<span class="form-field__error"
-                >{form.errors.partySize}</span
-              >{/if}
-          </div>
-          <div class="form-field">
-            <Label for="availability-duration">Duración aproximada</Label>
+          </FormField>
+          <FormField
+            id="availability-duration"
+            label="Duración aproximada"
+            error={form?.errors?.durationMinutes}
+          >
             <Select id="availability-duration" name="durationMinutes" value="120">
               <option value="90">90 minutos</option>
               <option value="120">2 horas</option>
               <option value="180">3 horas</option>
             </Select>
-            {#if form?.errors?.durationMinutes}<span class="form-field__error"
-                >{form.errors.durationMinutes}</span
-              >{/if}
-          </div>
+          </FormField>
           <Button type="submit" class="form-layout__submit">
             Consultar espacios <ArrowRight size={16} aria-hidden="true" />
           </Button>
@@ -154,75 +171,119 @@
     <Card>
       <CardContent>
         <form class="form-layout form-layout--wide" method="POST" use:enhance>
-          <div class="form-field form-field--wide">
-            <Label for="contact-name">Nombre</Label>
-            <Input id="contact-name" name="contactName" autocomplete="name" required />
-            {#if form?.errors?.contactName}<span class="form-field__error"
-                >{form.errors.contactName}</span
-              >{/if}
-          </div>
-          <div class="form-field">
-            <Label for="contact-phone">Teléfono</Label>
-            <Input id="contact-phone" name="contactPhone" type="tel" autocomplete="tel" required />
-            {#if form?.errors?.contactPhone}<span class="form-field__error"
-                >{form.errors.contactPhone}</span
-              >{/if}
-          </div>
-          <div class="form-field">
-            <Label for="contact-email"
-              >Correo electrónico <span class="form-field__optional">(opcional)</span></Label
-            >
-            <Input id="contact-email" name="contactEmail" type="email" autocomplete="email" />
-            {#if form?.errors?.contactEmail}<span class="form-field__error"
-                >{form.errors.contactEmail}</span
-              >{/if}
-          </div>
-          <div class="form-field">
-            <Label for="reservation-date">Fecha</Label>
-            <Input id="reservation-date" name="date" type="date" required />
-            {#if form?.errors?.date}<span class="form-field__error">{form.errors.date}</span>{/if}
-          </div>
-          <div class="form-field">
-            <Label for="reservation-time">Hora</Label>
-            <Input id="reservation-time" name="time" type="time" required />
-            {#if form?.errors?.time}<span class="form-field__error">{form.errors.time}</span>{/if}
-          </div>
-          <div class="form-field">
-            <Label for="reservation-party-size">Personas</Label>
+          <p class="form-legend">
+            <span class="form-field__required" aria-hidden="true">*</span> Campo obligatorio
+          </p>
+          <FormField
+            id="reservation-contact-name"
+            label="Nombre"
+            required
+            error={form?.errors?.contactName}
+            class="form-field--wide"
+          >
+            <Input
+              id="reservation-contact-name"
+              name="contactName"
+              autocomplete="name"
+              placeholder="Ej. Ana Martínez"
+              maxlength={FORM_LIMITS.reservation.contactNameMaxLength}
+              required
+              aria-invalid={Boolean(form?.errors?.contactName)}
+            />
+          </FormField>
+          <FormField
+            id="reservation-contact-phone"
+            label="Teléfono"
+            required
+            error={form?.errors?.contactPhone}
+          >
+            <Input
+              id="reservation-contact-phone"
+              name="contactPhone"
+              type="tel"
+              inputmode="tel"
+              autocomplete="tel"
+              placeholder="Ej. +503 7000 0000"
+              maxlength={FORM_LIMITS.reservation.contactPhoneMaxLength}
+              required
+              aria-invalid={Boolean(form?.errors?.contactPhone)}
+            />
+          </FormField>
+          <FormField
+            id="reservation-contact-email"
+            label="Correo electrónico (opcional)"
+            error={form?.errors?.contactEmail}
+          >
+            <Input
+              id="reservation-contact-email"
+              name="contactEmail"
+              type="email"
+              autocomplete="email"
+              placeholder="Ej. ana@correo.com"
+              maxlength={FORM_LIMITS.reservation.contactEmailMaxLength}
+              aria-invalid={Boolean(form?.errors?.contactEmail)}
+            />
+          </FormField>
+          <FormField id="reservation-date" label="Fecha" required error={form?.errors?.date}>
+            <Input
+              id="reservation-date"
+              name="date"
+              type="date"
+              required
+              aria-invalid={Boolean(form?.errors?.date)}
+            />
+          </FormField>
+          <FormField id="reservation-time" label="Hora" required error={form?.errors?.time}>
+            <Input
+              id="reservation-time"
+              name="time"
+              type="time"
+              required
+              aria-invalid={Boolean(form?.errors?.time)}
+            />
+          </FormField>
+          <FormField
+            id="reservation-party-size"
+            label="Personas"
+            required
+            error={form?.errors?.partySize}
+          >
             <Input
               id="reservation-party-size"
               name="partySize"
               type="number"
-              min="1"
-              max="100"
+              min={FORM_LIMITS.reservation.partySizeMin}
+              max={FORM_LIMITS.reservation.partySizeMax}
+              step="1"
+              inputmode="numeric"
+              placeholder="Ej. 4"
               required
+              aria-invalid={Boolean(form?.errors?.partySize)}
             />
-            {#if form?.errors?.partySize}<span class="form-field__error"
-                >{form.errors.partySize}</span
-              >{/if}
-          </div>
-          <div class="form-field">
-            <Label for="preferred-space"
-              >Espacio preferido <span class="form-field__optional">(opcional)</span></Label
-            >
+          </FormField>
+          <FormField id="preferred-space" label="Espacio preferido (opcional)">
             <Select id="preferred-space" name="preferredSpaceId">
               <option value="">Sin preferencia</option>
               {#each form?.availability?.spaces ?? [] as space (space.id)}
                 <option value={space.id}>{space.nameEs}</option>
               {/each}
             </Select>
-          </div>
-          <div class="form-field form-field--wide">
-            <Label for="special-requests"
-              >Solicitudes especiales <span class="form-field__optional">(opcional)</span></Label
-            >
+          </FormField>
+          <FormField
+            id="special-requests"
+            label="Solicitudes especiales (opcional)"
+            error={form?.errors?.specialRequests}
+            class="form-field--wide"
+          >
             <Textarea
               id="special-requests"
               name="specialRequests"
               rows="4"
+              maxlength={FORM_LIMITS.reservation.specialRequestsMaxLength}
               placeholder="Cuéntanos si celebras algo o necesitas considerar algún detalle."
+              aria-invalid={Boolean(form?.errors?.specialRequests)}
             />
-          </div>
+          </FormField>
           <Button type="submit" size="lg" class="form-layout__submit form-layout__submit--wide">
             Enviar solicitud <ArrowRight size={17} aria-hidden="true" />
           </Button>
@@ -317,21 +378,6 @@
   .form-layout {
     display: grid;
     gap: var(--space-md);
-  }
-
-  .form-field {
-    display: grid;
-    gap: 0.45rem;
-  }
-
-  .form-field__optional {
-    color: var(--muted-foreground);
-    font-weight: 400;
-  }
-
-  .form-field__error {
-    color: var(--destructive);
-    font-size: 0.8rem;
   }
 
   :global(.form-layout__submit) {
@@ -432,7 +478,7 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .form-field--wide,
+    :global(.form-field--wide),
     :global(.form-layout__submit--wide) {
       grid-column: 1 / -1;
     }

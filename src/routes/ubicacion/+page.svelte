@@ -113,7 +113,7 @@
     color: color-mix(in oklab, var(--text-on-brand) 82%, transparent);
   }
 
-  .location-page__detail-icon {
+  :global(.location-page__detail-icon) {
     flex: 0 0 auto;
     color: var(--mountain-300);
   }

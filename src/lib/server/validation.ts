@@ -1,4 +1,5 @@
 import type { CreateEventRequest, CreateReservationRequest, PublicEventType } from '$lib/api/types';
+import { FORM_LIMITS, FORM_PATTERNS } from '$lib/validation/limits';
 
 export interface FormValidation<T> {
   value: T | null;
@@ -28,13 +29,20 @@ export function validateAvailabilityForm(
   if (time && !timePattern.test(time)) errors.time = 'Usa una hora válida.';
 
   const partySize = integer(formData, 'partySize');
-  if (partySize === null || partySize < 1 || partySize > 100) {
-    errors.partySize = 'El grupo debe tener entre 1 y 100 personas.';
+  if (
+    partySize === null ||
+    partySize < FORM_LIMITS.reservation.partySizeMin ||
+    partySize > FORM_LIMITS.reservation.partySizeMax
+  ) {
+    errors.partySize = `El grupo debe tener entre ${FORM_LIMITS.reservation.partySizeMin} y ${FORM_LIMITS.reservation.partySizeMax} personas.`;
   }
 
   const durationMinutes = integer(formData, 'durationMinutes') ?? 120;
-  if (durationMinutes < 30 || durationMinutes > 360) {
-    errors.durationMinutes = 'La duración debe estar entre 30 y 360 minutos.';
+  if (
+    durationMinutes < FORM_LIMITS.reservation.durationMinutesMin ||
+    durationMinutes > FORM_LIMITS.reservation.durationMinutesMax
+  ) {
+    errors.durationMinutes = `La duración debe estar entre ${FORM_LIMITS.reservation.durationMinutesMin} y ${FORM_LIMITS.reservation.durationMinutesMax} minutos.`;
   }
 
   if (Object.keys(errors).length > 0 || partySize === null) return { value: null, errors };
@@ -51,11 +59,11 @@ export function validateAvailabilityForm(
   };
 }
 
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
+const emailPattern = FORM_PATTERNS.email;
 const datePattern = /^\d{4}-\d{2}-\d{2}$/u;
-const timePattern = /^([01]\d|2[0-3]):[0-5]\d$/u;
+const timePattern = FORM_PATTERNS.time;
 const localDateTimePattern = /^\d{4}-\d{2}-\d{2}T([01]\d|2[0-3]):[0-5]\d$/u;
-const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
+const uuidPattern = FORM_PATTERNS.uuid;
 const eventTypes: PublicEventType[] = [
   'Wedding',
   'Birthday',
@@ -111,12 +119,19 @@ export function validateContactForm(formData: FormData): FormValidation<ContactF
   const errors: Record<string, string> = {};
 
   if (!name) errors.name = 'El nombre es obligatorio.';
-  if (name.length > 120) errors.name = 'El nombre no puede superar 120 caracteres.';
+  if (name.length > FORM_LIMITS.contact.nameMaxLength)
+    errors.name = `El nombre no puede superar ${FORM_LIMITS.contact.nameMaxLength} caracteres.`;
   if (!email) errors.email = 'El correo es obligatorio.';
   else if (!emailPattern.test(email)) errors.email = 'Escribe un correo válido.';
+  else if (email.length > FORM_LIMITS.contact.emailMaxLength)
+    errors.email = `El correo no puede superar ${FORM_LIMITS.contact.emailMaxLength} caracteres.`;
+  if (phone && phone.length > FORM_LIMITS.contact.phoneMaxLength)
+    errors.phone = `El teléfono no puede superar ${FORM_LIMITS.contact.phoneMaxLength} caracteres.`;
   if (!message) errors.message = 'El mensaje es obligatorio.';
-  else if (message.length < 10) errors.message = 'Escribe al menos 10 caracteres.';
-  else if (message.length > 2000) errors.message = 'El mensaje no puede superar 2,000 caracteres.';
+  else if (message.length < FORM_LIMITS.contact.messageMinLength)
+    errors.message = 'Escribe al menos 10 caracteres.';
+  else if (message.length > FORM_LIMITS.contact.messageMaxLength)
+    errors.message = `El mensaje no puede superar ${FORM_LIMITS.contact.messageMaxLength.toLocaleString('es-SV')} caracteres.`;
 
   if (Object.keys(errors).length > 0) return { value: null, errors };
 
@@ -139,27 +154,44 @@ export function validateReservationForm(
   addRequired(errors, values, 'contactPhone', 'El teléfono');
   addRequired(errors, values, 'date', 'La fecha');
   addRequired(errors, values, 'time', 'La hora');
+  if (values.contactName.length > FORM_LIMITS.reservation.contactNameMaxLength)
+    errors.contactName = `El nombre no puede superar ${FORM_LIMITS.reservation.contactNameMaxLength} caracteres.`;
+  if (values.contactPhone.length > FORM_LIMITS.reservation.contactPhoneMaxLength)
+    errors.contactPhone = `El teléfono no puede superar ${FORM_LIMITS.reservation.contactPhoneMaxLength} caracteres.`;
   if (values.date && !validCalendarDate(values.date)) errors.date = 'Usa una fecha válida.';
   if (values.time && !timePattern.test(values.time)) errors.time = 'Usa una hora válida.';
 
   const partySize = integer(formData, 'partySize');
-  if (partySize === null || partySize < 1 || partySize > 100) {
-    errors.partySize = 'El grupo debe tener entre 1 y 100 personas.';
+  if (
+    partySize === null ||
+    partySize < FORM_LIMITS.reservation.partySizeMin ||
+    partySize > FORM_LIMITS.reservation.partySizeMax
+  ) {
+    errors.partySize = `El grupo debe tener entre ${FORM_LIMITS.reservation.partySizeMin} y ${FORM_LIMITS.reservation.partySizeMax} personas.`;
   }
 
   const durationMinutes = integer(formData, 'durationMinutes') ?? 120;
-  if (durationMinutes < 30 || durationMinutes > 360) {
-    errors.durationMinutes = 'La duración debe estar entre 30 y 360 minutos.';
+  if (
+    durationMinutes < FORM_LIMITS.reservation.durationMinutesMin ||
+    durationMinutes > FORM_LIMITS.reservation.durationMinutesMax
+  ) {
+    errors.durationMinutes = `La duración debe estar entre ${FORM_LIMITS.reservation.durationMinutesMin} y ${FORM_LIMITS.reservation.durationMinutesMax} minutos.`;
   }
 
   const contactEmail = optionalText(formData, 'contactEmail');
   if (contactEmail && !emailPattern.test(contactEmail))
     errors.contactEmail = 'Escribe un correo válido.';
+  else if (contactEmail && contactEmail.length > FORM_LIMITS.reservation.contactEmailMaxLength)
+    errors.contactEmail = `El correo no puede superar ${FORM_LIMITS.reservation.contactEmailMaxLength} caracteres.`;
 
   const preferredSpaceId = optionalText(formData, 'preferredSpaceId');
   if (preferredSpaceId && !uuidPattern.test(preferredSpaceId)) {
     errors.preferredSpaceId = 'Selecciona un espacio válido.';
   }
+
+  const specialRequests = optionalText(formData, 'specialRequests');
+  if (specialRequests && specialRequests.length > FORM_LIMITS.reservation.specialRequestsMaxLength)
+    errors.specialRequests = `La solicitud no puede superar ${FORM_LIMITS.reservation.specialRequestsMaxLength.toLocaleString('es-SV')} caracteres.`;
 
   if (Object.keys(errors).length > 0 || partySize === null) return { value: null, errors };
 
@@ -175,7 +207,7 @@ export function validateReservationForm(
       contactEmail,
       preferredLanguage: 'es',
       preferredSpaceId,
-      specialRequests: optionalText(formData, 'specialRequests'),
+      specialRequests,
     },
   };
 }
@@ -221,18 +253,42 @@ export function validateEventForm(formData: FormData): FormValidation<CreateEven
   }
 
   const estimatedGuestCount = integer(formData, 'estimatedGuestCount');
-  if (estimatedGuestCount === null || estimatedGuestCount < 1 || estimatedGuestCount > 10_000) {
-    errors.estimatedGuestCount = 'Indica entre 1 y 10,000 invitados.';
+  if (
+    estimatedGuestCount === null ||
+    estimatedGuestCount < FORM_LIMITS.event.estimatedGuestCountMin ||
+    estimatedGuestCount > FORM_LIMITS.event.estimatedGuestCountMax
+  ) {
+    errors.estimatedGuestCount = `Indica entre ${FORM_LIMITS.event.estimatedGuestCountMin} y ${FORM_LIMITS.event.estimatedGuestCountMax.toLocaleString('es-SV')} invitados.`;
   }
+
+  if (values.title.length > FORM_LIMITS.event.titleMaxLength)
+    errors.title = `El título no puede superar ${FORM_LIMITS.event.titleMaxLength} caracteres.`;
+  if (values.contactName.length > FORM_LIMITS.event.contactNameMaxLength)
+    errors.contactName = `El nombre no puede superar ${FORM_LIMITS.event.contactNameMaxLength} caracteres.`;
+  if (values.contactPhone.length > FORM_LIMITS.event.contactPhoneMaxLength)
+    errors.contactPhone = `El teléfono no puede superar ${FORM_LIMITS.event.contactPhoneMaxLength} caracteres.`;
 
   const contactEmail = optionalText(formData, 'contactEmail');
   if (contactEmail && !emailPattern.test(contactEmail))
     errors.contactEmail = 'Escribe un correo válido.';
+  else if (contactEmail && contactEmail.length > FORM_LIMITS.event.contactEmailMaxLength)
+    errors.contactEmail = `El correo no puede superar ${FORM_LIMITS.event.contactEmailMaxLength} caracteres.`;
 
   const budgetTarget = optionalText(formData, 'budgetTarget');
-  if (budgetTarget && !/^\d+(\.\d{1,2})?$/u.test(budgetTarget)) {
+  if (
+    budgetTarget &&
+    (!FORM_PATTERNS.decimal2.test(budgetTarget) ||
+      Number(budgetTarget) > FORM_LIMITS.event.budgetMax)
+  ) {
     errors.budgetTarget = 'Usa un monto positivo con hasta dos decimales.';
   }
+
+  const specialRequirements = optionalText(formData, 'specialRequirements');
+  if (
+    specialRequirements &&
+    specialRequirements.length > FORM_LIMITS.event.specialRequirementsMaxLength
+  )
+    errors.specialRequirements = `El detalle no puede superar ${FORM_LIMITS.event.specialRequirementsMaxLength.toLocaleString('es-SV')} caracteres.`;
 
   if (Object.keys(errors).length > 0 || estimatedGuestCount === null)
     return { value: null, errors };
@@ -250,7 +306,7 @@ export function validateEventForm(formData: FormData): FormValidation<CreateEven
       endsAt: toElSalvadorIso(values.endsAt),
       estimatedGuestCount,
       budgetTarget,
-      specialRequirements: optionalText(formData, 'specialRequirements'),
+      specialRequirements,
     },
   };
 }

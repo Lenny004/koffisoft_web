@@ -6,8 +6,9 @@
   import StatusMessage from '$lib/components/public/status-message.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
-  import { Label } from '$lib/components/ui/label/index.js';
   import { Textarea } from '$lib/components/ui/textarea/index.js';
+  import FormField from '$lib/components/ui/form-field.svelte';
+  import { FORM_LIMITS } from '$lib/validation/limits';
 
   type ContactActionForm = {
     kind?: 'error' | 'success';
@@ -81,35 +82,67 @@
         <h2 id="contact-form-title">Solicitar información</h2>
       </div>
       <form method="POST" use:enhance>
-        <div class="contact-form__field">
-          <Label for="contact-name">Nombre</Label>
-          <Input id="contact-name" name="name" autocomplete="name" required maxlength="120" />
-          {#if form?.errors?.name}<span class="contact-form__error">{form.errors.name}</span>{/if}
-        </div>
-        <div class="contact-form__field">
-          <Label for="contact-email">Correo electrónico</Label>
-          <Input id="contact-email" name="email" type="email" autocomplete="email" required />
-          {#if form?.errors?.email}<span class="contact-form__error">{form.errors.email}</span>{/if}
-        </div>
-        <div class="contact-form__field">
-          <Label for="contact-phone"
-            >Teléfono <span class="contact-form__optional">(opcional)</span></Label
-          >
-          <Input id="contact-phone" name="phone" type="tel" autocomplete="tel" />
-        </div>
-        <div class="contact-form__field contact-form__field--wide">
-          <Label for="contact-message">Mensaje</Label>
+        <p class="form-legend">
+          <span class="form-field__required" aria-hidden="true">*</span> Campo obligatorio
+        </p>
+        <FormField id="contact-name" label="Nombre" required error={form?.errors?.name}>
+          <Input
+            id="contact-name"
+            name="name"
+            autocomplete="name"
+            placeholder="Ej. Ana Martínez"
+            maxlength={FORM_LIMITS.contact.nameMaxLength}
+            required
+            aria-invalid={Boolean(form?.errors?.name)}
+          />
+        </FormField>
+        <FormField
+          id="contact-email"
+          label="Correo electrónico"
+          required
+          error={form?.errors?.email}
+        >
+          <Input
+            id="contact-email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            placeholder="Ej. ana@correo.com"
+            maxlength={FORM_LIMITS.contact.emailMaxLength}
+            required
+            aria-invalid={Boolean(form?.errors?.email)}
+          />
+        </FormField>
+        <FormField id="contact-phone" label="Teléfono (opcional)" error={form?.errors?.phone}>
+          <Input
+            id="contact-phone"
+            name="phone"
+            type="tel"
+            inputmode="tel"
+            autocomplete="tel"
+            placeholder="Ej. +503 7000 0000"
+            maxlength={FORM_LIMITS.contact.phoneMaxLength}
+            aria-invalid={Boolean(form?.errors?.phone)}
+          />
+        </FormField>
+        <FormField
+          id="contact-message"
+          label="Mensaje"
+          required
+          error={form?.errors?.message}
+          class="form-field--wide"
+        >
           <Textarea
             id="contact-message"
             name="message"
             rows="5"
-            minlength="10"
-            maxlength="2000"
+            placeholder="Cuéntanos cómo podemos ayudarte."
+            minlength={FORM_LIMITS.contact.messageMinLength}
+            maxlength={FORM_LIMITS.contact.messageMaxLength}
             required
+            aria-invalid={Boolean(form?.errors?.message)}
           />
-          {#if form?.errors?.message}<span class="contact-form__error">{form.errors.message}</span
-            >{/if}
-        </div>
+        </FormField>
         <Button type="submit" size="lg">Enviar mensaje <Send size={17} aria-hidden="true" /></Button
         >
       </form>
@@ -183,7 +216,7 @@
     margin: 0;
   }
 
-  .contact-page__detail-icon {
+  :global(.contact-page__detail-icon) {
     flex: 0 0 auto;
     color: var(--primary);
   }
@@ -193,8 +226,7 @@
     gap: 0.2rem;
   }
 
-  .contact-page__detail-list strong,
-  .contact-form__optional {
+  .contact-page__detail-list strong {
     font-size: var(--font-size-sm);
   }
 
@@ -205,25 +237,6 @@
   .contact-form form {
     display: grid;
     gap: var(--space-md);
-  }
-
-  .contact-form__field {
-    display: grid;
-    gap: var(--space-xs);
-  }
-
-  .contact-form__optional {
-    color: var(--text-muted);
-    font-weight: 400;
-  }
-
-  .contact-form__field--wide {
-    grid-column: 1 / -1;
-  }
-
-  .contact-form__error {
-    color: var(--destructive);
-    font-size: 0.8rem;
   }
 
   @media (min-width: 48rem) {
