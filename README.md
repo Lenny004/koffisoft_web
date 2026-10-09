@@ -32,18 +32,19 @@
 
 ## 🌟 Aspectos destacados
 
-- **Base pública en SvelteKit**: Fase 0 implementada como un esqueleto funcional con una página inicial placeholder.
-- **UI preparada para crecer**: usa Tailwind CSS 4 y componentes shadcn-svelte sobre Bits UI.
+- **Portada y navegación pública**: presenta Koffi-Soft, su carta, reservas y eventos con diseño responsive y accesible.
+- **Carta conectada a la API**: muestra categorías, detalle de ítems, precios publicados y filtros por alérgeno sin datos ficticios.
+- **Solicitudes públicas**: consulta disponibilidad, solicita reservas y cotiza eventos mediante acciones server-side con mejora progresiva.
 - **Verificación automatizada**: el CI ejecuta lint, typecheck, pruebas unitarias, build y pruebas E2E.
-- **Frontera clara con la API**: las rutas públicas futuras consumirán contratos HTTP versionados sin conexiones directas a PostgreSQL.
+- **Frontera clara con la API**: el cliente server-only consume únicamente los endpoints públicos de `koffisoft_api`, sin conexiones directas a PostgreSQL.
 
 <!-- section:overview -->
 
 ## ℹ️ Descripción
 
-`koffisoft_web` es el sitio público de Koffi-Soft, una cafetería de la Ruta Panorámica de El Salvador. Actualmente se encuentra en Fase 0: contiene un esqueleto funcional y una página inicial placeholder; todavía no implementa funcionalidades de negocio como el catálogo, productos, promociones, reservaciones, contacto, ubicación ni páginas institucionales.
+`koffisoft_web` es el sitio público de Koffi-Soft, una cafetería de la Ruta Panorámica de El Salvador. Este bloque implementa la portada, la carta pública, el detalle de ítems, las solicitudes de reserva y las solicitudes de cotización de eventos.
 
-Forma parte del sistema junto con `koffisoft_api`, responsable de PostgreSQL, Prisma, autenticación, trabajos en segundo plano y contratos HTTP, y `koffisoft_admin`, el panel privado que consume esos contratos. Cuando se apruebe la fase de contratos, este sitio y el panel usarán una versión exacta del paquete privado `@koffisoft/contracts`; en Fase 0 ese paquete aún no se agrega. El legacy queda fuera de este árbol y solo sirve como referencia de migración. Este sitio no contiene PHP, credenciales ni acceso directo a PostgreSQL.
+Forma parte del sistema junto con `koffisoft_api`, responsable de PostgreSQL, Prisma, autenticación, trabajos en segundo plano y contratos HTTP, y `koffisoft_admin`, el panel privado que consume esos contratos. Las rutas consultan la API desde `+page.server.ts` y mantienen estados vacíos o de error cuando el servicio no responde. El legacy queda fuera de este árbol y solo sirve como referencia de migración. Este sitio no contiene PHP, credenciales ni acceso directo a PostgreSQL.
 
 **Stack:** SvelteKit 2.70.3, Svelte 5.57.1, TypeScript 5.9.3, Vite 7.3.6, Tailwind CSS 4.3.3 con `@tailwindcss/vite` 4.3.3, shadcn-svelte 1.7.0 sobre Bits UI 2.19.5, `tailwind-variants` 3.3.1, `cn` 0.4.0, `tw-animate-css` 1.4.0, `@sveltejs/adapter-node` 5.5.7, ESLint 10.12.0, `eslint-plugin-svelte` 3.23.0, TypeScript ESLint 8.71.0, Prettier 3.9.9, `prettier-plugin-svelte` 4.1.1, Vitest 5.0.3 y Playwright 1.63.0.
 
@@ -85,18 +86,19 @@ pnpm exec playwright install chromium
 pnpm dev
 ```
 
-Abre la dirección que muestre Vite. La página inicial presenta la base digital de Koffi-Soft, el estado `Fase 0 · Esqueleto funcional` y el aviso de que el menú llegará próximamente.
+Abre la dirección que muestre Vite. Con `API_BASE_URL` y `LOCATION_ID` configurados, la página inicial consulta los destacados reales y la navegación permite abrir `/carta`, `/reservas` y `/eventos`.
 
 <!-- section:configuration -->
 
 ## ⚙️ Configuración
 
-La tabla reproduce exactamente las dos entradas de `.env.example`. Sus valores son locales de ejemplo y no contienen secretos.
+La tabla reproduce exactamente las entradas de `.env.example`. Sus valores son placeholders locales y no contienen secretos.
 
-| Variable              | Descripción                                                        | Ejemplo                 | Requerida   |
-| --------------------- | ------------------------------------------------------------------ | ----------------------- | ----------- |
-| `PUBLIC_API_BASE_URL` | URL base de la API pública prevista para las rutas del sitio       | `http://localhost:3000` | No (Fase 0) |
-| `ORIGIN`              | Origen local usado por el adaptador y los formularios de SvelteKit | `http://localhost:5173` | No (Fase 0) |
+| Variable       | Descripción                                                        | Ejemplo                 | Requerida |
+| -------------- | ------------------------------------------------------------------ | ----------------------- | --------- |
+| `API_BASE_URL` | URL base de `koffisoft_api`, leída solo en el servidor             | `http://localhost:3000` | Sí        |
+| `LOCATION_ID`  | UUID de la sede activa que publica carta, reservas y eventos       | `TU_UUID_DE_SEDE`       | Sí        |
+| `ORIGIN`       | Origen local usado por el adaptador y los formularios de SvelteKit | `http://localhost:5173` | No        |
 
 No agregues tokens, contraseñas, cookies, claves privadas ni credenciales SMTP al repositorio.
 
@@ -111,9 +113,10 @@ No agregues tokens, contraseñas, cookies, claves privadas ni credenciales SMTP 
 ├── .github/
 │   └── workflows/              # Automatización de CI
 ├── docs/
-│   └── reglas-documentacion.md # Reglas para documentar código
+│   ├── reglas-documentacion.md # Reglas para documentar código
+│   └── paginas-publicas.md     # Rutas, contratos y formularios públicos
 ├── src/
-│   ├── lib/                    # Utilidades y componentes UI compartidos
+│   ├── lib/                    # Tipos, cliente server-only y componentes UI compartidos
 │   ├── routes/                 # Ruta y layout del sitio público
 │   ├── app.css                 # Tema Tailwind 4 y variables de shadcn-svelte
 │   ├── app.d.ts                # Declaraciones de tipos de la aplicación
@@ -135,7 +138,7 @@ No agregues tokens, contraseñas, cookies, claves privadas ni credenciales SMTP 
 └── vitest.config.ts            # Configuración de Vitest
 ```
 
-Las pruebas unitarias viven junto al código en `src/**/*.test.ts`; las pruebas E2E se agrupan en `tests/`. Los componentes UI compartidos se ubican en `src/lib/components/ui/`.
+Las pruebas unitarias viven junto al código en `src/**/*.test.ts`; cubren el cliente de API, los mapeos de carta y la validación server-side. Las pruebas E2E se agrupan en `tests/`. Los componentes UI compartidos se ubican en `src/lib/components/ui/` y el cliente de API solo servidor en `src/lib/server/api/`.
 
 <!-- section:development -->
 
@@ -165,7 +168,7 @@ pnpm format
 - `pnpm lint:css`: revisa los archivos CSS con Stylelint y la convención BEM.
 - `pnpm format`: aplica Prettier.
 
-Las funciones `load` y las acciones de formulario deben vivir junto a su ruta (`+page.ts`, `+page.server.ts` o `+layout.server.ts`) y consumir la API mediante contratos, sin acceso directo a PostgreSQL. Las reglas de documentación están en [docs/reglas-documentacion.md](docs/reglas-documentacion.md).
+Las funciones `load` y las acciones de formulario deben vivir junto a su ruta (`+page.ts`, `+page.server.ts` o `+layout.server.ts`) y consumir la API mediante contratos, sin acceso directo a PostgreSQL. El detalle del bloque público está en [docs/paginas-publicas.md](docs/paginas-publicas.md) y las reglas de documentación en [docs/reglas-documentacion.md](docs/reglas-documentacion.md).
 
 <!-- section:testing -->
 
@@ -188,10 +191,11 @@ El workflow de [CI](.github/workflows/ci.yml) ejecuta lint, typecheck, pruebas u
 
 ## 🗺️ Hoja de ruta y estado
 
-El estado actual es Fase 0, un esqueleto funcional del sitio público.
+El estado actual es Fase 0 con el primer bloque público conectado a la API y contenido operativo aún pendiente de confirmación.
 
-- [ ] Implementar el alcance público planificado: catálogo, productos, promociones, reservaciones, contacto, ubicación y páginas institucionales.
-- [ ] Incorporar contratos HTTP versionados y conectar las rutas públicas cuando se apruebe la fase de contratos.
+- [x] Implementar el primer bloque público: portada, carta, reservas y eventos.
+- [ ] Incorporar contratos HTTP versionados cuando se apruebe el paquete privado `@koffisoft/contracts`.
+- [ ] Completar contenido operativo confirmado: contacto, ubicación, horarios, imágenes y promociones.
 
 <!-- section:contributing -->
 
