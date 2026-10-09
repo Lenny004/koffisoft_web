@@ -32,9 +32,10 @@
 
 ## 🌟 Aspectos destacados
 
-- **Portada y navegación pública**: presenta Koffi-Soft, su carta, reservas y eventos con diseño responsive y accesible.
+- **Identidad pública nueva**: recrea módulos del legacy con paleta café/crema, acento montaña, Fraunces, Manrope y Lucide.
+- **Portada y navegación pública**: presenta menú por categorías, favoritos, promociones, reservas, eventos y páginas editoriales responsive.
 - **Carta conectada a la API**: muestra categorías, detalle de ítems, precios publicados y filtros por alérgeno sin datos ficticios.
-- **Solicitudes públicas**: consulta disponibilidad, solicita reservas y cotiza eventos mediante acciones server-side con mejora progresiva.
+- **Solicitudes públicas**: consulta disponibilidad, solicita reservas, cotiza eventos y valida contacto mediante actions server-side.
 - **Verificación automatizada**: el CI ejecuta lint, typecheck, pruebas unitarias, build y pruebas E2E.
 - **Frontera clara con la API**: el cliente server-only consume únicamente los endpoints públicos de `koffisoft_api`, sin conexiones directas a PostgreSQL.
 
@@ -42,11 +43,11 @@
 
 ## ℹ️ Descripción
 
-`koffisoft_web` es el sitio público de Koffi-Soft, una cafetería de la Ruta Panorámica de El Salvador. Este bloque implementa la portada, la carta pública, el detalle de ítems, las solicitudes de reserva y las solicitudes de cotización de eventos.
+`koffisoft_web` es el sitio público de Koffi-Soft, una cafetería de la Ruta Panorámica de El Salvador. El sitio presenta el menú, categorías, favoritos, reservas, eventos y contenido editorial pendiente de confirmación.
 
 Forma parte del sistema junto con `koffisoft_api`, responsable de PostgreSQL, Prisma, autenticación, trabajos en segundo plano y contratos HTTP, y `koffisoft_admin`, el panel privado que consume esos contratos. Las rutas consultan la API desde `+page.server.ts` y mantienen estados vacíos o de error cuando el servicio no responde. El legacy queda fuera de este árbol y solo sirve como referencia de migración. Este sitio no contiene PHP, credenciales ni acceso directo a PostgreSQL.
 
-**Stack:** SvelteKit 2.70.3, Svelte 5.57.1, TypeScript 5.9.3, Vite 7.3.6, Tailwind CSS 4.3.3 con `@tailwindcss/vite` 4.3.3, shadcn-svelte 1.7.0 sobre Bits UI 2.19.5, `tailwind-variants` 3.3.1, `cn` 0.4.0, `tw-animate-css` 1.4.0, `@sveltejs/adapter-node` 5.5.7, ESLint 10.12.0, `eslint-plugin-svelte` 3.23.0, TypeScript ESLint 8.71.0, Prettier 3.9.9, `prettier-plugin-svelte` 4.1.1, Vitest 5.0.3 y Playwright 1.63.0.
+**Stack:** SvelteKit 2.70.3, Svelte 5.57.1, TypeScript 5.9.3, Vite 7.3.6, Tailwind CSS 4.3.3, shadcn-svelte 1.7.0 sobre Bits UI 2.19.5, `@lucide/svelte` 1.51.0, `@fontsource-variable/fraunces` 5.2.5, `@fontsource-variable/manrope` 5.2.5, Vitest 5.0.3 y Playwright 1.63.0.
 
 <!-- section:requirements -->
 
@@ -57,7 +58,7 @@ Forma parte del sistema junto con `koffisoft_api`, responsable de PostgreSQL, Pr
 - Chromium instalado con Playwright para ejecutar las pruebas E2E.
 - Stylelint `17.16.0` con `stylelint-config-standard` `40.0.0` para revisar CSS.
 
-Las versiones directas anteriores están fijadas sin rangos en `package.json`; `pnpm-lock.yaml` fija el árbol completo de dependencias.
+Las versiones directas están fijadas sin rangos en `package.json`; `pnpm-lock.yaml` debe refrescarse después de instalar las fuentes nuevas.
 
 <!-- section:installation -->
 
@@ -71,6 +72,8 @@ corepack prepare pnpm@11.1.3 --activate
 pnpm install
 cp .env.example .env
 ```
+
+El sandbox no pudo resolver las dos fuentes self-hosted por falta de red; ejecuta `pnpm install` con acceso al registro para actualizar el lockfile.
 
 Para preparar el navegador requerido únicamente por las pruebas E2E:
 
@@ -113,8 +116,10 @@ No agregues tokens, contraseñas, cookies, claves privadas ni credenciales SMTP 
 ├── .github/
 │   └── workflows/              # Automatización de CI
 ├── docs/
+│   ├── sistema-diseno.md       # Tokens, tipografía y componentes públicos
 │   ├── reglas-documentacion.md # Reglas para documentar código
 │   └── paginas-publicas.md     # Rutas, contratos y formularios públicos
+├── static/                     # Logos, fotografías y planos provisionales
 ├── src/
 │   ├── lib/                    # Tipos, cliente server-only y componentes UI compartidos
 │   ├── routes/                 # Ruta y layout del sitio público
@@ -194,6 +199,7 @@ El workflow de [CI](.github/workflows/ci.yml) ejecuta lint, typecheck, pruebas u
 El estado actual es Fase 0 con el primer bloque público conectado a la API y contenido operativo aún pendiente de confirmación.
 
 - [x] Implementar el primer bloque público: portada, carta, reservas y eventos.
+- [x] Incorporar el sistema visual público y las rutas editoriales provisionales.
 - [ ] Incorporar contratos HTTP versionados cuando se apruebe el paquete privado `@koffisoft/contracts`.
 - [ ] Completar contenido operativo confirmado: contacto, ubicación, horarios, imágenes y promociones.
 

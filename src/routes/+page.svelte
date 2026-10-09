@@ -1,7 +1,11 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import { ArrowRight, CalendarDays, Coffee, MapPin } from '@lucide/svelte';
 
+  import { getCategoryImage } from '$lib/content/menu';
+  import CategoryCard from '$lib/components/public/category-card.svelte';
   import MenuItemCard from '$lib/components/public/menu-item-card.svelte';
+  import SectionHeading from '$lib/components/public/section-heading.svelte';
   import StatusMessage from '$lib/components/public/status-message.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
   import { Card, CardContent } from '$lib/components/ui/card/index.js';
@@ -11,54 +15,31 @@
 </script>
 
 <svelte:head>
-  <title>Koffi-Soft | Café y paisaje en la Ruta Panorámica</title>
+  <title>Koffi-Soft | Menú de café y montaña</title>
   <meta
     name="description"
-    content="Descubre Koffi-Soft, café, cocina y encuentros en la Ruta Panorámica de El Salvador. Consulta la carta, reserva o cotiza tu evento."
+    content="Explora el menú de Koffi-Soft, sus categorías, favoritos, reservas y experiencias en la Ruta Panorámica."
   />
 </svelte:head>
 
 <div class="home-page">
-  <section class="home-hero" aria-labelledby="home-title">
-    <div class="home-hero__content">
-      <p class="home-hero__eyebrow"><Coffee size={16} aria-hidden="true" /> Koffi-Soft</p>
-      <h1 id="home-title" class="home-hero__title">Una pausa con vista a la montaña.</h1>
-      <p class="home-hero__copy">
-        Café, cocina y momentos para compartir en la Ruta Panorámica de El Salvador. Ven por el
-        paisaje, quédate por la mesa.
-      </p>
-      <div class="home-hero__actions">
-        <Button href="/reservas" size="lg" class="home-hero__action">
-          Reservar una mesa
-          <ArrowRight class="home-hero__icon" size={18} aria-hidden="true" />
-        </Button>
-        <Button href="/carta" variant="outline" size="lg" class="home-hero__action"
-          >Explorar la carta</Button
-        >
-      </div>
-      <div class="home-hero__details">
-        <span><MapPin size={16} aria-hidden="true" /> Ruta Panorámica</span>
-        <span><CalendarDays size={16} aria-hidden="true" /> Eventos y celebraciones</span>
-      </div>
-    </div>
-    <div class="home-hero__visual" aria-label="Espacio de café con vista panorámica" role="img">
-      <div class="home-hero__sun" aria-hidden="true"></div>
-      <div class="home-hero__mountain home-hero__mountain--back" aria-hidden="true"></div>
-      <div class="home-hero__mountain home-hero__mountain--front" aria-hidden="true"></div>
-      <div class="home-hero__cup" aria-hidden="true">☕</div>
-      <p class="home-hero__visual-label">El Salvador</p>
+  <section class="home-page__intro">
+    <SectionHeading
+      level="h1"
+      title="Menú"
+      eyebrow="Sabores de la montaña"
+      description="Una carta para disfrutar el café, la cocina y el paisaje con calma."
+    />
+    <div class="home-page__intro-meta">
+      <span><Coffee size={17} aria-hidden="true" /> Café y cocina de temporada</span>
+      <span><MapPin size={17} aria-hidden="true" /> Ruta Panorámica, El Salvador</span>
     </div>
   </section>
 
-  <section class="home-section home-section--menu" aria-labelledby="featured-title">
+  <section class="home-section" aria-labelledby="categories-title">
     <div class="home-section__heading">
-      <div>
-        <p class="home-section__eyebrow">Para disfrutar sin prisa</p>
-        <h2 id="featured-title" class="home-section__title">Favoritos de la carta</h2>
-      </div>
-      <Button href="/carta" variant="link" class="home-section__link">
-        Ver toda la carta <ArrowRight size={16} aria-hidden="true" />
-      </Button>
+      <h2 id="categories-title" class="home-section__title">Explora por categoría</h2>
+      <p class="home-section__copy">Encuentra algo para cada momento del día.</p>
     </div>
 
     {#if data.errorMessage}
@@ -67,21 +48,52 @@
         message={data.errorMessage}
         variant="destructive"
       />
-    {:else if data.featuredItems.length === 0}
-      <Card class="home-empty">
-        <CardContent>
-          <p class="home-empty__title">Estamos preparando la carta pública.</p>
-          <p class="home-empty__copy">
-            Pronto podrás consultar nuestras opciones directamente aquí.
-          </p>
-        </CardContent>
-      </Card>
+    {:else if data.categories.length === 0}
+      <StatusMessage
+        title="Estamos preparando la carta pública"
+        message="Las categorías aparecerán aquí cuando la sede tenga opciones publicadas."
+      />
     {:else}
-      <div class="home-section__grid">
+      <div class="home-section__category-grid">
+        {#each data.categories as category (category.id)}
+          <CategoryCard
+            href={'/carta?category=' + category.slug}
+            title={category.nameEs}
+            description={category.descriptionEs}
+            image={category.imageUrl ?? getCategoryImage(category)}
+            imageAlt={'Fotografía de ' + category.nameEs}
+          />
+        {/each}
+      </div>
+    {/if}
+  </section>
+
+  <section class="home-section home-section--favorites" aria-labelledby="favorites-title">
+    <SectionHeading
+      title="Productos favoritos"
+      eyebrow="Los más consultados"
+      description="Precios y disponibilidad corresponden a la publicación actual de la sede."
+    />
+
+    {#if data.errorMessage}
+      <StatusMessage
+        title="Favoritos no disponibles"
+        message={data.errorMessage}
+        variant="destructive"
+      />
+    {:else if data.featuredItems.length === 0}
+      <Card class="home-empty"
+        ><CardContent
+          ><p class="home-empty__message">No hay favoritos publicados por ahora.</p></CardContent
+        ></Card
+      >
+    {:else}
+      <div class="home-section__product-grid">
         {#each data.featuredItems as featuredItem (featuredItem.item.id)}
           <MenuItemCard
             item={featuredItem.item}
             categoryName={featuredItem.categoryName}
+            category={{ slug: featuredItem.categorySlug, nameEs: featuredItem.categoryName }}
             featured
           />
         {/each}
@@ -89,270 +101,190 @@
     {/if}
   </section>
 
-  <section class="home-callout" aria-labelledby="home-callout-title">
-    <div>
-      <p class="home-section__eyebrow home-callout__eyebrow">Momentos que merecen una mesa</p>
-      <h2 id="home-callout-title" class="home-callout__title">
-        Celebra tu próxima historia con nosotros.
-      </h2>
-      <p class="home-callout__copy">
-        Conoce nuestros espacios y cuéntanos qué necesitas para tu evento.
-      </p>
-    </div>
-    <Button href="/eventos" variant="secondary" size="lg">
-      Cotizar un evento <ArrowRight size={18} aria-hidden="true" />
-    </Button>
+  <section class="home-page__secondary" aria-label="Más experiencias">
+    <a class="home-page__secondary-card" href={resolve('/reservas')}>
+      <span class="home-page__secondary-icon"><CalendarDays size={24} aria-hidden="true" /></span>
+      <span>
+        <strong>Reserva tu mesa</strong>
+        <small>Planea una pausa con tu gente.</small>
+      </span>
+      <ArrowRight size={20} aria-hidden="true" />
+    </a>
+    <a class="home-page__secondary-card" href={resolve('/eventos')}>
+      <span class="home-page__secondary-icon"><MapPin size={24} aria-hidden="true" /></span>
+      <span>
+        <strong>Celebra con vista</strong>
+        <small>Conoce nuestros espacios para eventos.</small>
+      </span>
+      <ArrowRight size={20} aria-hidden="true" />
+    </a>
   </section>
+
+  <div class="home-page__cta">
+    <p>¿Quieres conocer todo lo que tenemos para compartir?</p>
+    <Button href="/carta" variant="outline"
+      >Ver la carta completa <ArrowRight size={17} aria-hidden="true" /></Button
+    >
+  </div>
 </div>
 
 <style>
-  /* La portada reúne contenido editorial estático y datos de carta cargados en el servidor. */
+  /* La portada sigue el orden del legacy: título, categorías, favoritos y llamados secundarios. */
   .home-page {
-    inline-size: min(100% - 2rem, var(--container-max));
+    inline-size: min(calc(100% - 2rem), var(--container-max));
     margin-inline: auto;
+    padding-block: var(--space-xl) 0;
   }
 
-  .home-hero {
-    display: grid;
-    gap: var(--space-xl);
-    min-block-size: min(42rem, calc(100dvh - 4.5rem));
-    align-items: center;
-    padding-block: 3rem;
+  .home-page__intro {
+    padding-block: var(--space-lg) var(--space-xl);
   }
 
-  .home-hero__content {
-    max-inline-size: 38rem;
-  }
-
-  .home-hero__eyebrow,
-  .home-section__eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    margin: 0 0 var(--space-md);
-    color: var(--primary);
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-  }
-
-  .home-hero__title,
-  .home-section__title,
-  .home-callout__title {
-    margin: 0;
-    font-family: Georgia, serif;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-  }
-
-  .home-hero__title {
-    max-inline-size: 11ch;
-    font-size: clamp(3rem, 9vw, 6rem);
-    line-height: 0.95;
-  }
-
-  .home-hero__copy {
-    max-inline-size: 34rem;
-    margin: var(--space-lg) 0 0;
-    color: var(--muted-foreground);
-    font-size: clamp(1rem, 2vw, 1.25rem);
-  }
-
-  .home-hero__actions,
-  .home-hero__details {
+  .home-page__intro-meta {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-sm);
+    justify-content: center;
+    gap: var(--space-md);
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
   }
 
-  .home-hero__actions {
-    margin-block-start: var(--space-xl);
-  }
-
-  :global(.home-hero__icon) {
-    margin-inline-start: 0.25rem;
-  }
-
-  .home-hero__details {
-    margin-block-start: var(--space-lg);
-    color: var(--muted-foreground);
-    font-size: 0.82rem;
-  }
-
-  .home-hero__details span {
+  .home-page__intro-meta span {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-  }
-
-  .home-hero__visual {
-    position: relative;
-    min-block-size: 20rem;
-    overflow: hidden;
-    border-radius: 2rem;
-    background: linear-gradient(150deg, var(--sand-100), var(--sand-300));
-    isolation: isolate;
-  }
-
-  .home-hero__sun {
-    position: absolute;
-    inset-block-start: 15%;
-    inset-inline-end: 16%;
-    inline-size: 5rem;
-    aspect-ratio: 1;
-    border-radius: var(--radius-full);
-    background: var(--accent);
-    box-shadow: 0 0 4rem var(--accent);
-  }
-
-  .home-hero__mountain {
-    position: absolute;
-    inset-inline: -10%;
-    clip-path: polygon(0 100%, 18% 54%, 34% 75%, 50% 22%, 68% 67%, 81% 45%, 100% 100%);
-  }
-
-  .home-hero__mountain--back {
-    inset-block-end: 16%;
-    block-size: 58%;
-    background: color-mix(in oklab, var(--primary) 28%, var(--sand-100));
-  }
-
-  .home-hero__mountain--front {
-    inset-block-end: -8%;
-    block-size: 56%;
-    background: var(--coffee-700);
-  }
-
-  .home-hero__cup {
-    position: absolute;
-    inset-block-end: 11%;
-    inset-inline-start: 14%;
-    display: grid;
-    place-items: center;
-    inline-size: 5rem;
-    block-size: 5rem;
-    border-radius: 1.5rem;
-    background: var(--card);
-    box-shadow: var(--shadow-md);
-    font-size: 2.6rem;
-    transform: rotate(-8deg);
-  }
-
-  .home-hero__visual-label {
-    position: absolute;
-    inset-block-end: 1.2rem;
-    inset-inline-end: 1.4rem;
-    margin: 0;
-    color: var(--primary-foreground);
-    font-family: Georgia, serif;
-    font-size: 1.1rem;
-    font-style: italic;
+    gap: var(--space-xs);
   }
 
   .home-section {
-    padding-block: 4rem;
+    padding-block: var(--space-xl);
+  }
+
+  .home-section--favorites {
+    padding-block-start: var(--space-2xl);
   }
 
   .home-section__heading {
     display: flex;
-    align-items: end;
+    flex-wrap: wrap;
+    align-items: baseline;
     justify-content: space-between;
-    gap: var(--space-lg);
-    margin-block-end: var(--space-xl);
-  }
-
-  .home-section__eyebrow {
-    margin-block-end: 0.5rem;
+    gap: var(--space-md);
+    margin-block-end: var(--space-lg);
   }
 
   .home-section__title {
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    margin: 0;
+    font-size: clamp(1.8rem, 4vw, 2.7rem);
   }
 
-  :global(.home-section__link) {
-    flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding-inline: 0;
+  .home-section__copy {
+    margin: 0;
+    color: var(--text-muted);
   }
 
-  .home-section__grid {
+  .home-section__category-grid,
+  .home-section__product-grid {
     display: grid;
     gap: var(--space-lg);
   }
 
-  :global(.home-empty) {
-    max-inline-size: 36rem;
+  .home-section__product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
   }
 
-  .home-empty__title,
-  .home-empty__copy {
+  .home-empty__message {
     margin: 0;
+    color: var(--text-muted);
   }
 
-  .home-empty__title {
-    font-weight: 700;
+  .home-page__secondary {
+    display: grid;
+    gap: var(--space-md);
+    padding-block: var(--space-xl);
   }
 
-  .home-empty__copy {
-    margin-block-start: 0.35rem;
-    color: var(--muted-foreground);
-  }
-
-  .home-callout {
-    display: flex;
+  .home-page__secondary-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--space-xl);
-    margin-block: 2rem 4rem;
-    padding: clamp(1.5rem, 5vw, 3rem);
-    border-radius: 1.5rem;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    color: var(--foreground);
+    background: var(--surface-warm);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition:
+      background-color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .home-page__secondary-card:hover {
+    background: var(--accent);
+    transform: translateY(-0.15rem);
+  }
+
+  .home-page__secondary-card strong,
+  .home-page__secondary-card small {
+    display: block;
+  }
+
+  .home-page__secondary-card strong {
+    font-family: var(--font-family-display);
+    font-size: 1.3rem;
+  }
+
+  .home-page__secondary-card small {
+    margin-block-start: 0.2rem;
+    color: var(--text-muted);
+  }
+
+  .home-page__secondary-icon {
+    display: grid;
+    place-items: center;
+    inline-size: 3rem;
+    block-size: 3rem;
     color: var(--primary-foreground);
     background: var(--primary);
+    border-radius: var(--radius-full);
   }
 
-  .home-callout__eyebrow {
-    color: var(--accent);
+  .home-page__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-block: var(--space-lg) var(--space-xl);
+    padding: var(--space-lg);
+    color: var(--text-on-brand);
+    background: var(--surface-brand);
+    border-radius: var(--radius-lg);
   }
 
-  .home-callout__title {
-    max-inline-size: 18ch;
-    font-size: clamp(1.8rem, 4vw, 3rem);
+  .home-page__cta p {
+    margin: 0;
+    font-family: var(--font-family-display);
+    font-size: 1.35rem;
   }
 
-  .home-callout__copy {
-    max-inline-size: 34rem;
-    margin: var(--space-md) 0 0;
-    color: color-mix(in oklab, var(--primary-foreground) 80%, transparent);
-  }
-
-  @media (min-width: 48rem) {
+  @media (min-width: 40rem) {
     .home-page {
-      inline-size: min(100% - 3rem, var(--container-max));
+      inline-size: min(calc(100% - 3rem), var(--container-max));
     }
 
-    .home-hero {
-      grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.85fr);
-      gap: clamp(2rem, 8vw, 7rem);
+    .home-section__category-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .home-hero__visual {
-      min-block-size: 34rem;
-    }
-
-    .home-section__grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+    .home-page__secondary {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  @media (max-width: 35rem) {
-    .home-section__heading,
-    .home-callout {
-      align-items: flex-start;
-      flex-direction: column;
+  @media (min-width: 64rem) {
+    .home-section__category-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 </style>

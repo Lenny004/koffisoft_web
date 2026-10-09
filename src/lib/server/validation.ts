@@ -5,6 +5,13 @@ export interface FormValidation<T> {
   errors: Record<string, string>;
 }
 
+export interface ContactFormValues {
+  name: string;
+  email: string;
+  phone?: string;
+  message: string;
+}
+
 /** Valida y normaliza los campos mínimos antes de consultar disponibilidad en la API. */
 export function validateAvailabilityForm(
   formData: FormData,
@@ -93,6 +100,27 @@ function addRequired(
   label: string,
 ) {
   if (!values[name]) errors[name] = `${label} es obligatorio.`;
+}
+
+/** Valida el formulario editorial de contacto sin enviarlo a una API no contratada. */
+export function validateContactForm(formData: FormData): FormValidation<ContactFormValues> {
+  const name = text(formData, 'name');
+  const email = text(formData, 'email');
+  const phone = optionalText(formData, 'phone');
+  const message = text(formData, 'message');
+  const errors: Record<string, string> = {};
+
+  if (!name) errors.name = 'El nombre es obligatorio.';
+  if (name.length > 120) errors.name = 'El nombre no puede superar 120 caracteres.';
+  if (!email) errors.email = 'El correo es obligatorio.';
+  else if (!emailPattern.test(email)) errors.email = 'Escribe un correo válido.';
+  if (!message) errors.message = 'El mensaje es obligatorio.';
+  else if (message.length < 10) errors.message = 'Escribe al menos 10 caracteres.';
+  else if (message.length > 2000) errors.message = 'El mensaje no puede superar 2,000 caracteres.';
+
+  if (Object.keys(errors).length > 0) return { value: null, errors };
+
+  return { value: { name, email, phone, message }, errors };
 }
 
 /** Valida la solicitud pública y conserva los nombres del DTO que recibirá la API. */

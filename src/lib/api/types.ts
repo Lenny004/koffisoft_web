@@ -46,6 +46,8 @@ export interface PublicMenuVariant {
 export interface PublicMenuItem {
   id: string;
   slug: string;
+  /** Campo opcional reservado para una futura URL de media del contrato público. */
+  imageUrl?: string;
   itemType: string;
   nameEs: string;
   nameEn: string;
@@ -57,6 +59,8 @@ export interface PublicMenuItem {
 export interface PublicMenuCategory {
   id: string;
   slug: string;
+  /** Campo opcional de presentación; no sustituye el contenido canónico de la API. */
+  imageUrl?: string;
   nameEs: string;
   nameEn: string;
   descriptionEs: string | null;

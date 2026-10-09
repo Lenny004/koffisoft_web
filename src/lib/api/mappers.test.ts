@@ -44,7 +44,9 @@ const menu: PublicMenuResponse = {
 
 describe('mapeos de carta pública', () => {
   it('aplana los primeros ítems publicados sin inventar contenido', () => {
-    expect(getFeaturedMenuItems(menu)).toEqual([{ categoryName: 'Café', item }]);
+    expect(getFeaturedMenuItems(menu)).toEqual([
+      { categoryName: 'Café', categorySlug: 'coffee', item },
+    ]);
     expect(getFeaturedMenuItems(null)).toEqual([]);
   });
 

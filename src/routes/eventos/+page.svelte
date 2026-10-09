@@ -286,7 +286,7 @@
   .event-catalog__title,
   .event-form-section__title {
     margin: 0;
-    font-family: Georgia, serif;
+    font-family: var(--font-family-display);
     font-weight: 700;
     letter-spacing: -0.04em;
     line-height: 0.95;
@@ -325,7 +325,7 @@
 
   .event-catalog__group-title {
     margin: 0;
-    font-family: Georgia, serif;
+    font-family: var(--font-family-display);
     font-size: 1.4rem;
   }
 
@@ -350,7 +350,7 @@
   }
 
   :global(.event-card__title) {
-    font-family: Georgia, serif;
+    font-family: var(--font-family-display);
     font-size: 1.25rem;
   }
 

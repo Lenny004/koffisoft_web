@@ -7,9 +7,15 @@ import { createApiClient } from '$lib/server/api/client';
 export const load: PageServerLoad = async ({ fetch }) => {
   try {
     const menu = await createApiClient(undefined, fetch).getPublicMenu();
-    return { featuredItems: getFeaturedMenuItems(menu), menuAvailable: true, errorMessage: null };
+    return {
+      categories: menu.categories,
+      featuredItems: getFeaturedMenuItems(menu),
+      menuAvailable: true,
+      errorMessage: null,
+    };
   } catch {
     return {
+      categories: [],
       featuredItems: [],
       menuAvailable: false,
       errorMessage:

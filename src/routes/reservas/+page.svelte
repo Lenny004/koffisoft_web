@@ -266,7 +266,7 @@
   .reservation-page__title,
   .reservation-form-section__title {
     margin: 0;
-    font-family: Georgia, serif;
+    font-family: var(--font-family-display);
     font-size: clamp(2.8rem, 8vw, 5rem);
     letter-spacing: -0.04em;
     line-height: 0.95;
@@ -303,7 +303,7 @@
   }
 
   :global(.availability-card__title) {
-    font-family: Georgia, serif;
+    font-family: var(--font-family-display);
     font-size: 1.4rem;
   }
 

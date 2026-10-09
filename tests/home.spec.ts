@@ -4,5 +4,5 @@ test('muestra la portada pública', async ({ page }) => {
   await page.goto('/');
 
   await expect(page).toHaveTitle(/Koffi-Soft/);
-  await expect(page.getByRole('heading', { name: /pausa con vista/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /^menú$/i })).toBeVisible();
 });
