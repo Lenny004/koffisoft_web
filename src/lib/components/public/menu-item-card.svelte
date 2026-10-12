@@ -3,8 +3,6 @@
 
   import { formatMenuPriceLabel, getDisplayVariant } from '$lib/api/mappers';
   import { getMenuItemImage } from '$lib/content/menu';
-  import { Badge } from '$lib/components/ui/badge/index.js';
-  import { Button } from '$lib/components/ui/button/index.js';
   import type { PublicMenuCategory, PublicMenuItem } from '$lib/api/types';
 
   let { item, category, categoryName } = $props<{
@@ -28,19 +26,18 @@
     >
       <img class="menu-card__image" src={image} alt="" loading="lazy" />
     </a>
-    {#if categoryName}
-      <span class="menu-card__label"><Badge variant="info">{categoryName}</Badge></span>
-    {/if}
     {#if available}
-      <span class="menu-card__action">
-        <Button href={resolve('/carta/[slug]', { slug: item.slug })} size="sm">Ver detalle</Button>
-      </span>
+      <span class="menu-card__veil" aria-hidden="true"></span>
+      <a class="menu-card__action" href={resolve('/carta/[slug]', { slug: item.slug })}
+        >Ver detalle</a
+      >
     {:else}
-      <span class="menu-card__stock"><Badge variant="secondary">No disponible</Badge></span>
+      <p class="menu-card__stock">No disponible</p>
     {/if}
   </div>
 
   <div class="menu-card__meta">
+    {#if categoryName}<p class="menu-card__label">{categoryName}</p>{/if}
     <h3 class="menu-card__title">
       <a class="menu-card__title-link" href={resolve('/carta/[slug]', { slug: item.slug })}
         >{item.nameEs}</a
@@ -51,11 +48,10 @@
 </article>
 
 <style>
-  /* Catálogo plano: la foto lleva la categoría y la disponibilidad; el detalle vive en la ficha. */
+  /* Ficha plana: la foto ocupa el cuadro y el texto queda debajo, sin borde ni sombra. */
   .menu-card {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
     font-family: var(--font-family-menu);
     font-weight: var(--font-weight-light);
     letter-spacing: var(--letter-spacing-menu);
@@ -80,64 +76,82 @@
     transition: transform var(--transition-base);
   }
 
+  .menu-card__veil,
+  .menu-card__action,
+  .menu-card__stock {
+    position: absolute;
+  }
+
+  .menu-card__veil {
+    inset: 0;
+    background: color-mix(in oklab, var(--background) 42%, transparent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast);
+  }
+
+  .menu-card__action {
+    inset: 50% auto auto 50%;
+    padding: var(--space-xs) var(--space-sm);
+    color: var(--foreground);
+    font-size: 0.75rem;
+    letter-spacing: var(--letter-spacing-label);
+    text-decoration: underline;
+    text-transform: uppercase;
+    text-underline-offset: 0.3em;
+    background: var(--background);
+    transform: translate(-50%, -50%);
+  }
+
+  .menu-card__stock {
+    inset-inline: var(--space-sm);
+    inset-block-end: var(--space-sm);
+    margin: 0;
+    color: var(--foreground);
+    font-size: 0.75rem;
+    letter-spacing: var(--letter-spacing-label);
+    text-align: center;
+    text-transform: uppercase;
+  }
+
   @media (hover: hover) {
+    .menu-card__action {
+      opacity: 0;
+    }
+
     .menu-card:hover .menu-card__image,
     .menu-card:focus-within .menu-card__image {
       transform: scale(1.03);
     }
-  }
 
-  .menu-card__label,
-  .menu-card__stock,
-  .menu-card__action {
-    position: absolute;
-    z-index: 1;
-  }
-
-  .menu-card__label {
-    inset-block-start: var(--space-sm);
-    inset-inline-start: var(--space-sm);
-  }
-
-  .menu-card__stock,
-  .menu-card__action {
-    inset-inline: var(--space-sm);
-    inset-block-end: var(--space-sm);
-  }
-
-  .menu-card__stock {
-    pointer-events: none;
-  }
-
-  .menu-card__action {
-    display: flex;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(0.35rem);
-    transition:
-      opacity var(--transition-fast),
-      transform var(--transition-fast);
-  }
-
-  @media (hover: hover) {
+    .menu-card:hover .menu-card__veil,
+    .menu-card:focus-within .menu-card__veil,
     .menu-card:hover .menu-card__action,
     .menu-card:focus-within .menu-card__action {
       opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0);
     }
   }
 
   .menu-card__meta {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-sm);
+    display: grid;
+    gap: 0.2rem;
+    margin-block-start: var(--space-sm);
+  }
+
+  .menu-card__label,
+  .menu-card__title,
+  .menu-card__price {
+    margin: 0;
+  }
+
+  .menu-card__label {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    letter-spacing: var(--letter-spacing-label);
+    text-transform: uppercase;
   }
 
   .menu-card__title {
-    margin: 0;
     font-size: 1rem;
     font-weight: var(--font-weight-medium);
     letter-spacing: 0;
@@ -156,11 +170,7 @@
   }
 
   .menu-card__price {
-    flex-shrink: 0;
-    margin: 0;
-    color: var(--foreground);
     font-size: var(--font-size-sm);
     line-height: 1.3;
-    white-space: nowrap;
   }
 </style>

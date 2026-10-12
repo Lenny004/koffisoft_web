@@ -19,6 +19,23 @@ export const categoryImages: Record<string, string> = {
 
 const defaultCategoryImage = '/menu/categories/breakfast.jpg';
 
+/** Fotos provisionales de Unsplash para que la rejilla se vea variada hasta tener imágenes propias. */
+export const editorialImages = [
+  '/menu/editorial/01.jpg',
+  '/menu/editorial/02.jpg',
+  '/menu/editorial/03.jpg',
+  '/menu/editorial/04.jpg',
+  '/menu/editorial/05.jpg',
+  '/menu/editorial/06.jpg',
+  '/menu/editorial/07.jpg',
+  '/menu/editorial/08.jpg',
+] as const;
+
+export function editorialImageForSlug(slug: string): string {
+  const total = [...slug].reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  return editorialImages[total % editorialImages.length];
+}
+
 function normalize(value: string): string {
   return value
     .normalize('NFD')
@@ -38,7 +55,7 @@ export function getCategoryImage(category: Pick<PublicMenuCategory, 'slug' | 'na
 
 export function getMenuItemImage(
   item: Pick<PublicMenuItem, 'slug' | 'imageUrl'>,
-  category?: Pick<PublicMenuCategory, 'slug' | 'nameEs'>,
+  _category?: Pick<PublicMenuCategory, 'slug' | 'nameEs'>,
 ): string {
-  return item.imageUrl ?? (category ? getCategoryImage(category) : defaultCategoryImage);
+  return item.imageUrl ?? editorialImageForSlug(item.slug);
 }

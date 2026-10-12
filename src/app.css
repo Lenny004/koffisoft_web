@@ -81,12 +81,14 @@
   --font-family-base: 'Helvetica Neue Light', ui-sans-serif, system-ui, sans-serif;
   --font-family-display: var(--font-family-base);
   --font-family-menu: var(--font-family-base);
+  --font-family-editorial: 'Palatino Linotype', palatino, georgia, serif;
   --font-size-sm: 0.875rem;
   --font-size-lg: 1.125rem;
   --font-weight-light: 300;
   --font-weight-medium: 500;
   --font-weight-bold: 700;
   --letter-spacing-menu: 0.04em;
+  --letter-spacing-label: 0.14em;
   --line-height-base: 1.5;
   --space-xs: 0.375rem;
   --space-sm: 0.75rem;

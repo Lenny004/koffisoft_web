@@ -1,6 +1,7 @@
 import type { PageServerLoad } from './$types';
 
 import { getFeaturedMenuItems } from '$lib/api/mappers';
+import { exampleMenu } from '$lib/content/menu-examples';
 import { createApiClient } from '$lib/server/api/client';
 
 /** Consulta la carta para mostrar destacados reales; un fallo de API deja la portada utilizable. */
@@ -13,19 +14,18 @@ export const load: PageServerLoad = async ({ fetch }) => {
     ]);
     return {
       categories: menu.categories,
-      featuredItems: getFeaturedMenuItems(menu),
+      featuredItems: getFeaturedMenuItems(menu, 8),
       announcements,
-      menuAvailable: true,
+      preview: false,
       errorMessage: null,
     };
   } catch {
     return {
-      categories: [],
-      featuredItems: [],
+      categories: exampleMenu.categories,
+      featuredItems: getFeaturedMenuItems(exampleMenu, 8),
       announcements: [],
-      menuAvailable: false,
-      errorMessage:
-        'La carta no está disponible en este momento. Puedes visitarnos o reservar y te ayudaremos por contacto directo.',
+      preview: true,
+      errorMessage: null,
     };
   }
 };

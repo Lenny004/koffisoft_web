@@ -1,5 +1,6 @@
 import type { PageServerLoad } from './$types';
 
+import { exampleMenu, filterExampleMenu } from '$lib/content/menu-examples';
 import { createApiClient } from '$lib/server/api/client';
 
 /** Conserva los filtros de URL y transforma un fallo externo en un estado renderizable. */
@@ -27,14 +28,24 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
         descriptionEn: category.descriptionEn,
       })),
       filters,
+      preview: false,
       errorMessage: null,
     };
   } catch {
+    const menu = filterExampleMenu(exampleMenu, filters);
     return {
-      menu: null,
-      navigation: [],
+      menu,
+      navigation: exampleMenu.categories.map((category) => ({
+        id: category.id,
+        slug: category.slug,
+        nameEs: category.nameEs,
+        nameEn: category.nameEn,
+        descriptionEs: category.descriptionEs,
+        descriptionEn: category.descriptionEn,
+      })),
       filters,
-      errorMessage: 'No pudimos cargar la carta. Intenta de nuevo en unos minutos.',
+      preview: true,
+      errorMessage: null,
     };
   }
 };
