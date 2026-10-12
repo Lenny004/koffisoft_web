@@ -82,9 +82,6 @@
         <h2 id="contact-form-title">Solicitar información</h2>
       </div>
       <form method="POST" use:enhance>
-        <p class="form-legend">
-          <span class="form-field__required" aria-hidden="true">*</span> Campo obligatorio
-        </p>
         <FormField id="contact-name" label="Nombre" required error={form?.errors?.name}>
           <Input
             id="contact-name"

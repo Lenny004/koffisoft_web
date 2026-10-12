@@ -1,15 +1,37 @@
 <script lang="ts">
-  import { ArrowLeft, SlidersHorizontal } from '@lucide/svelte';
+  import { resolve } from '$app/paths';
+  import { ArrowLeft } from '@lucide/svelte';
 
   import { getCategoryImage } from '$lib/content/menu';
   import MenuItemCard from '$lib/components/public/menu-item-card.svelte';
   import SectionHeading from '$lib/components/public/section-heading.svelte';
   import StatusMessage from '$lib/components/public/status-message.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
+  import FormField from '$lib/components/ui/form-field.svelte';
+  import { Input } from '$lib/components/ui/input/index.js';
   import { FORM_LIMITS } from '$lib/validation/limits';
   import type { PageData } from './$types';
 
   let { data }: { data: PageData } = $props();
+
+  const activeCategory = $derived(
+    data.navigation.find((category) => category.slug === data.filters.category) ?? null,
+  );
+  const heroCategory = $derived(activeCategory ?? data.navigation[0] ?? null);
+  const heroTitle = $derived(activeCategory?.nameEs ?? 'Nuestra carta');
+  const heroDescription = $derived(
+    activeCategory?.descriptionEs ??
+      'Opciones publicadas para disfrutar el café, la cocina y el paisaje.',
+  );
+
+  function cartaHref(category = '', allergen = data.filters.allergen) {
+    const params = new URLSearchParams();
+    if (category) params.set('category', category);
+    if (allergen) params.set('allergen', allergen);
+    const query = params.toString();
+    const path = resolve('/carta');
+    return query ? `${path}?${query}` : path;
+  }
 </script>
 
 <svelte:head>
@@ -21,49 +43,77 @@
 </svelte:head>
 
 <div class="menu-page">
-  <section class="menu-page__intro">
-    <SectionHeading
-      level="h1"
-      title="Nuestra carta"
-      eyebrow="Sabores para compartir"
-      description="Opciones publicadas para disfrutar el café, la cocina y el paisaje."
-    />
+  <section class="menu-hero" aria-labelledby="menu-hero-title">
+    <div class="menu-hero__copy">
+      <SectionHeading
+        level="h1"
+        align="start"
+        flush
+        titleId="menu-hero-title"
+        eyebrow="Sabores para compartir"
+        title={heroTitle}
+        description={heroDescription}
+      />
+    </div>
+    {#if heroCategory}
+      <img
+        class="menu-hero__image"
+        src={heroCategory.imageUrl ?? getCategoryImage(heroCategory)}
+        alt={'Fotografía de ' + heroCategory.nameEs}
+      />
+    {/if}
   </section>
 
-  <section class="menu-filter" aria-labelledby="menu-filter-title">
-    <div class="menu-filter__heading">
-      <SlidersHorizontal size={19} aria-hidden="true" />
-      <h2 id="menu-filter-title">Filtrar la carta</h2>
-    </div>
-    <form class="menu-filter__form" method="GET">
-      <p class="form-legend">
-        <span class="form-field__required" aria-hidden="true">*</span> Campo obligatorio
-      </p>
-      <label class="menu-filter__field">
-        <span>Categoría</span>
-        <select name="category" value={data.filters.category}>
-          <option value="">Todas las categorías</option>
-          {#each data.menu?.categories ?? [] as category (category.id)}
-            <option value={category.slug}>{category.nameEs}</option>
-          {/each}
-        </select>
-      </label>
-      <label class="menu-filter__field">
-        <span>Alérgeno</span>
-        <input
-          name="allergen"
-          value={data.filters.allergen}
-          placeholder="Ej. GLUTEN"
-          maxlength={FORM_LIMITS.menu.allergenMaxLength}
-          autocomplete="off"
-        />
-      </label>
-      <Button type="submit">Aplicar filtros</Button>
+  <div class="menu-toolbar">
+    <nav class="menu-rail" aria-label="Categorías de la carta">
+      <!-- La consulta conserva el alérgeno; resolve() solo cubre la ruta base. -->
+      <!-- eslint-disable svelte/no-navigation-without-resolve -->
+      <ul class="menu-rail__list">
+        <li class="menu-rail__item">
+          <a
+            class="menu-rail__link"
+            class:menu-rail__link--current={!data.filters.category}
+            href={cartaHref()}
+            aria-current={!data.filters.category ? 'page' : undefined}>Todas</a
+          >
+        </li>
+        {#each data.navigation as category (category.id)}
+          <li class="menu-rail__item">
+            <a
+              class="menu-rail__link"
+              class:menu-rail__link--current={data.filters.category === category.slug}
+              href={cartaHref(category.slug)}
+              aria-current={data.filters.category === category.slug ? 'page' : undefined}
+              >{category.nameEs}</a
+            >
+          </li>
+        {/each}
+      </ul>
+      <!-- eslint-enable svelte/no-navigation-without-resolve -->
+    </nav>
+
+    <form class="menu-refine" method="GET">
+      {#if data.filters.category}
+        <input type="hidden" name="category" value={data.filters.category} />
+      {/if}
+      <div class="menu-refine__field">
+        <FormField id="menu-allergen" label="Alérgeno">
+          <Input
+            id="menu-allergen"
+            name="allergen"
+            value={data.filters.allergen}
+            placeholder="Ej. GLUTEN"
+            maxlength={FORM_LIMITS.menu.allergenMaxLength}
+            autocomplete="off"
+          />
+        </FormField>
+      </div>
+      <Button type="submit" size="sm">Filtrar</Button>
       {#if data.filters.category || data.filters.allergen}
-        <Button href="/carta" variant="ghost">Limpiar</Button>
+        <Button href={cartaHref('', '')} variant="ghost" size="sm">Limpiar</Button>
       {/if}
     </form>
-  </section>
+  </div>
 
   {#if data.errorMessage}
     <StatusMessage title="Carta no disponible" message={data.errorMessage} variant="destructive" />
@@ -73,39 +123,30 @@
       message="La carta se mostrará aquí cuando la sede tenga ítems visibles para el sitio público."
     />
   {:else}
-    <div class="menu-page__categories">
-      {#each data.menu.categories as category (category.id)}
-        {#if category.items.length > 0}
-          <section class="menu-category" aria-labelledby={'category-' + category.slug}>
-            <div class="menu-category__heading">
-              <div class="menu-category__title-wrap">
-                <img
-                  class="menu-category__image"
-                  src={category.imageUrl ?? getCategoryImage(category)}
-                  alt=""
-                  loading="lazy"
-                />
-                <div>
-                  <p class="menu-category__eyebrow">Categoría</p>
-                  <h2 id={'category-' + category.slug} class="menu-category__title">
-                    {category.nameEs}
-                  </h2>
-                  {#if category.descriptionEs}<p class="menu-category__description">
-                      {category.descriptionEs}
-                    </p>{/if}
-                </div>
-              </div>
-              <span class="menu-category__count">{category.items.length} opciones</span>
-            </div>
+    {@const visibleCategories = data.menu.categories.filter(
+      (category) => category.items.length > 0,
+    )}
+    {#if visibleCategories.length === 0}
+      <StatusMessage
+        title="Sin coincidencias"
+        message="Ninguna opción publicada coincide con el filtro de alérgeno."
+      />
+    {:else}
+      <div class="menu-page__categories">
+        {#each visibleCategories as category (category.id)}
+          <section class="menu-category" aria-label={category.nameEs}>
+            {#if visibleCategories.length > 1}
+              <h2 class="menu-category__title">{category.nameEs}</h2>
+            {/if}
             <div class="menu-category__grid">
               {#each category.items as item (item.id)}
                 <MenuItemCard {item} {category} categoryName={category.nameEs} />
               {/each}
             </div>
           </section>
-        {/if}
-      {/each}
-    </div>
+        {/each}
+      </div>
+    {/if}
   {/if}
 
   <div class="menu-page__back">
@@ -116,61 +157,82 @@
 </div>
 
 <style>
-  /* Catálogo por categorías: filtros GET y datos de carta permanecen en la frontera server-only. */
+  /* Carta pública: introducción partida, riel de categorías y cuadrícula de producto. */
   .menu-page {
     inline-size: min(calc(100% - 2rem), var(--container-max));
     margin-inline: auto;
     padding-block: var(--space-xl) 0;
+    font-family: var(--font-family-menu);
+    font-weight: var(--font-weight-light);
+    letter-spacing: var(--letter-spacing-menu);
   }
 
-  .menu-page__intro {
-    padding-block: var(--space-lg) var(--space-xl);
-  }
-
-  .menu-filter {
+  .menu-hero {
     display: grid;
-    gap: var(--space-lg);
-    margin-block-end: var(--space-2xl);
-    padding: var(--space-lg);
-    background: var(--surface-warm);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-  }
-
-  .menu-filter__heading {
-    display: flex;
     align-items: center;
-    gap: var(--space-sm);
-    color: var(--primary);
+    gap: var(--space-xl);
+    margin-block-end: var(--space-xl);
   }
 
-  .menu-filter__heading h2 {
-    margin: 0;
-    font-size: 1.35rem;
+  .menu-hero__copy {
+    padding-inline-start: var(--space-lg);
+    border-inline-start: 1px solid var(--border);
   }
 
-  .menu-filter__form {
+  .menu-hero__image {
+    inline-size: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    background: var(--surface-warm);
+  }
+
+  .menu-toolbar {
     display: grid;
-    align-items: end;
     gap: var(--space-md);
+    margin-block-end: var(--space-xl);
+    padding-block: var(--space-sm);
+    border-block: 1px solid var(--border);
   }
 
-  .menu-filter__field {
-    display: grid;
-    gap: var(--space-xs);
+  .menu-rail__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm) var(--space-lg);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .menu-rail__link {
     color: var(--text-muted);
     font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+    text-decoration: none;
+    text-transform: uppercase;
   }
 
-  .menu-filter__field input,
-  .menu-filter__field select {
-    min-block-size: 2.75rem;
-    padding-inline: var(--space-sm);
+  .menu-rail__link:hover,
+  .menu-rail__link:focus-visible,
+  .menu-rail__link--current {
     color: var(--foreground);
-    background: var(--surface-raised);
-    border: 1px solid var(--input);
-    border-radius: var(--radius-sm);
+  }
+
+  .menu-rail__link--current {
+    text-decoration: underline;
+    text-underline-offset: 0.35em;
+  }
+
+  .menu-refine {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: var(--space-sm);
+  }
+
+  .menu-refine__field {
+    flex: 1 1 12rem;
+    max-inline-size: 18rem;
   }
 
   .menu-page__categories {
@@ -178,56 +240,17 @@
     gap: var(--space-2xl);
   }
 
-  .menu-category__heading {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-lg);
-    margin-block-end: var(--space-lg);
-  }
-
-  .menu-category__title-wrap {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-  }
-
-  .menu-category__image {
-    inline-size: 4.5rem;
-    block-size: 4.5rem;
-    object-fit: cover;
-    border-radius: var(--radius-full);
-  }
-
-  .menu-category__eyebrow {
-    margin: 0 0 var(--space-xs);
-    color: var(--primary);
-    font-size: 0.72rem;
-    font-weight: var(--font-weight-bold);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
   .menu-category__title {
-    margin: 0;
-    font-size: clamp(1.8rem, 4vw, 2.7rem);
-  }
-
-  .menu-category__description {
-    max-inline-size: 40rem;
-    margin: var(--space-xs) 0 0;
-    color: var(--text-muted);
-  }
-
-  .menu-category__count {
-    color: var(--text-muted);
-    font-size: var(--font-size-sm);
+    margin: 0 0 var(--space-lg);
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0;
+    line-height: 1.2;
   }
 
   .menu-category__grid {
     display: grid;
-    gap: var(--space-lg);
+    gap: var(--space-xl) var(--space-md);
   }
 
   .menu-page__back {
@@ -239,14 +262,23 @@
       inline-size: min(calc(100% - 3rem), var(--container-max));
     }
 
-    .menu-filter__form {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto;
+    .menu-category__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  @media (min-width: 52rem) {
+  @media (min-width: 64rem) {
+    .menu-hero {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    }
+
+    .menu-toolbar {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+    }
+
     .menu-category__grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
 </style>

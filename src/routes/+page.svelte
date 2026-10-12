@@ -1,6 +1,6 @@
 <script lang="ts">
   import { resolve } from '$app/paths';
-  import { ArrowRight, CalendarDays, Coffee, MapPin } from '@lucide/svelte';
+  import { ArrowRight, CalendarDays, Coffee, MapPin, Megaphone } from '@lucide/svelte';
 
   import { getCategoryImage } from '$lib/content/menu';
   import CategoryCard from '$lib/components/public/category-card.svelte';
@@ -35,6 +35,41 @@
       <span><MapPin size={17} aria-hidden="true" /> Ruta Panorámica, El Salvador</span>
     </div>
   </section>
+
+  {#if data.announcements.length > 0}
+    <section class="announcement" aria-labelledby="announcement-title">
+      <div class="announcement__icon"><Megaphone size={24} aria-hidden="true" /></div>
+      <div class="announcement__content">
+        <p class="announcement__eyebrow">Important Announcement</p>
+        {#each data.announcements as announcement (announcement.id)}
+          <article class="announcement__item">
+            <h2
+              id={announcement.id === data.announcements[0].id ? 'announcement-title' : undefined}
+              class="announcement__title"
+            >
+              {announcement.title}
+            </h2>
+            <p class="announcement__message">{announcement.message}</p>
+            {#if announcement.ctaLabel && announcement.ctaUrl}
+              {#if announcement.ctaUrl.startsWith('/')}
+                <a class="announcement__link" href={resolve(announcement.ctaUrl as '/')}
+                  >{announcement.ctaLabel} <ArrowRight size={16} aria-hidden="true" /></a
+                >
+              {:else}
+                <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+                <a class="announcement__link" href={announcement.ctaUrl}
+                  >{announcement.ctaLabel} <ArrowRight size={16} aria-hidden="true" /></a
+                >
+              {/if}
+            {/if}
+          </article>
+        {/each}
+        <a class="announcement__link" href={resolve('/avisos')}
+          >Leer el aviso completo <ArrowRight size={16} aria-hidden="true" /></a
+        >
+      </div>
+    </section>
+  {/if}
 
   <section class="home-section" aria-labelledby="categories-title">
     <div class="home-section__heading">
@@ -94,7 +129,6 @@
             item={featuredItem.item}
             categoryName={featuredItem.categoryName}
             category={{ slug: featuredItem.categorySlug, nameEs: featuredItem.categoryName }}
-            featured
           />
         {/each}
       </div>
@@ -155,6 +189,74 @@
     gap: var(--space-xs);
   }
 
+  .announcement {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-md);
+    margin-block-end: var(--space-lg);
+    padding: var(--space-lg);
+    color: var(--text-on-brand);
+    background: var(--surface-brand);
+    border: 1px solid color-mix(in oklab, var(--text-on-brand) 18%, transparent);
+    border-radius: var(--radius-lg);
+  }
+
+  .announcement__icon {
+    display: grid;
+    place-items: center;
+    inline-size: 3rem;
+    block-size: 3rem;
+    color: var(--surface-brand);
+    background: var(--accent);
+    border-radius: var(--radius-full);
+  }
+
+  .announcement__content,
+  .announcement__item {
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  .announcement__eyebrow {
+    margin: 0;
+    color: var(--mountain-300);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .announcement__title,
+  .announcement__message {
+    margin: 0;
+  }
+
+  .announcement__title {
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+  }
+
+  .announcement__message {
+    color: color-mix(in oklab, var(--text-on-brand) 82%, transparent);
+  }
+
+  .announcement__item + .announcement__item {
+    margin-block-start: var(--space-md);
+    padding-block-start: var(--space-md);
+    border-block-start: 1px solid color-mix(in oklab, var(--text-on-brand) 18%, transparent);
+  }
+
+  .announcement__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    inline-size: fit-content;
+    margin-block-start: var(--space-xs);
+    color: var(--text-on-brand);
+    font-weight: var(--font-weight-bold);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
   .home-section {
     padding-block: var(--space-xl);
   }
@@ -189,7 +291,7 @@
   }
 
   .home-section__product-grid {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: var(--space-xl) var(--space-md);
   }
 
   .home-empty__message {
@@ -273,7 +375,8 @@
       inline-size: min(calc(100% - 3rem), var(--container-max));
     }
 
-    .home-section__category-grid {
+    .home-section__category-grid,
+    .home-section__product-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
@@ -285,6 +388,10 @@
   @media (min-width: 64rem) {
     .home-section__category-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .home-section__product-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
 </style>

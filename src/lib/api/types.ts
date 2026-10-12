@@ -141,6 +141,21 @@ export interface PublicEventRequestResponse {
   endsAt: string;
 }
 
+export interface PublicImportantAnnouncement {
+  id: string;
+  locationId: string;
+  title: string;
+  message: string;
+  ctaLabel: string | null;
+  ctaUrl: string | null;
+  startsAt: string | null;
+  endsAt: string | null;
+  displayOrder: number;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface PublicMenuQuery {
   category?: string;
   allergen?: string;
