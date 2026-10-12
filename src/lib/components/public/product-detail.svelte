@@ -82,6 +82,9 @@
   .product-detail {
     display: grid;
     overflow: hidden;
+    font-family: var(--font-family-menu);
+    font-weight: var(--font-weight-light);
+    letter-spacing: var(--letter-spacing-menu);
     background: var(--surface-raised);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
@@ -131,6 +134,8 @@
   .product-detail__title {
     margin: 0;
     font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0;
   }
 
   .product-detail__description {
@@ -164,6 +169,8 @@
   .product-detail__variant-title {
     margin: 0;
     font-size: 1.35rem;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0;
   }
 
   .product-detail__price {
@@ -177,7 +184,7 @@
     align-items: center;
     gap: var(--space-xs);
     margin: 0 0 var(--space-xs);
-    font-family: var(--font-family-base);
+    font-family: var(--font-family-menu);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
   }

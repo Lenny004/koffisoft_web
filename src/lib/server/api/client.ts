@@ -6,6 +6,7 @@ import type {
   PublicAvailabilityResponse,
   PublicEventCatalogResponse,
   PublicEventRequestResponse,
+  PublicImportantAnnouncement,
   PublicMenuDetailResponse,
   PublicMenuQuery,
   PublicMenuResponse,
@@ -48,6 +49,7 @@ export interface PublicApiClient {
   createReservation(request: CreateReservationRequest): Promise<PublicReservationResponse>;
   getEventCatalog(): Promise<PublicEventCatalogResponse>;
   createEventRequest(request: ApiCreateEventRequest): Promise<PublicEventRequestResponse>;
+  getImportantAnnouncements(): Promise<PublicImportantAnnouncement[]>;
 }
 
 type ApiFetch = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
@@ -198,6 +200,11 @@ export function createApiClient(
         method: 'POST',
         body: JSON.stringify({ locationId: config.locationId, ...requestData }),
       });
+    },
+    getImportantAnnouncements() {
+      return request<PublicImportantAnnouncement[]>(
+        buildApiUrl(config.baseUrl, 'announcements', { locationId: config.locationId }),
+      );
     },
   };
 }

@@ -1,14 +1,11 @@
 <script lang="ts">
   import { resolve } from '$app/paths';
-  import { ArrowRight, CalendarDays, Coffee, MapPin } from '@lucide/svelte';
+  import { ArrowRight, Megaphone } from '@lucide/svelte';
 
-  import { getCategoryImage } from '$lib/content/menu';
-  import CategoryCard from '$lib/components/public/category-card.svelte';
+  import CatalogHero from '$lib/components/public/catalog-hero.svelte';
+  import CatalogRail from '$lib/components/public/catalog-rail.svelte';
   import MenuItemCard from '$lib/components/public/menu-item-card.svelte';
-  import SectionHeading from '$lib/components/public/section-heading.svelte';
   import StatusMessage from '$lib/components/public/status-message.svelte';
-  import { Button } from '$lib/components/ui/button/index.js';
-  import { Card, CardContent } from '$lib/components/ui/card/index.js';
   import type { PageData } from './$types';
 
   let { data }: { data: PageData } = $props();
@@ -23,268 +20,208 @@
 </svelte:head>
 
 <div class="home-page">
-  <section class="home-page__intro">
-    <SectionHeading
-      level="h1"
-      title="Menú"
-      eyebrow="Sabores de la montaña"
-      description="Una carta para disfrutar el café, la cocina y el paisaje con calma."
+  <div class="catalog-page__band">
+    <CatalogHero
+      titleId="home-hero-title"
+      title="Descubre los favoritos del café y la cocina de montaña"
+      label="Carta de la casa"
+      description="Platos, bebidas y postres publicados por la sede. Precios y disponibilidad de hoy, para elegir con calma."
     />
-    <div class="home-page__intro-meta">
-      <span><Coffee size={17} aria-hidden="true" /> Café y cocina de temporada</span>
-      <span><MapPin size={17} aria-hidden="true" /> Ruta Panorámica, El Salvador</span>
-    </div>
-  </section>
+    {#if data.preview}
+      <p class="catalog-preview">
+        Vista de ejemplo. La carta publicada de la sede reemplaza estas fotos y precios.
+      </p>
+    {/if}
+  </div>
 
-  <section class="home-section" aria-labelledby="categories-title">
-    <div class="home-section__heading">
-      <h2 id="categories-title" class="home-section__title">Explora por categoría</h2>
-      <p class="home-section__copy">Encuentra algo para cada momento del día.</p>
-    </div>
+  {#if data.announcements.length > 0}
+    <section class="catalog-page__band announcement" aria-labelledby="announcement-title">
+      <div class="announcement__icon"><Megaphone size={24} aria-hidden="true" /></div>
+      <div class="announcement__content">
+        <p class="announcement__eyebrow">Important Announcement</p>
+        {#each data.announcements as announcement (announcement.id)}
+          <article class="announcement__item">
+            <h2
+              id={announcement.id === data.announcements[0].id ? 'announcement-title' : undefined}
+              class="announcement__title"
+            >
+              {announcement.title}
+            </h2>
+            <p class="announcement__message">{announcement.message}</p>
+            {#if announcement.ctaLabel && announcement.ctaUrl}
+              {#if announcement.ctaUrl.startsWith('/')}
+                <a class="announcement__link" href={resolve(announcement.ctaUrl as '/')}
+                  >{announcement.ctaLabel} <ArrowRight size={16} aria-hidden="true" /></a
+                >
+              {:else}
+                <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+                <a class="announcement__link" href={announcement.ctaUrl}
+                  >{announcement.ctaLabel} <ArrowRight size={16} aria-hidden="true" /></a
+                >
+              {/if}
+            {/if}
+          </article>
+        {/each}
+        <a class="announcement__link" href={resolve('/avisos')}
+          >Leer el aviso completo <ArrowRight size={16} aria-hidden="true" /></a
+        >
+      </div>
+    </section>
+  {/if}
 
+  <CatalogRail categories={data.categories} />
+
+  <div class="catalog-page__band">
     {#if data.errorMessage}
       <StatusMessage
         title="Carta temporalmente no disponible"
         message={data.errorMessage}
         variant="destructive"
       />
-    {:else if data.categories.length === 0}
+    {:else if data.categories.length === 0 && data.featuredItems.length === 0}
       <StatusMessage
         title="Estamos preparando la carta pública"
-        message="Las categorías aparecerán aquí cuando la sede tenga opciones publicadas."
+        message="Las categorías y los favoritos aparecerán aquí cuando la sede tenga opciones publicadas."
       />
     {:else}
-      <div class="home-section__category-grid">
-        {#each data.categories as category (category.id)}
-          <CategoryCard
-            href={'/carta?category=' + category.slug}
-            title={category.nameEs}
-            description={category.descriptionEs}
-            image={category.imageUrl ?? getCategoryImage(category)}
-            imageAlt={'Fotografía de ' + category.nameEs}
+      <section aria-labelledby="favorites-title">
+        <h2 id="favorites-title" class="sr-only">Favoritos de la carta</h2>
+        {#if data.featuredItems.length === 0}
+          <StatusMessage
+            title="Sin favoritos publicados"
+            message="La barra de arriba lleva a cada categoría en cuanto haya opciones visibles."
           />
-        {/each}
-      </div>
+        {:else}
+          <div class="catalog-grid catalog-grid--lead">
+            {#each data.featuredItems as featuredItem (featuredItem.item.id)}
+              <MenuItemCard
+                item={featuredItem.item}
+                categoryName={featuredItem.categoryName}
+                category={{ slug: featuredItem.categorySlug, nameEs: featuredItem.categoryName }}
+              />
+            {/each}
+          </div>
+        {/if}
+      </section>
     {/if}
-  </section>
 
-  <section class="home-section home-section--favorites" aria-labelledby="favorites-title">
-    <SectionHeading
-      title="Productos favoritos"
-      eyebrow="Los más consultados"
-      description="Precios y disponibilidad corresponden a la publicación actual de la sede."
-    />
-
-    {#if data.errorMessage}
-      <StatusMessage
-        title="Favoritos no disponibles"
-        message={data.errorMessage}
-        variant="destructive"
-      />
-    {:else if data.featuredItems.length === 0}
-      <Card class="home-empty"
-        ><CardContent
-          ><p class="home-empty__message">No hay favoritos publicados por ahora.</p></CardContent
-        ></Card
-      >
-    {:else}
-      <div class="home-section__product-grid">
-        {#each data.featuredItems as featuredItem (featuredItem.item.id)}
-          <MenuItemCard
-            item={featuredItem.item}
-            categoryName={featuredItem.categoryName}
-            category={{ slug: featuredItem.categorySlug, nameEs: featuredItem.categoryName }}
-            featured
-          />
-        {/each}
-      </div>
-    {/if}
-  </section>
-
-  <section class="home-page__secondary" aria-label="Más experiencias">
-    <a class="home-page__secondary-card" href={resolve('/reservas')}>
-      <span class="home-page__secondary-icon"><CalendarDays size={24} aria-hidden="true" /></span>
-      <span>
-        <strong>Reserva tu mesa</strong>
-        <small>Planea una pausa con tu gente.</small>
-      </span>
-      <ArrowRight size={20} aria-hidden="true" />
-    </a>
-    <a class="home-page__secondary-card" href={resolve('/eventos')}>
-      <span class="home-page__secondary-icon"><MapPin size={24} aria-hidden="true" /></span>
-      <span>
-        <strong>Celebra con vista</strong>
-        <small>Conoce nuestros espacios para eventos.</small>
-      </span>
-      <ArrowRight size={20} aria-hidden="true" />
-    </a>
-  </section>
-
-  <div class="home-page__cta">
-    <p>¿Quieres conocer todo lo que tenemos para compartir?</p>
-    <Button href="/carta" variant="outline"
-      >Ver la carta completa <ArrowRight size={17} aria-hidden="true" /></Button
-    >
+    <section class="home-page__extra" aria-label="Más experiencias">
+      <a class="home-page__extra-link" href={resolve('/reservas')}>
+        <span class="home-page__extra-title">Reserva tu mesa</span>
+        <span class="home-page__extra-copy">Planea una pausa con tu gente.</span>
+      </a>
+      <a class="home-page__extra-link" href={resolve('/eventos')}>
+        <span class="home-page__extra-title">Celebra con vista</span>
+        <span class="home-page__extra-copy">Espacios para reuniones y celebraciones.</span>
+      </a>
+    </section>
   </div>
 </div>
 
 <style>
-  /* La portada sigue el orden del legacy: título, categorías, favoritos y llamados secundarios. */
-  .home-page {
-    inline-size: min(calc(100% - 2rem), var(--container-max));
-    margin-inline: auto;
-    padding-block: var(--space-xl) 0;
-  }
-
-  .home-page__intro {
-    padding-block: var(--space-lg) var(--space-xl);
-  }
-
-  .home-page__intro-meta {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--space-md);
-    color: var(--text-muted);
-    font-size: var(--font-size-sm);
-  }
-
-  .home-page__intro-meta span {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xs);
-  }
-
-  .home-section {
-    padding-block: var(--space-xl);
-  }
-
-  .home-section--favorites {
-    padding-block-start: var(--space-2xl);
-  }
-
-  .home-section__heading {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
+  /* Portada de catálogo: el ancho vive en catalog.css para que la barra llegue de lado a lado. */
+  .announcement {
+    display: grid;
+    grid-template-columns: auto 1fr;
     gap: var(--space-md);
     margin-block-end: var(--space-lg);
-  }
-
-  .home-section__title {
-    margin: 0;
-    font-size: clamp(1.8rem, 4vw, 2.7rem);
-  }
-
-  .home-section__copy {
-    margin: 0;
-    color: var(--text-muted);
-  }
-
-  .home-section__category-grid,
-  .home-section__product-grid {
-    display: grid;
-    gap: var(--space-lg);
-  }
-
-  .home-section__product-grid {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-  }
-
-  .home-empty__message {
-    margin: 0;
-    color: var(--text-muted);
-  }
-
-  .home-page__secondary {
-    display: grid;
-    gap: var(--space-md);
-    padding-block: var(--space-xl);
-  }
-
-  .home-page__secondary-card {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: var(--space-md);
     padding: var(--space-lg);
-    color: var(--foreground);
-    background: var(--surface-warm);
-    border: 1px solid var(--border);
+    color: var(--text-on-brand);
+    background: var(--surface-brand);
+    border: 1px solid color-mix(in oklab, var(--text-on-brand) 18%, transparent);
     border-radius: var(--radius-lg);
-    text-decoration: none;
-    transition:
-      background-color var(--transition-fast),
-      transform var(--transition-fast);
   }
 
-  .home-page__secondary-card:hover {
-    background: var(--accent);
-    transform: translateY(-0.15rem);
-  }
-
-  .home-page__secondary-card strong,
-  .home-page__secondary-card small {
-    display: block;
-  }
-
-  .home-page__secondary-card strong {
-    font-family: var(--font-family-display);
-    font-size: 1.3rem;
-  }
-
-  .home-page__secondary-card small {
-    margin-block-start: 0.2rem;
-    color: var(--text-muted);
-  }
-
-  .home-page__secondary-icon {
+  .announcement__icon {
     display: grid;
     place-items: center;
     inline-size: 3rem;
     block-size: 3rem;
-    color: var(--primary-foreground);
-    background: var(--primary);
+    color: var(--surface-brand);
+    background: var(--accent);
     border-radius: var(--radius-full);
   }
 
-  .home-page__cta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-md);
-    margin-block: var(--space-lg) var(--space-xl);
-    padding: var(--space-lg);
-    color: var(--text-on-brand);
-    background: var(--surface-brand);
-    border-radius: var(--radius-lg);
+  .announcement__content,
+  .announcement__item {
+    display: grid;
+    gap: var(--space-xs);
   }
 
-  .home-page__cta p {
+  .announcement__eyebrow {
     margin: 0;
-    font-family: var(--font-family-display);
-    font-size: 1.35rem;
+    color: var(--mountain-300);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .announcement__title,
+  .announcement__message {
+    margin: 0;
+  }
+
+  .announcement__title {
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+  }
+
+  .announcement__message {
+    color: color-mix(in oklab, var(--text-on-brand) 82%, transparent);
+  }
+
+  .announcement__item + .announcement__item {
+    margin-block-start: var(--space-md);
+    padding-block-start: var(--space-md);
+    border-block-start: 1px solid color-mix(in oklab, var(--text-on-brand) 18%, transparent);
+  }
+
+  .announcement__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    inline-size: fit-content;
+    margin-block-start: var(--space-xs);
+    color: var(--text-on-brand);
+    font-weight: var(--font-weight-bold);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .home-page__extra {
+    display: grid;
+    gap: var(--space-lg);
+    margin-block: var(--space-2xl) var(--space-xl);
+    padding-block-start: var(--space-lg);
+    border-block-start: 1px solid var(--border);
+  }
+
+  .home-page__extra-link {
+    display: grid;
+    gap: 0.2rem;
+    color: var(--foreground);
+    text-decoration: none;
+  }
+
+  .home-page__extra-title {
+    font-family: var(--font-family-editorial);
+    font-size: 1.5rem;
+  }
+
+  .home-page__extra-copy {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .home-page__extra-link:hover .home-page__extra-title,
+  .home-page__extra-link:focus-visible .home-page__extra-title {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
   @media (min-width: 40rem) {
-    .home-page {
-      inline-size: min(calc(100% - 3rem), var(--container-max));
-    }
-
-    .home-section__category-grid {
+    .home-page__extra {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .home-page__secondary {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  @media (min-width: 64rem) {
-    .home-section__category-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 </style>

@@ -5,20 +5,29 @@
     description,
     level = 'h2',
     align = 'center',
+    titleId,
+    flush = false,
   } = $props<{
     title: string;
     eyebrow?: string;
     description?: string;
     level?: 'h1' | 'h2' | 'h3';
     align?: 'center' | 'start';
+    titleId?: string;
+    flush?: boolean;
   }>();
 </script>
 
-<div class:section-heading--start={align === 'start'} class="section-heading">
+<div
+  class:section-heading--start={align === 'start'}
+  class:section-heading--flush={flush}
+  class="section-heading"
+>
   <div class="section-heading__line" aria-hidden="true"></div>
   <div class="section-heading__content">
     {#if eyebrow}<p class="section-heading__eyebrow">{eyebrow}</p>{/if}
-    <svelte:element this={level} class="section-heading__title">{title}</svelte:element>
+    <svelte:element this={level} id={titleId} class="section-heading__title">{title}</svelte:element
+    >
     {#if description}<p class="section-heading__description">{description}</p>{/if}
   </div>
   <div class="section-heading__line" aria-hidden="true"></div>
@@ -36,12 +45,17 @@
   }
 
   .section-heading--start {
-    grid-template-columns: 0 minmax(0, 1fr);
+    grid-template-columns: minmax(0, 42rem);
+    justify-content: start;
     text-align: start;
   }
 
   .section-heading--start .section-heading__line {
     display: none;
+  }
+
+  .section-heading--flush {
+    margin-block-end: 0;
   }
 
   .section-heading__line {
@@ -66,6 +80,8 @@
     margin: 0;
     color: var(--foreground);
     font-size: clamp(2rem, 5vw, 3.75rem);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0;
   }
 
   .section-heading__description {

@@ -1,193 +1,176 @@
 <script lang="ts">
   import { resolve } from '$app/paths';
-  import { ArrowRight, CircleCheck, CircleX } from '@lucide/svelte';
 
-  import { formatMenuPrice, getDisplayVariant } from '$lib/api/mappers';
+  import { formatMenuPriceLabel, getDisplayVariant } from '$lib/api/mappers';
   import { getMenuItemImage } from '$lib/content/menu';
-  import { Badge } from '$lib/components/ui/badge/index.js';
   import type { PublicMenuCategory, PublicMenuItem } from '$lib/api/types';
 
-  let {
-    item,
-    category,
-    categoryName,
-    featured = false,
-  } = $props<{
+  let { item, category, categoryName } = $props<{
     item: PublicMenuItem;
     category?: Pick<PublicMenuCategory, 'slug' | 'nameEs'>;
     categoryName?: string;
-    featured?: boolean;
   }>();
 
   const displayVariant = $derived(getDisplayVariant(item));
+  const available = $derived(displayVariant?.available ?? false);
   const image = $derived(getMenuItemImage(item, category));
+  const priceLabel = $derived(formatMenuPriceLabel(item));
 </script>
 
-<article class:menu-card--featured={featured} class="menu-card">
-  <a
-    class="menu-card__media"
-    href={resolve('/carta/[slug]', { slug: item.slug })}
-    aria-label={'Ver ' + item.nameEs}
-  >
-    <img src={image} alt="" loading="lazy" />
-    {#if displayVariant}
-      <span class="menu-card__status">
-        {#if displayVariant.available}
-          <CircleCheck size={15} aria-hidden="true" /> Disponible
-        {:else}
-          <CircleX size={15} aria-hidden="true" /> No disponible
-        {/if}
-      </span>
+<article class="menu-card">
+  <div class="menu-card__media">
+    <a
+      class="menu-card__image-link"
+      href={resolve('/carta/[slug]', { slug: item.slug })}
+      aria-label={'Ver ' + item.nameEs}
+    >
+      <img class="menu-card__image" src={image} alt="" loading="lazy" />
+    </a>
+    {#if available}
+      <span class="menu-card__veil" aria-hidden="true"></span>
+      <a class="menu-card__action" href={resolve('/carta/[slug]', { slug: item.slug })}
+        >Ver detalle</a
+      >
+    {:else}
+      <p class="menu-card__stock">No disponible</p>
     {/if}
-  </a>
+  </div>
 
-  <div class="menu-card__body">
-    <div class="menu-card__heading">
-      <div>
-        {#if categoryName}<p class="menu-card__category">{categoryName}</p>{/if}
-        <h3 class="menu-card__title">
-          <a href={resolve('/carta/[slug]', { slug: item.slug })}>{item.nameEs}</a>
-        </h3>
-      </div>
-      {#if displayVariant}
-        <Badge variant={displayVariant.available ? 'secondary' : 'outline'}>
-          {displayVariant.available ? 'Disponible' : 'Agotado'}
-        </Badge>
-      {/if}
-    </div>
-    <p class="menu-card__description">
-      {item.descriptionEs ?? 'Consulta los detalles de esta opción en nuestra carta.'}
-    </p>
-    <div class="menu-card__footer">
-      <p class="menu-card__price">{formatMenuPrice(displayVariant)}</p>
-      <a class="menu-card__link" href={resolve('/carta/[slug]', { slug: item.slug })}>
-        Ver detalle <ArrowRight size={16} aria-hidden="true" />
-      </a>
-    </div>
+  <div class="menu-card__meta">
+    {#if categoryName}<p class="menu-card__label">{categoryName}</p>{/if}
+    <h3 class="menu-card__title">
+      <a class="menu-card__title-link" href={resolve('/carta/[slug]', { slug: item.slug })}
+        >{item.nameEs}</a
+      >
+    </h3>
+    <p class="menu-card__price">{priceLabel}</p>
   </div>
 </article>
 
 <style>
-  /* Tarjeta pública con fotografía provisional y precio siempre derivado del contrato de la API. */
+  /* Ficha plana: la foto ocupa el cuadro y el texto queda debajo, sin borde ni sombra. */
   .menu-card {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    block-size: 100%;
-    background: var(--surface-raised);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    transition:
-      transform var(--transition-base),
-      box-shadow var(--transition-base);
-  }
-
-  .menu-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-0.25rem);
-  }
-
-  .menu-card--featured {
-    border-color: color-mix(in oklab, var(--primary) 55%, var(--border));
+    font-family: var(--font-family-menu);
+    font-weight: var(--font-weight-light);
+    letter-spacing: var(--letter-spacing-menu);
   }
 
   .menu-card__media {
     position: relative;
-    display: block;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 1;
     overflow: hidden;
     background: var(--surface-warm);
   }
 
-  .menu-card__media img {
+  .menu-card__image-link {
+    display: block;
+    block-size: 100%;
+  }
+
+  .menu-card__image {
     inline-size: 100%;
     block-size: 100%;
     object-fit: cover;
     transition: transform var(--transition-base);
   }
 
-  .menu-card:hover .menu-card__media img {
-    transform: scale(1.04);
-  }
-
-  .menu-card__status {
+  .menu-card__veil,
+  .menu-card__action,
+  .menu-card__stock {
     position: absolute;
-    inset-block-start: var(--space-sm);
-    inset-inline-start: var(--space-sm);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 0.35rem 0.55rem;
-    color: var(--primary-foreground);
-    background: var(--primary);
-    border-radius: var(--radius-full);
-    font-size: 0.72rem;
-    font-weight: var(--font-weight-bold);
   }
 
-  .menu-card__body {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: var(--space-md);
-    padding: var(--space-lg);
+  .menu-card__veil {
+    inset: 0;
+    background: color-mix(in oklab, var(--background) 42%, transparent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast);
   }
 
-  .menu-card__heading {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--space-sm);
+  .menu-card__action {
+    inset: 50% auto auto 50%;
+    padding: var(--space-xs) var(--space-sm);
+    color: var(--foreground);
+    font-size: 0.75rem;
+    letter-spacing: var(--letter-spacing-label);
+    text-decoration: underline;
+    text-transform: uppercase;
+    text-underline-offset: 0.3em;
+    background: var(--background);
+    transform: translate(-50%, -50%);
   }
 
-  .menu-card__category {
-    margin: 0 0 var(--space-xs);
-    color: var(--primary);
-    font-size: 0.72rem;
-    font-weight: var(--font-weight-bold);
-    letter-spacing: 0.1em;
+  .menu-card__stock {
+    inset-inline: var(--space-sm);
+    inset-block-end: var(--space-sm);
+    margin: 0;
+    color: var(--foreground);
+    font-size: 0.75rem;
+    letter-spacing: var(--letter-spacing-label);
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  @media (hover: hover) {
+    .menu-card__action {
+      opacity: 0;
+    }
+
+    .menu-card:hover .menu-card__image,
+    .menu-card:focus-within .menu-card__image {
+      transform: scale(1.03);
+    }
+
+    .menu-card:hover .menu-card__veil,
+    .menu-card:focus-within .menu-card__veil,
+    .menu-card:hover .menu-card__action,
+    .menu-card:focus-within .menu-card__action {
+      opacity: 1;
+    }
+  }
+
+  .menu-card__meta {
+    display: grid;
+    gap: 0.2rem;
+    margin-block-start: var(--space-sm);
+  }
+
+  .menu-card__label,
+  .menu-card__title,
+  .menu-card__price {
+    margin: 0;
+  }
+
+  .menu-card__label {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    letter-spacing: var(--letter-spacing-label);
     text-transform: uppercase;
   }
 
   .menu-card__title {
-    margin: 0;
-    font-size: 1.45rem;
+    font-size: 1rem;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0;
+    line-height: 1.3;
   }
 
-  .menu-card__title a {
+  .menu-card__title-link {
     color: inherit;
     text-decoration: none;
   }
 
-  .menu-card__description {
-    flex: 1;
-    margin: 0;
-    color: var(--text-muted);
-    font-size: var(--font-size-sm);
-  }
-
-  .menu-card__footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-sm);
+  .menu-card__title-link:hover,
+  .menu-card__title-link:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
   .menu-card__price {
-    margin: 0;
-    color: var(--primary);
-    font-size: 1.1rem;
-    font-weight: var(--font-weight-bold);
-  }
-
-  .menu-card__link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    color: var(--primary);
     font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    text-decoration: none;
+    line-height: 1.3;
   }
 </style>

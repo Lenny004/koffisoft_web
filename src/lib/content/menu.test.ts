@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getCategoryImage, getMenuItemImage } from './menu';
+import { editorialImageForSlug, getCategoryImage, getMenuItemImage } from './menu';
 
 describe('mapeo de imágenes editoriales', () => {
   it('selecciona una imagen de categoría por slug o nombre', () => {
@@ -12,13 +12,14 @@ describe('mapeo de imágenes editoriales', () => {
     );
   });
 
-  it('prioriza la URL opcional del ítem y usa fallback de categoría', () => {
+  it('prioriza la URL del ítem y, si falta, elige una foto editorial estable', () => {
     expect(
       getMenuItemImage(
         { slug: 'latte', imageUrl: undefined },
         { slug: 'postres', nameEs: 'Postres' },
       ),
-    ).toBe('/menu/categories/desserts.jpg');
+    ).toBe(editorialImageForSlug('latte'));
+    expect(getMenuItemImage({ slug: 'latte' })).toBe(editorialImageForSlug('latte'));
     expect(getMenuItemImage({ slug: 'latte', imageUrl: '/media/latte.jpg' })).toBe(
       '/media/latte.jpg',
     );

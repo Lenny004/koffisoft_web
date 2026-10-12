@@ -29,6 +29,7 @@
     { href: '/promociones', label: 'Promociones' },
     { href: '/reservas', label: 'Reservas' },
     { href: '/eventos', label: 'Eventos' },
+    { href: '/avisos', label: 'Avisos' },
   ] as const;
 
   function isActive(href: string): boolean {
@@ -151,6 +152,7 @@
         <a href={resolve('/promociones')}>Promociones</a>
         <a href={resolve('/senderismo')}>Senderismo</a>
         <a href={resolve('/nosotros')}>Nosotros</a>
+        <a href={resolve('/avisos')}>Avisos importantes</a>
       </div>
 
       <div class="site-footer__column">
@@ -173,6 +175,8 @@
       <span class="site-footer__legal-links">
         <a href={resolve('/legal')}>Términos</a>
         <a href={resolve('/privacidad')}>Privacidad</a>
+        <a href={resolve('/cookies')}>Cookies</a>
+        <a href={resolve('/condiciones')}>Condiciones</a>
       </span>
     </div>
   </footer>

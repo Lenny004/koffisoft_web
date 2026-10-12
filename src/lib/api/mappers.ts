@@ -44,3 +44,19 @@ export function formatMenuPrice(variant: PublicMenuVariant | null): string {
     return `${variant.price.currency} ${variant.price.amount}`;
   }
 }
+
+/** Muestra el menor precio y antepone «Desde» solo cuando las variantes difieren. */
+export function formatMenuPriceLabel(item: PublicMenuItem): string {
+  const priced = item.variants.flatMap((variant) => {
+    const amount = Number(variant.price.amount);
+    return Number.isFinite(amount) ? [{ amount, variant }] : [];
+  });
+  if (priced.length === 0) return 'Precio no disponible';
+
+  const lowest = priced.reduce((current, candidate) =>
+    candidate.amount < current.amount ? candidate : current,
+  );
+  const formatted = formatMenuPrice(lowest.variant);
+  const hasRange = priced.some((entry) => entry.amount !== lowest.amount);
+  return hasRange ? `Desde ${formatted}` : formatted;
+}

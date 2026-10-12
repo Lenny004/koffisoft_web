@@ -8,10 +8,9 @@ La referencia visual es una cafetería de montaña en la Ruta Panorámica: cáli
 
 ## Tipografía
 
-- **Fraunces Variable:** títulos, marca y llamados editoriales. Sus remates y contraste aportan una personalidad de café artesanal sin repetir Poppins.
-- **Manrope Variable:** texto, navegación, formularios y datos. Su construcción abierta conserva legibilidad en pantallas pequeñas.
+- **Helvetica Neue Light:** títulos, carta, navegación, formularios y texto corrido. El archivo vive en `static/fonts/helvetica-neue-light.ttf` y se declara en `src/app.css`.
 
-Ambas familias se self-hostean con `@fontsource-variable/*`. La base continúa en `16px`; el código usa `rem`, `clamp()` y pesos variables.
+La base continúa en `16px` con peso 300. El código usa `rem` y `clamp()`. Los pesos más altos se sintetizan a partir de ese único corte.
 
 ## Color
 

@@ -40,6 +40,9 @@
     inline-size: min(calc(100% - 2rem), var(--container-max));
     margin-inline: auto;
     padding-block: var(--space-xl) var(--space-lg);
+    font-family: var(--font-family-menu);
+    font-weight: var(--font-weight-light);
+    letter-spacing: var(--letter-spacing-menu);
   }
 
   :global(.menu-detail-page__back) {

@@ -12,19 +12,20 @@ Las rutas server-only leen estas variables desde `$env/dynamic/private`:
 
 ## Rutas conectadas a la API
 
-| Ruta            | Datos                                         | Interacción                                               |
-| --------------- | --------------------------------------------- | --------------------------------------------------------- |
-| `/`             | Categorías y destacados de `GET /menu`        | Navegación a carta, reservas y eventos                    |
-| `/carta`        | Carta agrupada de `GET /menu`                 | Filtros `category` y `allergen` por query params          |
-| `/carta/[slug]` | Detalle de `GET /menu/items/{slug}`           | Variantes, precio, alérgenos y modificadores publicados   |
-| `/reservas`     | `GET /reservations/availability` bajo demanda | Actions `availability` y `default` para solicitar reserva |
-| `/eventos`      | `GET /events/catalog`                         | Action `default` para solicitar cotización                |
+| Ruta            | Datos                                                                  | Interacción                                               |
+| --------------- | ---------------------------------------------------------------------- | --------------------------------------------------------- |
+| `/`             | Categorías y destacados de `GET /menu`; avisos de `GET /announcements` | Navegación a carta, reservas, eventos y avisos            |
+| `/avisos`       | Avisos vigentes de `GET /announcements`                                | Lectura del aviso completo, con enlaces del texto         |
+| `/carta`        | Carta agrupada de `GET /menu`                                          | Filtros `category` y `allergen` por query params          |
+| `/carta/[slug]` | Detalle de `GET /menu/items/{slug}`                                    | Variantes, precio, alérgenos y modificadores publicados   |
+| `/reservas`     | `GET /reservations/availability` bajo demanda                          | Actions `availability` y `default` para solicitar reserva |
+| `/eventos`      | `GET /events/catalog`                                                  | Action `default` para solicitar cotización                |
 
 Los precios, disponibilidad, capacidades y códigos no se generan en el frontend. El cliente server-only vive en `src/lib/server/api/client.ts`.
 
 ## Rutas editoriales o provisionales
 
-Estas páginas no inventan contratos. Su contenido está en `src/lib/content/site.ts` y queda marcado por `editorialPlaceholder` hasta que exista información aprobada:
+Estas páginas no inventan contratos. El contenido institucional está en `src/lib/content/site.ts` y los módulos legales en `src/lib/content/legal.ts`. Ambos quedan marcados por `editorialPlaceholder` hasta que exista información aprobada:
 
 | Ruta           | Alcance                                                                                              |
 | -------------- | ---------------------------------------------------------------------------------------------------- |
@@ -34,8 +35,10 @@ Estas páginas no inventan contratos. Su contenido está en `src/lib/content/sit
 | `/nosotros`    | Misión, visión y equipo editorial provisional                                                        |
 | `/senderismo`  | Recorrido por etapas con fotografías provisionales                                                   |
 | `/ubicacion`   | Mapa de referencia y horario provisional                                                             |
-| `/legal`       | Términos de uso provisionales                                                                        |
+| `/legal`       | Aviso legal y condiciones de uso, en cláusulas numeradas provisionales                               |
 | `/privacidad`  | Política de privacidad provisional                                                                   |
+| `/cookies`     | Política de cookies y almacenamiento local provisional                                               |
+| `/condiciones` | Condiciones provisionales de solicitudes de reserva y eventos                                        |
 
 ## Formularios
 

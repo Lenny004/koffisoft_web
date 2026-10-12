@@ -33,7 +33,7 @@
 ## 🌟 Aspectos destacados
 
 - **Identidad pública nueva**: recrea módulos del legacy con paleta café/crema, acento montaña, Fraunces, Manrope y Lucide.
-- **Portada y navegación pública**: presenta menú por categorías, favoritos, promociones, reservas, eventos y páginas editoriales responsive.
+- **Portada y navegación pública**: presenta menú por categorías, favoritos, avisos importantes, promociones, reservas, eventos y páginas editoriales responsive.
 - **Carta conectada a la API**: muestra categorías, detalle de ítems, precios publicados y filtros por alérgeno sin datos ficticios.
 - **Solicitudes públicas**: consulta disponibilidad, solicita reservas, cotiza eventos y valida contacto mediante actions server-side.
 - **Verificación automatizada**: el CI ejecuta lint, typecheck, pruebas unitarias, build y pruebas E2E.
@@ -199,6 +199,7 @@ El workflow de [CI](.github/workflows/ci.yml) ejecuta lint, typecheck, pruebas u
 El estado actual es Fase 0 con el primer bloque público conectado a la API y contenido operativo aún pendiente de confirmación.
 
 - [x] Implementar el primer bloque público: portada, carta, reservas y eventos.
+- [x] Mostrar avisos importantes vigentes administrados desde el panel.
 - [x] Incorporar el sistema visual público y las rutas editoriales provisionales.
 - [ ] Incorporar contratos HTTP versionados cuando se apruebe el paquete privado `@koffisoft/contracts`.
 - [ ] Completar contenido operativo confirmado: contacto, ubicación, horarios, imágenes y promociones.

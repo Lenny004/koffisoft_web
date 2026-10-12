@@ -64,10 +64,4 @@ export const siteContent = {
       image: '/experiences/hiking-panorama.png',
     },
   ],
-  legal: {
-    termsTitle: 'Términos de uso',
-    privacyTitle: 'Política de privacidad',
-    placeholder:
-      'Este contenido legal es provisional y debe ser reemplazado por el texto aprobado antes de publicar el sitio en producción.',
-  },
 } as const;

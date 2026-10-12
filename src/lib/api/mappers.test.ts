@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatMenuPrice, getDisplayVariant, getFeaturedMenuItems } from './mappers';
+import {
+  formatMenuPrice,
+  formatMenuPriceLabel,
+  getDisplayVariant,
+  getFeaturedMenuItems,
+} from './mappers';
 import type { PublicMenuItem, PublicMenuResponse } from './types';
 
 const item: PublicMenuItem = {
@@ -54,5 +59,26 @@ describe('mapeos de carta pública', () => {
     const variant = getDisplayVariant(item);
     expect(variant?.id).toBe('variant-1');
     expect(formatMenuPrice(variant)).toContain('4.50');
+  });
+
+  it('antepone Desde cuando las variantes tienen precios distintos', () => {
+    const ranged: PublicMenuItem = {
+      ...item,
+      variants: [
+        item.variants[0],
+        {
+          ...item.variants[0],
+          id: 'variant-2',
+          isDefault: false,
+          price: { ...item.variants[0].price, id: 'price-2', amount: '6.00' },
+        },
+      ],
+    };
+
+    expect(formatMenuPriceLabel(item)).toContain('4.50');
+    expect(formatMenuPriceLabel(item).startsWith('Desde')).toBe(false);
+    expect(formatMenuPriceLabel(ranged)).toContain('4.50');
+    expect(formatMenuPriceLabel(ranged).startsWith('Desde')).toBe(true);
+    expect(formatMenuPriceLabel({ ...item, variants: [] })).toBe('Precio no disponible');
   });
 });
