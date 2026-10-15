@@ -23,6 +23,10 @@ Las rutas server-only leen estas variables desde `$env/dynamic/private`:
 
 Los precios, disponibilidad, capacidades y códigos no se generan en el frontend. El cliente server-only vive en `src/lib/server/api/client.ts`.
 
+Las CTA editoriales solo se renderizan si la API entrega una ruta relativa
+segura o una URL `http(s)`. El sitio vuelve a rechazar esquemas ejecutables o
+destinos protocol-relative antes de crear el enlace.
+
 ## Rutas editoriales o provisionales
 
 Estas páginas no inventan contratos. El contenido institucional está en `src/lib/content/site.ts` y los módulos legales en `src/lib/content/legal.ts`. Ambos quedan marcados por `editorialPlaceholder` hasta que exista información aprobada:

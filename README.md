@@ -33,7 +33,7 @@
 ## 🌟 Aspectos destacados
 
 - **Identidad pública nueva**: recrea módulos del legacy con paleta café/crema, acento montaña, Fraunces, Manrope y Lucide.
-- **Portada y navegación pública**: presenta menú por categorías, favoritos, avisos importantes, promociones, reservas, eventos y páginas editoriales responsive.
+- **Portada y navegación pública**: presenta menú por categorías, favoritos, avisos importantes con CTA segura, promociones, reservas, eventos y páginas editoriales responsive.
 - **Carta conectada a la API**: muestra categorías, detalle de ítems, precios publicados y filtros por alérgeno sin datos ficticios.
 - **Solicitudes públicas**: consulta disponibilidad, solicita reservas, cotiza eventos y valida contacto mediante actions server-side.
 - **Verificación automatizada**: el CI ejecuta lint, typecheck, pruebas unitarias, build y pruebas E2E.
@@ -186,7 +186,7 @@ pnpm test:e2e
 pnpm test:e2e:ui
 ```
 
-- `pnpm test` y `pnpm test:unit`: ejecutan las pruebas unitarias de `src/**/*.test.ts` con Vitest.
+- `pnpm test` y `pnpm test:unit`: ejecutan las pruebas unitarias de `src/**/*.test.ts` con Vitest, incluidas las validaciones defensivas de CTA de avisos.
 - `pnpm test:e2e`: ejecuta las pruebas de `tests/` con Playwright y Chromium.
 - `pnpm test:e2e:ui`: abre la interfaz de Playwright para las pruebas E2E.
 

@@ -41,6 +41,27 @@ export function formatAnnouncementDate(value: string | null): string | null {
   }).format(date);
 }
 
+/** Rechaza esquemas ejecutables antes de renderizar una CTA editorial. */
+export function isSafeAnnouncementCtaUrl(value: string): boolean {
+  if (/[\u0000-\u001f\u007f\\]/u.test(value)) return false;
+  if (value.startsWith('/')) return !value.startsWith('//');
+  try {
+    const parsed = new URL(value);
+    return ['http:', 'https:'].includes(parsed.protocol) && /^https?:\/\//iu.test(value);
+  } catch {
+    return false;
+  }
+}
+
+export function isExternalAnnouncementUrl(value: string): boolean {
+  try {
+    const parsed = new URL(value);
+    return ['http:', 'https:'].includes(parsed.protocol) && /^https?:\/\//iu.test(value);
+  } catch {
+    return false;
+  }
+}
+
 function linkifyLine(line: string): AnnouncementTextSegment[] {
   const segments: AnnouncementTextSegment[] = [];
   let cursor = 0;
