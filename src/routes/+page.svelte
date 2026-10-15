@@ -24,9 +24,10 @@
   <div class="catalog-page__band">
     <CatalogHero
       titleId="home-hero-title"
-      title="Descubre los favoritos del café y la cocina de montaña"
-      label="Carta de la casa"
-      description="Platos, bebidas y postres publicados por la sede. Precios y disponibilidad de hoy, para elegir con calma."
+      title={data.siteContent.hero.title}
+      label={data.siteContent.hero.eyebrow}
+      description={data.siteContent.hero.description}
+      imageUrl={data.siteContent.hero.imageUrl}
     />
     {#if data.preview}
       <p class="catalog-preview">

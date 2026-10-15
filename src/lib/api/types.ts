@@ -156,6 +156,57 @@ export interface PublicImportantAnnouncement {
   updatedAt: string;
 }
 
+export interface PublicSiteHour {
+  id: string;
+  serviceType: string;
+  dayOfWeek: number;
+  opensAt: string;
+  closesAt: string;
+  crossesMidnight: boolean;
+  active: boolean;
+}
+
+export interface PublicSiteOverride {
+  id: string;
+  serviceDate: string;
+  serviceType: string;
+  opensAt: string | null;
+  closesAt: string | null;
+  isClosed: boolean;
+  reason: string;
+}
+
+export interface PublicSiteProfile {
+  heroEyebrow: string;
+  heroTitle: string;
+  heroDescription: string;
+  heroImageUrl: string | null;
+  aboutTitle: string;
+  aboutDescription: string;
+  aboutMission: string;
+  aboutVision: string;
+  aboutTeam: { name: string; role: string; description: string }[];
+  socialFacebookUrl: string | null;
+  socialInstagramUrl: string | null;
+  socialTikTokUrl: string | null;
+}
+
+export interface PublicSiteContent {
+  locationId: string;
+  location: {
+    name: string;
+    addressLine: string;
+    municipality: string;
+    department: string;
+    phone: string | null;
+    email: string | null;
+    timezone: string;
+  };
+  hours: PublicSiteHour[];
+  overrides: PublicSiteOverride[];
+  profile: PublicSiteProfile | null;
+}
+
 export interface PublicMenuQuery {
   category?: string;
   allergen?: string;

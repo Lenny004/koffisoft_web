@@ -18,8 +18,10 @@
   } from '@lucide/svelte';
 
   import '../app.css';
+  import type { LayoutProps } from './$types';
 
-  let { children } = $props();
+  let { children, data }: LayoutProps = $props();
+  const content = $derived(data.siteContent);
   let menuOpen = $state(false);
   let darkMode = $state(false);
 
@@ -66,7 +68,7 @@
         <img class="site-header__logo" src="/brand/logo-primary.png" alt="Koffi-Soft" />
         <span class="site-header__brand-copy">
           <span class="site-header__name">Koffi-Soft</span>
-          <span class="site-header__tagline">Café y montaña</span>
+          <span class="site-header__tagline">{content.hero.eyebrow}</span>
         </span>
       </a>
 
@@ -132,17 +134,32 @@
     <div class="site-footer__inner">
       <div class="site-footer__identity">
         <img class="site-footer__logo" src="/brand/logo-light.png" alt="Koffi-Soft" />
-        <p class="site-footer__copy">Café, cocina y encuentros con vista a la montaña.</p>
+        <p class="site-footer__copy">{content.hero.description}</p>
         <div class="site-footer__social" aria-label="Redes sociales">
-          <a href="https://www.facebook.com" aria-label="Facebook de Koffi-Soft"
-            ><MessageCircle size={19} aria-hidden="true" /></a
-          >
-          <a href="https://www.instagram.com" aria-label="Instagram de Koffi-Soft"
-            ><Camera size={19} aria-hidden="true" /></a
-          >
-          <a href="https://www.tiktok.com" aria-label="TikTok de Koffi-Soft"
-            ><Music2 size={19} aria-hidden="true" /></a
-          >
+          {#if content.social.facebook}
+            <a
+              href={content.social.facebook}
+              aria-label="Facebook de Koffi-Soft"
+              rel="external noreferrer"
+              target="_blank"><MessageCircle size={19} aria-hidden="true" /></a
+            >
+          {/if}
+          {#if content.social.instagram}
+            <a
+              href={content.social.instagram}
+              aria-label="Instagram de Koffi-Soft"
+              rel="external noreferrer"
+              target="_blank"><Camera size={19} aria-hidden="true" /></a
+            >
+          {/if}
+          {#if content.social.tikTok}
+            <a
+              href={content.social.tikTok}
+              aria-label="TikTok de Koffi-Soft"
+              rel="external noreferrer"
+              target="_blank"><Music2 size={19} aria-hidden="true" /></a
+            >
+          {/if}
         </div>
       </div>
 
@@ -165,9 +182,9 @@
 
       <div class="site-footer__column site-footer__column--contact">
         <p class="site-footer__label">Ruta Panorámica</p>
-        <p><MapPin size={15} aria-hidden="true" /> El Salvador</p>
-        <p><Phone size={15} aria-hidden="true" /> Teléfono por confirmar</p>
-        <p><Mountain size={15} aria-hidden="true" /> Horario por confirmar</p>
+        <p><MapPin size={15} aria-hidden="true" /> {content.contact.address}</p>
+        <p><Phone size={15} aria-hidden="true" /> {content.contact.phone}</p>
+        <p><Mountain size={15} aria-hidden="true" /> {content.contact.hours}</p>
       </div>
     </div>
     <div class="site-footer__bottom">

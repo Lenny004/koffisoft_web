@@ -5,6 +5,7 @@
   import SectionHeading from '$lib/components/public/section-heading.svelte';
   import StatusMessage from '$lib/components/public/status-message.svelte';
   import type { PublicAvailabilityResponse } from '$lib/api/types';
+  import type { PageProps } from './$types';
 
   type ReservationActionForm = {
     kind?: 'error' | 'success' | 'availability';
@@ -14,7 +15,7 @@
     errors?: Record<string, string>;
   } | null;
 
-  let { form }: { form: ReservationActionForm } = $props();
+  let { form, data }: { form: ReservationActionForm; data: PageProps['data'] } = $props();
 </script>
 
 <svelte:head>
@@ -47,7 +48,7 @@
     />
   {/if}
 
-  <ReservationFlow {form} />
+  <ReservationFlow {form} siteContent={data.siteContent} />
 
   <aside class="reservation-note">
     <Clock3 size={20} aria-hidden="true" />

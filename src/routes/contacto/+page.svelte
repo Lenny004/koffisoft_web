@@ -2,7 +2,7 @@
   import { enhance } from '$app/forms';
   import { Mail, MapPin, MessageCircle, Phone, Send } from '@lucide/svelte';
 
-  import { siteContent, editorialPlaceholder } from '$lib/content/site';
+  import type { PageProps } from './$types';
   import StatusMessage from '$lib/components/public/status-message.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
@@ -16,7 +16,7 @@
     errors?: Record<string, string>;
   } | null;
 
-  let { form }: { form: ContactActionForm } = $props();
+  let { form, data }: { form: ContactActionForm; data: PageProps['data'] } = $props();
 </script>
 
 <svelte:head>
@@ -53,22 +53,22 @@
       <div class="contact-page__detail-list">
         <p>
           <Mail class="contact-page__detail-icon" size={19} aria-hidden="true" /><span
-            ><strong>Correo</strong>{siteContent.contact.email}</span
+            ><strong>Correo</strong>{data.siteContent.contact.email}</span
           >
         </p>
         <p>
           <Phone class="contact-page__detail-icon" size={19} aria-hidden="true" /><span
-            ><strong>Teléfono</strong>{siteContent.contact.phone}</span
+            ><strong>Teléfono</strong>{data.siteContent.contact.phone}</span
           >
         </p>
         <p>
           <MapPin class="contact-page__detail-icon" size={19} aria-hidden="true" /><span
-            ><strong>Ubicación</strong>{siteContent.contact.address}</span
+            ><strong>Ubicación</strong>{data.siteContent.contact.address}</span
           >
         </p>
         <p>
           <MessageCircle class="contact-page__detail-icon" size={19} aria-hidden="true" /><span
-            ><strong>Horario</strong>{siteContent.contact.hours}</span
+            ><strong>Horario</strong>{data.siteContent.contact.hours}</span
           >
         </p>
       </div>
@@ -77,7 +77,7 @@
     <section class="contact-form" aria-labelledby="contact-form-title">
       <div class="contact-form__heading">
         <p class="contact-page__eyebrow">
-          {editorialPlaceholder ? 'Contenido provisional' : 'Contacto'}
+          {data.siteContentSource === 'fallback' ? 'Contenido provisional' : 'Contacto'}
         </p>
         <h2 id="contact-form-title">Solicitar información</h2>
       </div>

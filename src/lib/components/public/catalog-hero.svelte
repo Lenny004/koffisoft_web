@@ -5,16 +5,19 @@
     description,
     titleId,
     level = 'h1',
+    imageUrl = null,
   } = $props<{
     title: string;
     label?: string;
     description?: string;
     titleId: string;
     level?: 'h1' | 'h2';
+    imageUrl?: string | null;
   }>();
 </script>
 
 <section class="catalog-hero" aria-labelledby={titleId}>
+  {#if imageUrl}<img class="catalog-hero__image" src={imageUrl} alt="" loading="eager" />{/if}
   <svelte:element this={level} id={titleId} class="catalog-hero__title">{title}</svelte:element>
   {#if label}<p class="catalog-hero__label">{label}</p>{/if}
   {#if description}<p class="catalog-hero__copy">{description}</p>{/if}
@@ -38,6 +41,13 @@
     letter-spacing: 0;
     line-height: 1.12;
     text-wrap: balance;
+  }
+
+  .catalog-hero__image {
+    inline-size: min(100%, 32rem);
+    max-block-size: 16rem;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
   }
 
   .catalog-hero__label {

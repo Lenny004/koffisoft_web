@@ -11,6 +11,7 @@ import type {
   PublicMenuQuery,
   PublicMenuResponse,
   PublicReservationResponse,
+  PublicSiteContent,
   ReservationAvailabilityRequest,
 } from '$lib/api/types';
 
@@ -50,6 +51,7 @@ export interface PublicApiClient {
   getEventCatalog(): Promise<PublicEventCatalogResponse>;
   createEventRequest(request: ApiCreateEventRequest): Promise<PublicEventRequestResponse>;
   getImportantAnnouncements(): Promise<PublicImportantAnnouncement[]>;
+  getSiteContent(): Promise<PublicSiteContent>;
 }
 
 type ApiFetch = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
@@ -204,6 +206,11 @@ export function createApiClient(
     getImportantAnnouncements() {
       return request<PublicImportantAnnouncement[]>(
         buildApiUrl(config.baseUrl, 'announcements', { locationId: config.locationId }),
+      );
+    },
+    getSiteContent() {
+      return request<PublicSiteContent>(
+        buildApiUrl(config.baseUrl, 'site', { locationId: config.locationId }),
       );
     },
   };

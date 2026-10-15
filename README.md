@@ -30,6 +30,8 @@
 
 <!-- section:highlights -->
 
+- **Contenido del sitio conectado:** hero, Nosotros, contacto, ubicación, horarios y redes llegan desde `GET /site` con fallback editorial seguro.
+
 ## 🌟 Aspectos destacados
 
 - **Identidad pública nueva**: recrea módulos del legacy con paleta café/crema, acento montaña, Fraunces, Manrope y Lucide.
@@ -47,7 +49,7 @@
 
 Forma parte del sistema junto con `koffisoft_api`, responsable de PostgreSQL, Prisma, autenticación, trabajos en segundo plano y contratos HTTP, y `koffisoft_admin`, el panel privado que consume esos contratos. Las rutas consultan la API desde `+page.server.ts` y mantienen estados vacíos o de error cuando el servicio no responde. El legacy queda fuera de este árbol y solo sirve como referencia de migración. Este sitio no contiene PHP, credenciales ni acceso directo a PostgreSQL.
 
-**Stack:** SvelteKit 2.70.3, Svelte 5.57.1, TypeScript 5.9.3, Vite 7.3.6, Tailwind CSS 4.3.3, shadcn-svelte 1.7.0 sobre Bits UI 2.19.5, `@lucide/svelte` 1.51.0, `@fontsource-variable/fraunces` 5.2.5, `@fontsource-variable/manrope` 5.2.5, Vitest 5.0.3 y Playwright 1.63.0.
+**Stack:** SvelteKit 2.70.3, Svelte 5.57.1, TypeScript 5.9.3, Vite 7.3.6, Tailwind CSS 4.3.3, shadcn-svelte 1.7.0 sobre Bits UI 2.19.5, `@lucide/svelte` 1.51.0, Vitest 5.0.3 y Playwright 1.63.0. La interfaz usa las familias Fraunces y Manrope con fallback local.
 
 <!-- section:requirements -->
 

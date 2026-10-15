@@ -2,8 +2,9 @@
   import { resolve } from '$app/paths';
   import { Clock3, ExternalLink, MapPin, Phone } from '@lucide/svelte';
 
-  import { siteContent, editorialPlaceholder } from '$lib/content/site';
+  import type { PageProps } from './$types';
   import SectionHeading from '$lib/components/public/section-heading.svelte';
+  let { data }: PageProps = $props();
 </script>
 
 <svelte:head>
@@ -21,7 +22,7 @@
     eyebrow="Ven a la montaña"
     description="Consulta la referencia de llegada y el horario antes de visitarnos."
   />
-  {#if editorialPlaceholder}<p class="location-page__notice">
+  {#if data.siteContentSource === 'fallback'}<p class="location-page__notice">
       Mapa, dirección y horario son referencias provisionales pendientes de confirmación.
     </p>{/if}
 
@@ -38,17 +39,17 @@
       <h2 id="location-details-title">Planifica tu visita</h2>
       <p>
         <MapPin class="location-page__detail-icon" size={20} aria-hidden="true" /><span
-          >{siteContent.contact.address}</span
+          >{data.siteContent.contact.address}</span
         >
       </p>
       <p>
         <Phone class="location-page__detail-icon" size={20} aria-hidden="true" /><span
-          >{siteContent.contact.phone}</span
+          >{data.siteContent.contact.phone}</span
         >
       </p>
       <p>
         <Clock3 class="location-page__detail-icon" size={20} aria-hidden="true" /><span
-          >{siteContent.contact.hours}</span
+          >{data.siteContent.contact.hours}</span
         >
       </p>
       <a href={resolve('/contacto')}

@@ -3,7 +3,7 @@
   import { resolve } from '$app/paths';
   import { ArrowRight, MapPin } from '@lucide/svelte';
 
-  import { siteContent } from '$lib/content/site';
+  import type { SiteContent } from '$lib/content/site';
   import {
     addCalendarDays,
     formatVisitDate,
@@ -43,7 +43,7 @@
     { id: 'details', label: 'Tus datos' },
   ];
 
-  let { form }: { form: ReservationActionForm } = $props();
+  let { form, siteContent }: { form: ReservationActionForm; siteContent: SiteContent } = $props();
 
   let step = $state<BookingStep>('party');
   let partySize = $state(2);
