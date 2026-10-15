@@ -7,12 +7,14 @@ import type {
   PublicAvailabilityResponse,
   PublicContactMessageResponse,
   PublicEventCatalogResponse,
+  PublicPublishedEvent,
   PublicEventRequestResponse,
   PublicImportantAnnouncement,
   PublicMenuDetailResponse,
   PublicMenuQuery,
   PublicMenuResponse,
   PublicReservationResponse,
+  PublicPreviewResponse,
   PublicSeoMetadata,
   PublicSiteContent,
   ReservationAvailabilityRequest,
@@ -53,11 +55,13 @@ export interface PublicApiClient {
   getAvailability(request: ReservationAvailabilityRequest): Promise<PublicAvailabilityResponse>;
   createReservation(request: CreateReservationRequest): Promise<PublicReservationResponse>;
   getEventCatalog(): Promise<PublicEventCatalogResponse>;
+  getPublishedEvents(): Promise<PublicPublishedEvent[]>;
   createEventRequest(request: ApiCreateEventRequest): Promise<PublicEventRequestResponse>;
   createContactMessage(request: CreateContactMessageRequest): Promise<PublicContactMessageResponse>;
   getImportantAnnouncements(): Promise<PublicImportantAnnouncement[]>;
   getSiteContent(): Promise<PublicSiteContent>;
   getSeo(resourceType: SeoResourceType, resourceKey: string): Promise<PublicSeoMetadata>;
+  getPreview(token: string): Promise<PublicPreviewResponse>;
 }
 
 type ApiFetch = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
@@ -111,18 +115,22 @@ export function createApiClient(
 ): PublicApiClient {
   const config = { ...getDefaultConfig(), ...suppliedConfig };
 
-  async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
+  async function request<T>(
+    path: string,
+    init: RequestInit = {},
+    options: { requireLocation?: boolean } = {},
+  ): Promise<T> {
     if (!config.baseUrl) {
       throw new ApiConfigurationError('Falta configurar API_BASE_URL para consultar la API.');
     }
 
-    if (!config.locationId) {
+    if (options.requireLocation !== false && !config.locationId) {
       throw new ApiConfigurationError(
         'Falta configurar LOCATION_ID para consultar la sede pública.',
       );
     }
 
-    if (!uuidPattern.test(config.locationId)) {
+    if (options.requireLocation !== false && !uuidPattern.test(config.locationId)) {
       throw new ApiConfigurationError('LOCATION_ID debe ser un UUID válido de la sede pública.');
     }
 
@@ -203,6 +211,11 @@ export function createApiClient(
         buildApiUrl(config.baseUrl, 'events/catalog', { locationId: config.locationId }),
       );
     },
+    getPublishedEvents() {
+      return request<PublicPublishedEvent[]>(
+        buildApiUrl(config.baseUrl, 'events/public', { locationId: config.locationId }),
+      );
+    },
     createEventRequest(requestData: ApiCreateEventRequest) {
       return request<PublicEventRequestResponse>(buildApiUrl(config.baseUrl, 'events', {}), {
         method: 'POST',
@@ -232,6 +245,13 @@ export function createApiClient(
           resourceType,
           resourceKey,
         }),
+      );
+    },
+    getPreview(token: string) {
+      return request<PublicPreviewResponse>(
+        buildApiUrl(config.baseUrl, `publication/preview/${encodeURIComponent(token)}`, {}),
+        {},
+        { requireLocation: false },
       );
     },
   };

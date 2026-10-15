@@ -30,6 +30,9 @@
 
 <!-- section:highlights -->
 
+- **Vista previa segura:** `/preview/:token` muestra contenido temporal sin
+  indexacion ni cache; ve [docs/preview-publico.md](docs/preview-publico.md).
+
 - **Formulario de contacto conectado:** envia mensajes a la API con validacion
   server-side, honeypot, limite basico y estados de error claros.
 - **Contenido del sitio conectado:** hero, Nosotros, contacto, ubicación, horarios y redes llegan desde `GET /site` con fallback editorial seguro.
@@ -111,6 +114,9 @@ La tabla reproduce exactamente las entradas de `.env.example`. Sus valores son p
 No agregues tokens, contraseñas, cookies, claves privadas ni credenciales SMTP al repositorio.
 
 <!-- section:structure -->
+
+La ruta `src/routes/preview/[token]/` esta aislada, consume un token de un
+solo uso y no presenta contenido editorial interno.
 
 ## 🗂️ Estructura del proyecto
 
@@ -199,6 +205,8 @@ pnpm test:e2e:ui
 El workflow de [CI](.github/workflows/ci.yml) ejecuta lint, typecheck, pruebas unitarias, build y pruebas E2E.
 
 <!-- section:roadmap -->
+
+- [x] Bloque 4: filtros de vigencia y preview temporal sin indexacion.
 
 ## 🗺️ Hoja de ruta y estado
 

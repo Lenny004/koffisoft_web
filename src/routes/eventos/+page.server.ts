@@ -2,16 +2,25 @@ import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
 import { createApiClient } from '$lib/server/api/client';
+import type { PublicPublishedEvent } from '$lib/api/types';
 import { validateEventForm } from '$lib/server/validation';
 
 /** Carga solo el catálogo público: la API omite precios y líneas internas por contrato. */
 export const load: PageServerLoad = async ({ fetch }) => {
   try {
-    const catalog = await createApiClient(undefined, fetch).getEventCatalog();
-    return { catalog, errorMessage: null };
+    const client = createApiClient(undefined, fetch);
+    const catalog = await client.getEventCatalog();
+    let publishedEvents: PublicPublishedEvent[] = [];
+    try {
+      publishedEvents = await client.getPublishedEvents();
+    } catch {
+      // El catalogo de cotizacion sigue siendo util si no hay eventos editoriales.
+    }
+    return { catalog, publishedEvents, errorMessage: null };
   } catch {
     return {
       catalog: null,
+      publishedEvents: [],
       errorMessage: 'No pudimos cargar los espacios y paquetes. Intenta de nuevo más tarde.',
     };
   }

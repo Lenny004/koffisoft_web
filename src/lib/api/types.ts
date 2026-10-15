@@ -134,6 +134,19 @@ export interface PublicEventCatalogResponse {
   packages: PublicEventPackage[];
 }
 
+export interface PublicPublishedEvent {
+  id: string;
+  locationId: string;
+  eventCode: string;
+  eventType: string;
+  title: string;
+  startsAt: string;
+  endsAt: string;
+  estimatedGuestCount: number;
+  publicationStatus: 'Draft' | 'Scheduled' | 'Published';
+  publishedAt: string;
+}
+
 export interface PublicEventRequestResponse {
   eventCode: string;
   status: string;
@@ -166,10 +179,22 @@ export interface PublicImportantAnnouncement {
   ctaUrl: string | null;
   startsAt: string | null;
   endsAt: string | null;
+  publicationStatus?: 'Draft' | 'Scheduled' | 'Published';
+  publishedAt?: string | null;
+  scheduledAt?: string | null;
+  expiresAt?: string | null;
   displayOrder: number;
   active: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface PublicPreviewResponse {
+  resourceType: 'announcement' | 'event' | 'menu_item';
+  resourceId: string;
+  locationId: string;
+  noindex: true;
+  resource: Record<string, unknown>;
 }
 
 export interface PublicSiteHour {

@@ -10,6 +10,7 @@
   import { Select } from '$lib/components/ui/select/index.js';
   import { Textarea } from '$lib/components/ui/textarea/index.js';
   import { FORM_LIMITS, FORM_PATTERNS } from '$lib/validation/limits';
+  import type { PublicPublishedEvent } from '$lib/api/types';
   import type { PageData } from './$types';
 
   type EventActionForm = {
@@ -19,7 +20,9 @@
     errors?: Record<string, string>;
   } | null;
 
-  let { data, form }: { data: PageData; form: EventActionForm } = $props();
+  type EventsPageData = PageData & { publishedEvents: PublicPublishedEvent[] };
+
+  let { data, form }: { data: EventsPageData; form: EventActionForm } = $props();
 
   const eventTypes = [
     { value: 'Wedding', label: 'Boda' },
@@ -29,6 +32,14 @@
     { value: 'Anniversary', label: 'Aniversario' },
     { value: 'Other', label: 'Otro' },
   ];
+
+  function eventDate(value: string): string {
+    return new Intl.DateTimeFormat('es-SV', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+      timeZone: 'America/El_Salvador',
+    }).format(new Date(value));
+  }
 </script>
 
 <div class="event-page">
@@ -125,6 +136,33 @@
           </div>
         </div>
       {/if}
+    </section>
+  {/if}
+
+  {#if data.publishedEvents.length > 0}
+    <section class="event-catalog" aria-labelledby="published-events-title">
+      <div class="event-catalog__heading">
+        <div>
+          <p class="event-page__eyebrow">Agenda publicada</p>
+          <h2 id="published-events-title" class="event-catalog__title">Próximos eventos.</h2>
+        </div>
+      </div>
+      <div class="event-catalog__grid">
+        {#each data.publishedEvents as publishedEvent (publishedEvent.id)}
+          <Card class="event-card">
+            <CardHeader>
+              <div class="event-card__icon" aria-hidden="true"><CalendarDays size={20} /></div>
+              <CardTitle class="event-card__title">{publishedEvent.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p class="event-card__type">{publishedEvent.eventType}</p>
+              <p class="event-card__capacity">
+                {eventDate(publishedEvent.startsAt)} · {eventDate(publishedEvent.endsAt)}
+              </p>
+            </CardContent>
+          </Card>
+        {/each}
+      </div>
     </section>
   {/if}
 

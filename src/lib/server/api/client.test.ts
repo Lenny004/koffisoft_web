@@ -91,6 +91,24 @@ describe('createApiClient', () => {
     expect(fetcher).toHaveBeenCalledOnce();
   });
 
+  it('consume preview sin exigir LOCATION_ID y conserva el token opaco', async () => {
+    const token = 'A'.repeat(43);
+    const fetcher = vi.fn(async (input: RequestInfo | URL) => {
+      expect(String(input)).toBe(`https://api.example.test/publication/preview/${token}`);
+      return new Response(
+        JSON.stringify({ resourceType: 'announcement', resourceId: 'notice-1', noindex: true }),
+        { headers: { 'content-type': 'application/json' } },
+      );
+    });
+
+    await expect(
+      createApiClient({ baseUrl: 'https://api.example.test', locationId: '' }, fetcher).getPreview(
+        token,
+      ),
+    ).resolves.toMatchObject({ noindex: true });
+    expect(fetcher).toHaveBeenCalledOnce();
+  });
+
   it('convierte respuestas HTTP fallidas en errores tipados', async () => {
     const fetcher = vi.fn(
       async () =>
