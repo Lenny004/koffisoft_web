@@ -196,7 +196,8 @@ El workflow de [CI](.github/workflows/ci.yml) ejecuta lint, typecheck, pruebas u
 
 ## 🗺️ Hoja de ruta y estado
 
-El estado actual es Fase 0 con el primer bloque público conectado a la API y contenido operativo aún pendiente de confirmación.
+El sitio público tiene conectadas portada, carta, reservas, eventos y avisos
+importantes; el contenido operativo aún está pendiente de confirmación.
 
 - [x] Implementar el primer bloque público: portada, carta, reservas y eventos.
 - [x] Mostrar avisos importantes vigentes administrados desde el panel.
