@@ -83,6 +83,16 @@
       </div>
       <form method="POST" use:enhance>
         <p class="form-legend form-field--wide">* Campo obligatorio</p>
+        <div class="contact-form__honeypot" aria-hidden="true">
+          <label for="contact-website">No completar</label>
+          <Input
+            id="contact-website"
+            name="website"
+            placeholder="Dejar vacío"
+            tabindex="-1"
+            autocomplete="off"
+          />
+        </div>
         <FormField id="contact-name" label="Nombre" required error={form?.errors?.name}>
           <Input
             id="contact-name"
@@ -149,7 +159,6 @@
 </div>
 
 <style>
-  /* El formulario valida entrada en servidor y comunica con claridad que falta el endpoint de envío. */
   .contact-page {
     inline-size: min(calc(100% - 2rem), var(--container-max));
     margin-inline: auto;
@@ -235,6 +244,15 @@
   .contact-form form {
     display: grid;
     gap: var(--space-md);
+  }
+
+  .contact-form__honeypot {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   @media (min-width: 48rem) {

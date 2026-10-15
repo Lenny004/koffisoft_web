@@ -141,6 +141,22 @@ export interface PublicEventRequestResponse {
   endsAt: string;
 }
 
+export type PublicContactTopic = 'general' | 'reservation' | 'event' | 'feedback' | 'other';
+
+export interface CreateContactMessageRequest {
+  name: string;
+  email: string;
+  phone?: string;
+  languageCode?: 'es' | 'en';
+  topic?: PublicContactTopic;
+  message: string;
+  website?: string;
+}
+
+export interface PublicContactMessageResponse {
+  accepted: boolean;
+}
+
 export interface PublicImportantAnnouncement {
   id: string;
   locationId: string;

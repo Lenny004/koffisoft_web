@@ -131,7 +131,7 @@ function validateReservationCore(
   return { partySize, durationMinutes };
 }
 
-/** Valida el formulario editorial de contacto sin enviarlo a una API no contratada. */
+/** Valida y normaliza los campos del formulario publico de contacto. */
 export function validateContactForm(formData: FormData): FormValidation<ContactFormValues> {
   const name = text(formData, 'name');
   const email = text(formData, 'email');

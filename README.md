@@ -30,6 +30,8 @@
 
 <!-- section:highlights -->
 
+- **Formulario de contacto conectado:** envia mensajes a la API con validacion
+  server-side, honeypot, limite basico y estados de error claros.
 - **Contenido del sitio conectado:** hero, Nosotros, contacto, ubicación, horarios y redes llegan desde `GET /site` con fallback editorial seguro.
 
 ## 🌟 Aspectos destacados

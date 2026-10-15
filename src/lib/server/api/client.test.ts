@@ -47,6 +47,32 @@ describe('createApiClient', () => {
     expect(fetcher).toHaveBeenCalledOnce();
   });
 
+  it('sends the public contact form to the API with the location', async () => {
+    const fetcher = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      expect(String(input)).toBe('https://api.example.test/contact');
+      expect(init?.method).toBe('POST');
+      expect(JSON.parse(String(init?.body))).toMatchObject({
+        locationId,
+        email: 'ana@example.com',
+        message: 'Necesito informacion sobre reservas.',
+      });
+      return new Response(JSON.stringify({ accepted: true }), {
+        headers: { 'content-type': 'application/json' },
+      });
+    });
+
+    await expect(
+      createApiClient(
+        { baseUrl: 'https://api.example.test', locationId },
+        fetcher,
+      ).createContactMessage({
+        name: 'Ana',
+        email: 'ana@example.com',
+        message: 'Necesito informacion sobre reservas.',
+      }),
+    ).resolves.toEqual({ accepted: true });
+  });
+
   it('convierte respuestas HTTP fallidas en errores tipados', async () => {
     const fetcher = vi.fn(
       async () =>

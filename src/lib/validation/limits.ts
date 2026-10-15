@@ -15,6 +15,7 @@ export const FORM_LIMITS = {
     mfaLabelMaxLength: 100, // UserMfaFactor.label @db.VarChar(100), MfaSetupDto @MaxLength(100).
   },
   contact: {
+    searchMaxLength: 120,
     nameMaxLength: 200, // ContactMessage.name_snapshot @db.VarChar(200).
     emailMaxLength: 200, // ContactMessage.email @db.VarChar(200).
     phoneMaxLength: 40, // ContactMessage.phone @db.VarChar(40).

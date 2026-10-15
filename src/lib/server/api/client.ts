@@ -1,9 +1,11 @@
 import { env } from '$env/dynamic/private';
 
 import type {
+  CreateContactMessageRequest,
   CreateEventRequest as ApiCreateEventRequest,
   CreateReservationRequest,
   PublicAvailabilityResponse,
+  PublicContactMessageResponse,
   PublicEventCatalogResponse,
   PublicEventRequestResponse,
   PublicImportantAnnouncement,
@@ -50,6 +52,7 @@ export interface PublicApiClient {
   createReservation(request: CreateReservationRequest): Promise<PublicReservationResponse>;
   getEventCatalog(): Promise<PublicEventCatalogResponse>;
   createEventRequest(request: ApiCreateEventRequest): Promise<PublicEventRequestResponse>;
+  createContactMessage(request: CreateContactMessageRequest): Promise<PublicContactMessageResponse>;
   getImportantAnnouncements(): Promise<PublicImportantAnnouncement[]>;
   getSiteContent(): Promise<PublicSiteContent>;
 }
@@ -199,6 +202,12 @@ export function createApiClient(
     },
     createEventRequest(requestData: ApiCreateEventRequest) {
       return request<PublicEventRequestResponse>(buildApiUrl(config.baseUrl, 'events', {}), {
+        method: 'POST',
+        body: JSON.stringify({ locationId: config.locationId, ...requestData }),
+      });
+    },
+    createContactMessage(requestData) {
+      return request<PublicContactMessageResponse>(buildApiUrl(config.baseUrl, 'contact', {}), {
         method: 'POST',
         body: JSON.stringify({ locationId: config.locationId, ...requestData }),
       });
