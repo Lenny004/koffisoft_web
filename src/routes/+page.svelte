@@ -4,6 +4,7 @@
 
   import CatalogHero from '$lib/components/public/catalog-hero.svelte';
   import CatalogRail from '$lib/components/public/catalog-rail.svelte';
+  import { isSafeAnnouncementCtaUrl } from '$lib/content/announcements';
   import MenuItemCard from '$lib/components/public/menu-item-card.svelte';
   import StatusMessage from '$lib/components/public/status-message.svelte';
   import type { PageData } from './$types';
@@ -48,7 +49,7 @@
               {announcement.title}
             </h2>
             <p class="announcement__message">{announcement.message}</p>
-            {#if announcement.ctaLabel && announcement.ctaUrl}
+            {#if announcement.ctaLabel && announcement.ctaUrl && isSafeAnnouncementCtaUrl(announcement.ctaUrl)}
               {#if announcement.ctaUrl.startsWith('/')}
                 <a class="announcement__link" href={resolve(announcement.ctaUrl as '/')}
                   >{announcement.ctaLabel} <ArrowRight size={16} aria-hidden="true" /></a
@@ -94,11 +95,7 @@
         {:else}
           <div class="catalog-grid catalog-grid--lead">
             {#each data.featuredItems as featuredItem (featuredItem.item.id)}
-              <MenuItemCard
-                item={featuredItem.item}
-                categoryName={featuredItem.categoryName}
-                category={{ slug: featuredItem.categorySlug, nameEs: featuredItem.categoryName }}
-              />
+              <MenuItemCard item={featuredItem.item} categoryName={featuredItem.categoryName} />
             {/each}
           </div>
         {/if}

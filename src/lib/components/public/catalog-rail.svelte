@@ -24,7 +24,7 @@
     aside?: Snippet;
   }>();
 
-  function categoryHref(slug = ''): string {
+  function categoryHref(slug: string = ''): string {
     const params = new URLSearchParams();
     if (slug) params.set('category', slug);
     if (allergen) params.set('allergen', allergen);

@@ -114,7 +114,7 @@
               {/if}
               <div class="catalog-grid">
                 {#each category.items as item (item.id)}
-                  <MenuItemCard {item} {category} categoryName={category.nameEs} />
+                  <MenuItemCard {item} categoryName={category.nameEs} />
                 {/each}
               </div>
             </section>
@@ -124,7 +124,7 @@
     {/if}
 
     <div class="menu-page__back">
-      <Button href="/" variant="link"
+      <Button href={resolve('/')} variant="link"
         ><ArrowLeft size={16} aria-hidden="true" /> Volver al inicio</Button
       >
     </div>

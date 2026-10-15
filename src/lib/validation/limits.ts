@@ -28,6 +28,7 @@ export const FORM_LIMITS = {
     specialRequestsMaxLength: 10_000, // Reservation.special_requests @db.Text, DTO @MaxLength(10_000).
     partySizeMin: 1, // reservations.party_size CHECK (> 0), DTO @Min(1).
     partySizeMax: 100, // DTO de disponibilidad y creación pública @Max(100).
+    durationMinutesDefault: 120, // Duración de visita usada por el flujo público cuando no se indica otra.
     durationMinutesMin: 30, // DTO @Min(30).
     durationMinutesMax: 360, // DTO @Max(360).
   },

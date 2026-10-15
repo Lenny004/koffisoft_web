@@ -49,7 +49,7 @@ export function addCalendarDays(isoDate: string, days: number): string {
   return date.toISOString().slice(0, 10);
 }
 
-export function todayInElSalvador(now = new Date()): string {
+export function todayInElSalvador(now: Date = new Date()): string {
   return new Intl.DateTimeFormat('en-CA', { timeZone: TIME_ZONE }).format(now);
 }
 
@@ -68,7 +68,7 @@ export function formatVisitDateParts(isoDate: string): {
   month: string;
 } {
   const date = new Date(`${isoDate}T12:00:00-06:00`);
-  const format = (options: Intl.DateTimeFormatOptions) =>
+  const format = (options: Intl.DateTimeFormatOptions): string =>
     new Intl.DateTimeFormat('es-SV', { ...options, timeZone: TIME_ZONE }).format(date);
 
   return {

@@ -53,9 +53,6 @@ export function getCategoryImage(category: Pick<PublicMenuCategory, 'slug' | 'na
   );
 }
 
-export function getMenuItemImage(
-  item: Pick<PublicMenuItem, 'slug' | 'imageUrl'>,
-  _category?: Pick<PublicMenuCategory, 'slug' | 'nameEs'>,
-): string {
+export function getMenuItemImage(item: Pick<PublicMenuItem, 'slug' | 'imageUrl'>): string {
   return item.imageUrl ?? editorialImageForSlug(item.slug);
 }

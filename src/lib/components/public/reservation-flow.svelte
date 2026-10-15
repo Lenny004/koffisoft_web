@@ -352,10 +352,15 @@
             : 'Hora por elegir'}
         </p>
         <form class="reservation-form" method="POST" use:enhance>
+          <p class="form-legend form-field--wide">* Campo obligatorio</p>
           <input type="hidden" name="partySize" value={partySize} />
           <input type="hidden" name="date" value={date} />
           <input type="hidden" name="time" value={time} />
-          <input type="hidden" name="durationMinutes" value="120" />
+          <input
+            type="hidden"
+            name="durationMinutes"
+            value={FORM_LIMITS.reservation.durationMinutesDefault}
+          />
           {#if spaceChoice !== 'any' && spaceChoice !== 'unset'}
             <input type="hidden" name="preferredSpaceId" value={spaceChoice} />
           {/if}

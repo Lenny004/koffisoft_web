@@ -11,7 +11,7 @@
     category: Pick<PublicMenuCategory, 'slug' | 'nameEs'>;
   }>();
 
-  const image = $derived(getMenuItemImage(item, category));
+  const image = $derived(getMenuItemImage(item));
 </script>
 
 <article class="product-detail">

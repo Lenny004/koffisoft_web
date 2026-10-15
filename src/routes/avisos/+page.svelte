@@ -43,13 +43,15 @@
     {:else}
       <div class="announcements-page__inner">
         {#each data.announcements as announcement (announcement.id)}
+          {@const displayDate = noticeDate(announcement)}
+          {@const paragraphs = formatAnnouncementMessage(announcement.message)}
           <article class="notice">
             <h2 class="notice__title">{announcement.title}</h2>
-            {#if noticeDate(announcement)}
-              <p class="notice__date">{noticeDate(announcement)}</p>
+            {#if displayDate}
+              <p class="notice__date">{displayDate}</p>
             {/if}
 
-            {#each formatAnnouncementMessage(announcement.message) as paragraph, paragraphIndex (paragraphIndex)}
+            {#each paragraphs as paragraph, paragraphIndex (paragraphIndex)}
               <p class="notice__paragraph">
                 {#each paragraph.lines as line, lineIndex (lineIndex)}
                   {#if lineIndex > 0}<br />{/if}

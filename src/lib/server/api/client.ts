@@ -152,7 +152,7 @@ export function createApiClient(
     }
   }
 
-  const locationQuery = (query: Record<string, string | undefined> = {}) =>
+  const locationQuery = (query: Record<string, string | undefined> = {}): string =>
     buildApiUrl(config.baseUrl, 'menu', { locationId: config.locationId, ...query });
 
   return {

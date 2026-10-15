@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import { ArrowLeft } from '@lucide/svelte';
 
   import ProductDetail from '$lib/components/public/product-detail.svelte';
@@ -19,7 +20,7 @@
 </svelte:head>
 
 <div class="menu-detail-page">
-  <Button href="/carta" variant="link" class="menu-detail-page__back">
+  <Button href={resolve('/carta')} variant="link" class="menu-detail-page__back">
     <ArrowLeft size={16} aria-hidden="true" /> Volver a la carta
   </Button>
 

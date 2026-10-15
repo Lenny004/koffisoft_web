@@ -12,7 +12,8 @@
     baseHref: string;
   }>();
 
-  const pageHref = (value: number) => (value === 1 ? baseHref : baseHref + '?page=' + value);
+  const pageHref = (value: number): string =>
+    value === 1 ? baseHref : `${baseHref}?page=${value}`;
 </script>
 
 {#if totalPages > 1}
@@ -20,7 +21,7 @@
     <a
       class:pagination__link--disabled={page <= 1}
       class="pagination__link"
-      href={resolve(page > 1 ? pageHref(page - 1) : pageHref(1))}
+      href={resolve((page > 1 ? pageHref(page - 1) : pageHref(1)) as '/')}
       aria-label="Página anterior"
       aria-disabled={page <= 1}
       tabindex={page <= 1 ? -1 : 0}
@@ -31,7 +32,7 @@
     <a
       class:pagination__link--disabled={page >= totalPages}
       class="pagination__link"
-      href={resolve(page < totalPages ? pageHref(page + 1) : pageHref(totalPages))}
+      href={resolve((page < totalPages ? pageHref(page + 1) : pageHref(totalPages)) as '/')}
       aria-label="Página siguiente"
       aria-disabled={page >= totalPages}
       tabindex={page >= totalPages ? -1 : 0}

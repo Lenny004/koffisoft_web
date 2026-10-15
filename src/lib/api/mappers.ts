@@ -2,7 +2,6 @@ import type { PublicMenuItem, PublicMenuResponse, PublicMenuVariant } from './ty
 
 export interface FeaturedMenuItem {
   categoryName: string;
-  categorySlug: string;
   item: PublicMenuItem;
 }
 
@@ -17,7 +16,6 @@ export function getFeaturedMenuItems(
     .flatMap((category) =>
       category.items.map((item) => ({
         categoryName: category.nameEs,
-        categorySlug: category.slug,
         item,
       })),
     )

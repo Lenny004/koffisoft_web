@@ -29,6 +29,19 @@ describe('validación server-side de formularios públicos', () => {
     });
   });
 
+  it('rechaza una duración no numérica en lugar de sustituirla silenciosamente', () => {
+    const form = new FormData();
+    form.set('date', '2026-10-24');
+    form.set('time', '18:30');
+    form.set('partySize', '4');
+    form.set('durationMinutes', 'dos horas');
+
+    expect(validateAvailabilityForm(form)).toMatchObject({
+      value: null,
+      errors: { durationMinutes: expect.stringContaining('30') },
+    });
+  });
+
   it('convierte la fecha local de evento al offset de la sede', () => {
     const form = new FormData();
     form.set('eventType', 'Birthday');

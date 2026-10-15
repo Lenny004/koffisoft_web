@@ -13,12 +13,9 @@ describe('mapeo de imágenes editoriales', () => {
   });
 
   it('prioriza la URL del ítem y, si falta, elige una foto editorial estable', () => {
-    expect(
-      getMenuItemImage(
-        { slug: 'latte', imageUrl: undefined },
-        { slug: 'postres', nameEs: 'Postres' },
-      ),
-    ).toBe(editorialImageForSlug('latte'));
+    expect(getMenuItemImage({ slug: 'latte', imageUrl: undefined })).toBe(
+      editorialImageForSlug('latte'),
+    );
     expect(getMenuItemImage({ slug: 'latte' })).toBe(editorialImageForSlug('latte'));
     expect(getMenuItemImage({ slug: 'latte', imageUrl: '/media/latte.jpg' })).toBe(
       '/media/latte.jpg',

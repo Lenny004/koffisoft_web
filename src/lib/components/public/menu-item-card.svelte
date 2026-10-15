@@ -3,17 +3,16 @@
 
   import { formatMenuPriceLabel, getDisplayVariant } from '$lib/api/mappers';
   import { getMenuItemImage } from '$lib/content/menu';
-  import type { PublicMenuCategory, PublicMenuItem } from '$lib/api/types';
+  import type { PublicMenuItem } from '$lib/api/types';
 
-  let { item, category, categoryName } = $props<{
+  let { item, categoryName } = $props<{
     item: PublicMenuItem;
-    category?: Pick<PublicMenuCategory, 'slug' | 'nameEs'>;
     categoryName?: string;
   }>();
 
   const displayVariant = $derived(getDisplayVariant(item));
   const available = $derived(displayVariant?.available ?? false);
-  const image = $derived(getMenuItemImage(item, category));
+  const image = $derived(getMenuItemImage(item));
   const priceLabel = $derived(formatMenuPriceLabel(item));
 </script>
 

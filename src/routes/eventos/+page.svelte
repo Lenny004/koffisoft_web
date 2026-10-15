@@ -147,6 +147,7 @@
     <Card>
       <CardContent>
         <form class="form-layout" method="POST" use:enhance>
+          <p class="form-legend form-field--wide">* Campo obligatorio</p>
           <FormField
             id="event-type"
             label="Tipo de evento"
