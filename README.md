@@ -33,6 +33,7 @@
 - **Formulario de contacto conectado:** envia mensajes a la API con validacion
   server-side, honeypot, limite basico y estados de error claros.
 - **Contenido del sitio conectado:** hero, Nosotros, contacto, ubicación, horarios y redes llegan desde `GET /site` con fallback editorial seguro.
+- **SEO público:** metatags, Open Graph, Twitter, canonical, JSON-LD Restaurant, sitemap y robots se resuelven desde contenido publicado.
 
 ## 🌟 Aspectos destacados
 
@@ -93,7 +94,7 @@ pnpm exec playwright install chromium
 pnpm dev
 ```
 
-Abre la dirección que muestre Vite. Con `API_BASE_URL` y `LOCATION_ID` configurados, la página inicial consulta los destacados reales y la navegación permite abrir `/carta`, `/reservas` y `/eventos`.
+Abre la dirección que muestre Vite. Con `API_BASE_URL` y `LOCATION_ID` configurados, la página inicial consulta los destacados reales, renderiza SEO editable y la navegación permite abrir `/carta`, `/reservas` y `/eventos`.
 
 <!-- section:configuration -->
 
@@ -122,11 +123,12 @@ No agregues tokens, contraseñas, cookies, claves privadas ni credenciales SMTP 
 ├── docs/
 │   ├── sistema-diseno.md       # Tokens, tipografía y componentes públicos
 │   ├── reglas-documentacion.md # Reglas para documentar código
-│   └── paginas-publicas.md     # Rutas, contratos y formularios públicos
+│   ├── paginas-publicas.md     # Rutas, contratos y formularios públicos
+│   └── seo-publico.md          # Metatags, JSON-LD y feeds de descubrimiento
 ├── static/                     # Logos, fotografías y planos provisionales
 ├── src/
 │   ├── lib/                    # Tipos, cliente server-only y componentes UI compartidos
-│   ├── routes/                 # Ruta y layout del sitio público
+│   ├── routes/                 # Rutas, layout y feeds del sitio público
 │   ├── app.css                 # Tema Tailwind 4 y variables de shadcn-svelte
 │   ├── app.d.ts                # Declaraciones de tipos de la aplicación
 │   └── app.html                # Documento HTML base
@@ -177,7 +179,7 @@ pnpm format
 - `pnpm lint:css`: revisa los archivos CSS con Stylelint y la convención BEM.
 - `pnpm format`: aplica Prettier.
 
-Las funciones `load` y las acciones de formulario deben vivir junto a su ruta (`+page.ts`, `+page.server.ts` o `+layout.server.ts`) y consumir la API mediante contratos, sin acceso directo a PostgreSQL. El detalle del bloque público está en [docs/paginas-publicas.md](docs/paginas-publicas.md) y las reglas de documentación en [docs/reglas-documentacion.md](docs/reglas-documentacion.md).
+Las funciones `load` y las acciones de formulario deben vivir junto a su ruta (`+page.ts`, `+page.server.ts` o `+layout.server.ts`) y consumir la API mediante contratos, sin acceso directo a PostgreSQL. El detalle del bloque público está en [docs/paginas-publicas.md](docs/paginas-publicas.md), [docs/seo-publico.md](docs/seo-publico.md) y las reglas de documentación en [docs/reglas-documentacion.md](docs/reglas-documentacion.md).
 
 <!-- section:testing -->
 
@@ -190,7 +192,7 @@ pnpm test:e2e
 pnpm test:e2e:ui
 ```
 
-- `pnpm test` y `pnpm test:unit`: ejecutan las pruebas unitarias de `src/**/*.test.ts` con Vitest, incluidas las validaciones defensivas de CTA de avisos.
+- `pnpm test` y `pnpm test:unit`: ejecutan las pruebas unitarias de `src/**/*.test.ts` con Vitest, incluidas las validaciones defensivas de CTA de avisos y defaults SEO.
 - `pnpm test:e2e`: ejecuta las pruebas de `tests/` con Playwright y Chromium.
 - `pnpm test:e2e:ui`: abre la interfaz de Playwright para las pruebas E2E.
 
@@ -205,6 +207,7 @@ importantes; el contenido operativo aún está pendiente de confirmación.
 
 - [x] Implementar el primer bloque público: portada, carta, reservas y eventos.
 - [x] Mostrar avisos importantes vigentes administrados desde el panel.
+- [x] Bloque 2: SEO editorial, metatags públicos y feeds sitemap/robots.
 - [x] Incorporar el sistema visual público y las rutas editoriales provisionales.
 - [ ] Incorporar contratos HTTP versionados cuando se apruebe el paquete privado `@koffisoft/contracts`.
 - [ ] Completar contenido operativo confirmado: contacto, ubicación, horarios, imágenes y promociones.

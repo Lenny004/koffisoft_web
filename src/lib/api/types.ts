@@ -223,6 +223,19 @@ export interface PublicSiteContent {
   profile: PublicSiteProfile | null;
 }
 
+export interface PublicSeoMetadata {
+  id: string | null;
+  resourceType: 'menu_item' | 'event' | 'announcement' | 'page';
+  resourceKey: string;
+  metaTitle: string;
+  metaDescription: string;
+  ogImageUrl: string | null;
+  canonicalUrl: string;
+  noindex: boolean;
+  locationId: string | null;
+  updatedAt: string | null;
+}
+
 export interface PublicMenuQuery {
   category?: string;
   allergen?: string;

@@ -18,11 +18,6 @@
   }
 </script>
 
-<svelte:head>
-  <title>Aviso importante | Koffi-Soft</title>
-  <meta name="description" content="Consulta los avisos importantes publicados por Koffi-Soft." />
-</svelte:head>
-
 <div class="announcements-page">
   <header class="announcements-page__header">
     <h1 class="announcements-page__title">Avisos importantes</h1>

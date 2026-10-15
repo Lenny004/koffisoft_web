@@ -12,14 +12,6 @@
   let { data }: { data: PageData } = $props();
 </script>
 
-<svelte:head>
-  <title>Koffi-Soft | Menú de café y montaña</title>
-  <meta
-    name="description"
-    content="Explora el menú de Koffi-Soft, sus categorías, favoritos, reservas y experiencias en la Ruta Panorámica."
-  />
-</svelte:head>
-
 <div class="home-page">
   <div class="catalog-page__band">
     <CatalogHero

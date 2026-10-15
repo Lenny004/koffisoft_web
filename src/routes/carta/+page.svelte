@@ -27,14 +27,6 @@
   );
 </script>
 
-<svelte:head>
-  <title>Carta | Koffi-Soft</title>
-  <meta
-    name="description"
-    content="Consulta la carta pública de Koffi-Soft, agrupada por categorías y filtrable por alérgenos."
-  />
-</svelte:head>
-
 <div class="menu-page">
   <div class="catalog-page__band">
     <CatalogHero

@@ -7,14 +7,6 @@
   let { data }: PageProps = $props();
 </script>
 
-<svelte:head>
-  <title>Ubicación | Koffi-Soft</title>
-  <meta
-    name="description"
-    content="Encuentra Koffi-Soft en la Ruta Panorámica y consulta su horario."
-  />
-</svelte:head>
-
 <div class="location-page">
   <SectionHeading
     level="h1"

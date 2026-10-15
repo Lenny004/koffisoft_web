@@ -5,14 +5,6 @@
   import SectionHeading from '$lib/components/public/section-heading.svelte';
 </script>
 
-<svelte:head>
-  <title>Senderismo | Koffi-Soft</title>
-  <meta
-    name="description"
-    content="Descubre el recorrido de senderismo editorial de Koffi-Soft en la Ruta Panorámica."
-  />
-</svelte:head>
-
 <div class="hiking-page">
   <SectionHeading
     level="h1"

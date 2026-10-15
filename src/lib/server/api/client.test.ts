@@ -73,6 +73,24 @@ describe('createApiClient', () => {
     ).resolves.toEqual({ accepted: true });
   });
 
+  it('consulta SEO público por tipo, clave y sede', async () => {
+    const fetcher = vi.fn(async (input: RequestInfo | URL) => {
+      expect(String(input)).toBe(
+        `https://api.example.test/seo?locationId=${locationId}&resourceType=page&resourceKey=home`,
+      );
+      return new Response(JSON.stringify({ resourceType: 'page', resourceKey: 'home' }), {
+        headers: { 'content-type': 'application/json' },
+      });
+    });
+
+    await createApiClient({ baseUrl: 'https://api.example.test', locationId }, fetcher).getSeo(
+      'page',
+      'home',
+    );
+
+    expect(fetcher).toHaveBeenCalledOnce();
+  });
+
   it('convierte respuestas HTTP fallidas en errores tipados', async () => {
     const fetcher = vi.fn(
       async () =>

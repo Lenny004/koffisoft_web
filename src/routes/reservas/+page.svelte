@@ -18,14 +18,6 @@
   let { form, data }: { form: ReservationActionForm; data: PageProps['data'] } = $props();
 </script>
 
-<svelte:head>
-  <title>Reservas | Koffi-Soft</title>
-  <meta
-    name="description"
-    content="Elige personas, fecha y hora, y envía una solicitud de reserva para Koffi-Soft en la Ruta Panorámica."
-  />
-</svelte:head>
-
 <div class="reservation-page">
   <SectionHeading
     level="h1"

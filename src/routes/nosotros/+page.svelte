@@ -7,11 +7,6 @@
   let { data }: PageProps = $props();
 </script>
 
-<svelte:head>
-  <title>Nosotros | Koffi-Soft</title>
-  <meta name="description" content="Conoce la misión, visión y equipo de Koffi-Soft." />
-</svelte:head>
-
 <div class="about-page">
   <section class="about-page__hero">
     <div>

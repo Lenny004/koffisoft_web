@@ -13,9 +13,11 @@ import type {
   PublicMenuQuery,
   PublicMenuResponse,
   PublicReservationResponse,
+  PublicSeoMetadata,
   PublicSiteContent,
   ReservationAvailabilityRequest,
 } from '$lib/api/types';
+import type { SeoResourceType } from '$lib/seo';
 
 const DEFAULT_TIMEOUT_MS = 8_000;
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
@@ -55,6 +57,7 @@ export interface PublicApiClient {
   createContactMessage(request: CreateContactMessageRequest): Promise<PublicContactMessageResponse>;
   getImportantAnnouncements(): Promise<PublicImportantAnnouncement[]>;
   getSiteContent(): Promise<PublicSiteContent>;
+  getSeo(resourceType: SeoResourceType, resourceKey: string): Promise<PublicSeoMetadata>;
 }
 
 type ApiFetch = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
@@ -220,6 +223,15 @@ export function createApiClient(
     getSiteContent() {
       return request<PublicSiteContent>(
         buildApiUrl(config.baseUrl, 'site', { locationId: config.locationId }),
+      );
+    },
+    getSeo(resourceType: SeoResourceType, resourceKey: string) {
+      return request<PublicSeoMetadata>(
+        buildApiUrl(config.baseUrl, 'seo', {
+          locationId: config.locationId,
+          resourceType,
+          resourceKey,
+        }),
       );
     },
   };

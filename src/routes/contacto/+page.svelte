@@ -19,14 +19,6 @@
   let { form, data }: { form: ContactActionForm; data: PageProps['data'] } = $props();
 </script>
 
-<svelte:head>
-  <title>Contacto | Koffi-Soft</title>
-  <meta
-    name="description"
-    content="Encuentra los canales de contacto de Koffi-Soft y envía tu mensaje."
-  />
-</svelte:head>
-
 <div class="contact-page">
   <header class="contact-page__header">
     <p class="contact-page__eyebrow">Estamos para escucharte</p>

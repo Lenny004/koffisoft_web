@@ -1,6 +1,7 @@
 export const editorialPlaceholder = true;
 
 export interface SiteContent {
+  name: string;
   contact: { email: string; phone: string; address: string; hours: string };
   hero: { eyebrow: string; title: string; description: string; imageUrl: string | null };
   about: {
@@ -16,6 +17,7 @@ export interface SiteContent {
 }
 
 export const siteContent: SiteContent = {
+  name: 'Koffi-Soft',
   contact: {
     email: 'Por confirmar',
     phone: 'Por confirmar',

@@ -31,14 +31,6 @@
   ];
 </script>
 
-<svelte:head>
-  <title>Eventos | Koffi-Soft</title>
-  <meta
-    name="description"
-    content="Conoce los espacios públicos para eventos de Koffi-Soft y solicita una cotización para tu celebración."
-  />
-</svelte:head>
-
 <div class="event-page">
   <header class="event-page__header">
     <p class="event-page__eyebrow">Reuniones con otra perspectiva</p>

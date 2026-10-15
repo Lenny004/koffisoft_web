@@ -18,10 +18,30 @@
   } from '@lucide/svelte';
 
   import '../app.css';
+  import SeoHead from '$lib/components/public/seo-head.svelte';
   import type { LayoutProps } from './$types';
 
   let { children, data }: LayoutProps = $props();
   const content = $derived(data.siteContent);
+  const restaurantJsonLd = $derived<Record<string, unknown>>({
+    '@context': 'https://schema.org',
+    '@type': 'Restaurant',
+    name: content.name,
+    url: data.siteUrl,
+    image: data.seo?.ogImageUrl ?? `${data.siteUrl}/brand/logo-primary.png`,
+    description: content.hero.description,
+    ...(content.contact.address !== 'Por confirmar'
+      ? { address: { '@type': 'PostalAddress', streetAddress: content.contact.address } }
+      : {}),
+    ...(content.contact.phone !== 'Por confirmar' ? { telephone: content.contact.phone } : {}),
+    ...(content.social.facebook || content.social.instagram || content.social.tikTok
+      ? {
+          sameAs: [content.social.facebook, content.social.instagram, content.social.tikTok].filter(
+            (value): value is string => Boolean(value),
+          ),
+        }
+      : {}),
+  });
   let menuOpen = $state(false);
   let darkMode = $state(false);
 
@@ -56,9 +76,10 @@
 
 <svelte:window onkeydown={(event) => event.key === 'Escape' && (menuOpen = false)} />
 
+{#if data.seo}<SeoHead metadata={data.seo} jsonLd={restaurantJsonLd} />{/if}
+
 <svelte:head>
   <meta name="theme-color" content="#173a2a" />
-  <meta name="description" content="Koffi-Soft: café, cocina y montaña en la Ruta Panorámica." />
 </svelte:head>
 
 <div class="site-shell">

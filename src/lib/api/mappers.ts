@@ -85,6 +85,7 @@ export function mapSiteContent(content: PublicSiteContent): SiteContent {
   const profile = content.profile;
   const location = content.location;
   return {
+    name: location.name || 'Koffi-Soft',
     contact: {
       address: [location.addressLine, location.municipality, location.department]
         .filter(Boolean)
