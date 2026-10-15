@@ -30,6 +30,8 @@
 
 <!-- section:highlights -->
 
+- **Estadísticas sin cookies:** cada navegación envía un evento anónimo y no bloqueante; la API conserva solo agregados diarios por sede, recurso y dominio.
+
 - **Vista previa segura:** `/preview/:token` muestra contenido temporal sin
   indexacion ni cache; ve [docs/preview-publico.md](docs/preview-publico.md).
 

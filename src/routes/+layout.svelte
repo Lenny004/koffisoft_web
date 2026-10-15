@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { afterNavigate } from '$app/navigation';
   import { resolve } from '$app/paths';
   import { page } from '$app/state';
   import { onMount } from 'svelte';
@@ -18,6 +19,7 @@
   } from '@lucide/svelte';
 
   import '../app.css';
+  import { createAnalyticsPayload } from '$lib/analytics';
   import SeoHead from '$lib/components/public/seo-head.svelte';
   import type { LayoutProps } from './$types';
 
@@ -44,6 +46,7 @@
   });
   let menuOpen = $state(false);
   let darkMode = $state(false);
+  let trackedPath = $state('');
 
   const navigation = [
     { href: '/', label: 'Inicio' },
@@ -69,9 +72,33 @@
     }
   }
 
+  function trackPageView(): void {
+    if (typeof window === 'undefined' || trackedPath === window.location.pathname) return;
+    const payload = createAnalyticsPayload(
+      window.location.pathname,
+      data.locationId,
+      document.referrer,
+    );
+    trackedPath = window.location.pathname;
+    if (!payload) return;
+
+    void fetch('/analytics/page-view', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload),
+      credentials: 'omit',
+      keepalive: true,
+    }).catch(() => {
+      // Las estadísticas son opcionales y nunca deben interrumpir la navegación.
+    });
+  }
+
   onMount(() => {
     darkMode = document.documentElement.dataset.theme === 'dark';
+    trackPageView();
   });
+
+  afterNavigate(trackPageView);
 </script>
 
 <svelte:window onkeydown={(event) => event.key === 'Escape' && (menuOpen = false)} />
