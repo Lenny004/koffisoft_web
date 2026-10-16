@@ -134,11 +134,40 @@ export interface PublicEventCatalogResponse {
   packages: PublicEventPackage[];
 }
 
+export interface PublicPublishedEvent {
+  id: string;
+  locationId: string;
+  eventCode: string;
+  eventType: string;
+  title: string;
+  startsAt: string;
+  endsAt: string;
+  estimatedGuestCount: number;
+  publicationStatus: 'Draft' | 'Scheduled' | 'Published';
+  publishedAt: string;
+}
+
 export interface PublicEventRequestResponse {
   eventCode: string;
   status: string;
   startsAt: string;
   endsAt: string;
+}
+
+export type PublicContactTopic = 'general' | 'reservation' | 'event' | 'feedback' | 'other';
+
+export interface CreateContactMessageRequest {
+  name: string;
+  email: string;
+  phone?: string;
+  languageCode?: 'es' | 'en';
+  topic?: PublicContactTopic;
+  message: string;
+  website?: string;
+}
+
+export interface PublicContactMessageResponse {
+  accepted: boolean;
 }
 
 export interface PublicImportantAnnouncement {
@@ -150,10 +179,86 @@ export interface PublicImportantAnnouncement {
   ctaUrl: string | null;
   startsAt: string | null;
   endsAt: string | null;
+  publicationStatus?: 'Draft' | 'Scheduled' | 'Published';
+  publishedAt?: string | null;
+  scheduledAt?: string | null;
+  expiresAt?: string | null;
   displayOrder: number;
   active: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface PublicPreviewResponse {
+  resourceType: 'announcement' | 'event' | 'menu_item';
+  resourceId: string;
+  locationId: string;
+  noindex: true;
+  resource: Record<string, unknown>;
+}
+
+export interface PublicSiteHour {
+  id: string;
+  serviceType: string;
+  dayOfWeek: number;
+  opensAt: string;
+  closesAt: string;
+  crossesMidnight: boolean;
+  active: boolean;
+}
+
+export interface PublicSiteOverride {
+  id: string;
+  serviceDate: string;
+  serviceType: string;
+  opensAt: string | null;
+  closesAt: string | null;
+  isClosed: boolean;
+  reason: string;
+}
+
+export interface PublicSiteProfile {
+  heroEyebrow: string;
+  heroTitle: string;
+  heroDescription: string;
+  heroImageUrl: string | null;
+  aboutTitle: string;
+  aboutDescription: string;
+  aboutMission: string;
+  aboutVision: string;
+  aboutTeam: { name: string; role: string; description: string }[];
+  socialFacebookUrl: string | null;
+  socialInstagramUrl: string | null;
+  socialTikTokUrl: string | null;
+}
+
+export interface PublicSiteContent {
+  locationId: string;
+  location: {
+    name: string;
+    addressLine: string;
+    municipality: string;
+    department: string;
+    phone: string | null;
+    email: string | null;
+    timezone: string;
+  };
+  hours: PublicSiteHour[];
+  overrides: PublicSiteOverride[];
+  profile: PublicSiteProfile | null;
+}
+
+export interface PublicSeoMetadata {
+  id: string | null;
+  resourceType: 'menu_item' | 'event' | 'announcement' | 'page';
+  resourceKey: string;
+  metaTitle: string;
+  metaDescription: string;
+  ogImageUrl: string | null;
+  canonicalUrl: string;
+  noindex: boolean;
+  locationId: string | null;
+  updatedAt: string | null;
 }
 
 export interface PublicMenuQuery {

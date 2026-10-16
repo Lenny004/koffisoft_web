@@ -78,10 +78,10 @@
   --status-warning: var(--clay-700);
   --status-info: var(--mountain-800);
   --status-danger: var(--danger-700);
-  --font-family-base: 'Helvetica Neue Light', ui-sans-serif, system-ui, sans-serif;
-  --font-family-display: var(--font-family-base);
+  --font-family-base: 'Manrope', 'Helvetica Neue Light', ui-sans-serif, system-ui, sans-serif;
+  --font-family-display: 'Fraunces', georgia, serif;
   --font-family-menu: var(--font-family-base);
-  --font-family-editorial: 'Palatino Linotype', palatino, georgia, serif;
+  --font-family-editorial: var(--font-family-display);
   --font-size-sm: 0.875rem;
   --font-size-lg: 1.125rem;
   --font-weight-light: 300;

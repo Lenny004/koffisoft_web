@@ -13,6 +13,11 @@ export interface ContactFormValues {
   message: string;
 }
 
+interface ReservationCoreValues {
+  partySize: number | null;
+  durationMinutes: number | null;
+}
+
 /** Valida y normaliza los campos mínimos antes de consultar disponibilidad en la API. */
 export function validateAvailabilityForm(
   formData: FormData,
@@ -28,24 +33,11 @@ export function validateAvailabilityForm(
   if (date && !validCalendarDate(date)) errors.date = 'Usa una fecha válida.';
   if (time && !timePattern.test(time)) errors.time = 'Usa una hora válida.';
 
-  const partySize = integer(formData, 'partySize');
-  if (
-    partySize === null ||
-    partySize < FORM_LIMITS.reservation.partySizeMin ||
-    partySize > FORM_LIMITS.reservation.partySizeMax
-  ) {
-    errors.partySize = `El grupo debe tener entre ${FORM_LIMITS.reservation.partySizeMin} y ${FORM_LIMITS.reservation.partySizeMax} personas.`;
-  }
+  const { partySize, durationMinutes } = validateReservationCore(formData, errors);
 
-  const durationMinutes = integer(formData, 'durationMinutes') ?? 120;
-  if (
-    durationMinutes < FORM_LIMITS.reservation.durationMinutesMin ||
-    durationMinutes > FORM_LIMITS.reservation.durationMinutesMax
-  ) {
-    errors.durationMinutes = `La duración debe estar entre ${FORM_LIMITS.reservation.durationMinutesMin} y ${FORM_LIMITS.reservation.durationMinutesMax} minutos.`;
+  if (Object.keys(errors).length > 0 || partySize === null || durationMinutes === null) {
+    return { value: null, errors };
   }
-
-  if (Object.keys(errors).length > 0 || partySize === null) return { value: null, errors };
 
   return {
     errors,
@@ -64,6 +56,7 @@ const datePattern = /^\d{4}-\d{2}-\d{2}$/u;
 const timePattern = FORM_PATTERNS.time;
 const localDateTimePattern = /^\d{4}-\d{2}-\d{2}T([01]\d|2[0-3]):[0-5]\d$/u;
 const uuidPattern = FORM_PATTERNS.uuid;
+const EL_SALVADOR_OFFSET = '-06:00';
 const eventTypes: PublicEventType[] = [
   'Wedding',
   'Birthday',
@@ -106,11 +99,39 @@ function addRequired(
   values: Record<string, string>,
   name: string,
   label: string,
-) {
+): void {
   if (!values[name]) errors[name] = `${label} es obligatorio.`;
 }
 
-/** Valida el formulario editorial de contacto sin enviarlo a una API no contratada. */
+function validateReservationCore(
+  formData: FormData,
+  errors: Record<string, string>,
+): ReservationCoreValues {
+  const partySize = integer(formData, 'partySize');
+  if (
+    partySize === null ||
+    partySize < FORM_LIMITS.reservation.partySizeMin ||
+    partySize > FORM_LIMITS.reservation.partySizeMax
+  ) {
+    errors.partySize = `El grupo debe tener entre ${FORM_LIMITS.reservation.partySizeMin} y ${FORM_LIMITS.reservation.partySizeMax} personas.`;
+  }
+
+  const durationRawValue = text(formData, 'durationMinutes');
+  const durationMinutes = durationRawValue
+    ? integer(formData, 'durationMinutes')
+    : FORM_LIMITS.reservation.durationMinutesDefault;
+  if (
+    durationMinutes === null ||
+    durationMinutes < FORM_LIMITS.reservation.durationMinutesMin ||
+    durationMinutes > FORM_LIMITS.reservation.durationMinutesMax
+  ) {
+    errors.durationMinutes = `La duración debe estar entre ${FORM_LIMITS.reservation.durationMinutesMin} y ${FORM_LIMITS.reservation.durationMinutesMax} minutos.`;
+  }
+
+  return { partySize, durationMinutes };
+}
+
+/** Valida y normaliza los campos del formulario publico de contacto. */
 export function validateContactForm(formData: FormData): FormValidation<ContactFormValues> {
   const name = text(formData, 'name');
   const email = text(formData, 'email');
@@ -161,22 +182,7 @@ export function validateReservationForm(
   if (values.date && !validCalendarDate(values.date)) errors.date = 'Usa una fecha válida.';
   if (values.time && !timePattern.test(values.time)) errors.time = 'Usa una hora válida.';
 
-  const partySize = integer(formData, 'partySize');
-  if (
-    partySize === null ||
-    partySize < FORM_LIMITS.reservation.partySizeMin ||
-    partySize > FORM_LIMITS.reservation.partySizeMax
-  ) {
-    errors.partySize = `El grupo debe tener entre ${FORM_LIMITS.reservation.partySizeMin} y ${FORM_LIMITS.reservation.partySizeMax} personas.`;
-  }
-
-  const durationMinutes = integer(formData, 'durationMinutes') ?? 120;
-  if (
-    durationMinutes < FORM_LIMITS.reservation.durationMinutesMin ||
-    durationMinutes > FORM_LIMITS.reservation.durationMinutesMax
-  ) {
-    errors.durationMinutes = `La duración debe estar entre ${FORM_LIMITS.reservation.durationMinutesMin} y ${FORM_LIMITS.reservation.durationMinutesMax} minutos.`;
-  }
+  const { partySize, durationMinutes } = validateReservationCore(formData, errors);
 
   const contactEmail = optionalText(formData, 'contactEmail');
   if (contactEmail && !emailPattern.test(contactEmail))
@@ -193,7 +199,9 @@ export function validateReservationForm(
   if (specialRequests && specialRequests.length > FORM_LIMITS.reservation.specialRequestsMaxLength)
     errors.specialRequests = `La solicitud no puede superar ${FORM_LIMITS.reservation.specialRequestsMaxLength.toLocaleString('es-SV')} caracteres.`;
 
-  if (Object.keys(errors).length > 0 || partySize === null) return { value: null, errors };
+  if (Object.keys(errors).length > 0 || partySize === null || durationMinutes === null) {
+    return { value: null, errors };
+  }
 
   return {
     errors,
@@ -213,7 +221,7 @@ export function validateReservationForm(
 }
 
 function toElSalvadorIso(value: string): string {
-  return `${value}:00-06:00`;
+  return `${value}:00${EL_SALVADOR_OFFSET}`;
 }
 
 /** Valida el formulario de cotización y aplica el offset horario contractual de la sede. */

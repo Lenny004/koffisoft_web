@@ -1,22 +1,19 @@
 <script lang="ts">
   import { HeartHandshake, Mountain, Users } from '@lucide/svelte';
 
-  import { siteContent, editorialPlaceholder } from '$lib/content/site';
   import SectionHeading from '$lib/components/public/section-heading.svelte';
-</script>
+  import type { PageProps } from './$types';
 
-<svelte:head>
-  <title>Nosotros | Koffi-Soft</title>
-  <meta name="description" content="Conoce la misión, visión y equipo de Koffi-Soft." />
-</svelte:head>
+  let { data }: PageProps = $props();
+</script>
 
 <div class="about-page">
   <section class="about-page__hero">
     <div>
-      <p class="about-page__eyebrow">Una mesa con paisaje</p>
-      <h1 class="about-page__title">Nosotros</h1>
+      <p class="about-page__eyebrow">{data.siteContent.hero.eyebrow}</p>
+      <h1 class="about-page__title">{data.siteContent.about.title}</h1>
       <p class="about-page__intro">
-        Koffi-Soft nace como un punto de encuentro para disfrutar la montaña con los cinco sentidos.
+        {data.siteContent.about.description}
       </p>
     </div>
     <div
@@ -28,7 +25,7 @@
     </div>
   </section>
 
-  {#if editorialPlaceholder}<p class="about-page__notice">
+  {#if data.siteContentSource === 'fallback'}<p class="about-page__notice">
       Contenido editorial provisional pendiente de validación institucional.
     </p>{/if}
 
@@ -36,19 +33,19 @@
     <article class="about-value">
       <HeartHandshake class="about-value__icon" size={25} aria-hidden="true" />
       <h2>Misión</h2>
-      <p>{siteContent.about.mission}</p>
+      <p>{data.siteContent.about.mission}</p>
     </article>
     <article class="about-value">
       <Mountain class="about-value__icon" size={25} aria-hidden="true" />
       <h2>Visión</h2>
-      <p>{siteContent.about.vision}</p>
+      <p>{data.siteContent.about.vision}</p>
     </article>
   </section>
 
   <section class="about-page__team" aria-labelledby="team-title">
     <SectionHeading level="h2" title="El equipo" eyebrow="Personas detrás de la experiencia" />
     <div class="about-page__team-grid">
-      {#each siteContent.about.team as member (member.name)}
+      {#each data.siteContent.about.team as member (member.name)}
         <article class="team-card">
           <div class="team-card__avatar" aria-hidden="true"><Users size={26} /></div>
           <h3>{member.name}</h3>

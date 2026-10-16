@@ -5,6 +5,7 @@
   import SectionHeading from '$lib/components/public/section-heading.svelte';
   import StatusMessage from '$lib/components/public/status-message.svelte';
   import type { PublicAvailabilityResponse } from '$lib/api/types';
+  import type { PageProps } from './$types';
 
   type ReservationActionForm = {
     kind?: 'error' | 'success' | 'availability';
@@ -14,16 +15,8 @@
     errors?: Record<string, string>;
   } | null;
 
-  let { form }: { form: ReservationActionForm } = $props();
+  let { form, data }: { form: ReservationActionForm; data: PageProps['data'] } = $props();
 </script>
-
-<svelte:head>
-  <title>Reservas | Koffi-Soft</title>
-  <meta
-    name="description"
-    content="Elige personas, fecha y hora, y envía una solicitud de reserva para Koffi-Soft en la Ruta Panorámica."
-  />
-</svelte:head>
 
 <div class="reservation-page">
   <SectionHeading
@@ -47,7 +40,7 @@
     />
   {/if}
 
-  <ReservationFlow {form} />
+  <ReservationFlow {form} siteContent={data.siteContent} />
 
   <aside class="reservation-note">
     <Clock3 size={20} aria-hidden="true" />

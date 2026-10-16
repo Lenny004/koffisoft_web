@@ -4,6 +4,7 @@
 
   import CatalogHero from '$lib/components/public/catalog-hero.svelte';
   import CatalogRail from '$lib/components/public/catalog-rail.svelte';
+  import { isSafeAnnouncementCtaUrl } from '$lib/content/announcements';
   import MenuItemCard from '$lib/components/public/menu-item-card.svelte';
   import StatusMessage from '$lib/components/public/status-message.svelte';
   import type { PageData } from './$types';
@@ -11,21 +12,14 @@
   let { data }: { data: PageData } = $props();
 </script>
 
-<svelte:head>
-  <title>Koffi-Soft | Menú de café y montaña</title>
-  <meta
-    name="description"
-    content="Explora el menú de Koffi-Soft, sus categorías, favoritos, reservas y experiencias en la Ruta Panorámica."
-  />
-</svelte:head>
-
 <div class="home-page">
   <div class="catalog-page__band">
     <CatalogHero
       titleId="home-hero-title"
-      title="Descubre los favoritos del café y la cocina de montaña"
-      label="Carta de la casa"
-      description="Platos, bebidas y postres publicados por la sede. Precios y disponibilidad de hoy, para elegir con calma."
+      title={data.siteContent.hero.title}
+      label={data.siteContent.hero.eyebrow}
+      description={data.siteContent.hero.description}
+      imageUrl={data.siteContent.hero.imageUrl}
     />
     {#if data.preview}
       <p class="catalog-preview">
@@ -48,7 +42,7 @@
               {announcement.title}
             </h2>
             <p class="announcement__message">{announcement.message}</p>
-            {#if announcement.ctaLabel && announcement.ctaUrl}
+            {#if announcement.ctaLabel && announcement.ctaUrl && isSafeAnnouncementCtaUrl(announcement.ctaUrl)}
               {#if announcement.ctaUrl.startsWith('/')}
                 <a class="announcement__link" href={resolve(announcement.ctaUrl as '/')}
                   >{announcement.ctaLabel} <ArrowRight size={16} aria-hidden="true" /></a
@@ -94,11 +88,7 @@
         {:else}
           <div class="catalog-grid catalog-grid--lead">
             {#each data.featuredItems as featuredItem (featuredItem.item.id)}
-              <MenuItemCard
-                item={featuredItem.item}
-                categoryName={featuredItem.categoryName}
-                category={{ slug: featuredItem.categorySlug, nameEs: featuredItem.categoryName }}
-              />
+              <MenuItemCard item={featuredItem.item} categoryName={featuredItem.categoryName} />
             {/each}
           </div>
         {/if}

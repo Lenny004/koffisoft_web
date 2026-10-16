@@ -7,11 +7,6 @@
   import SectionHeading from '$lib/components/public/section-heading.svelte';
 </script>
 
-<svelte:head>
-  <title>Promociones | Koffi-Soft</title>
-  <meta name="description" content="Conoce las novedades y promociones de Koffi-Soft." />
-</svelte:head>
-
 <div class="promotions-page">
   <SectionHeading
     level="h1"

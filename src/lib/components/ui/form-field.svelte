@@ -34,7 +34,7 @@
     const control = document.getElementById(id);
     if (!(control instanceof HTMLInputElement || control instanceof HTMLTextAreaElement)) return;
 
-    const updateLength = () => {
+    const updateLength = (): void => {
       currentLength = control.value.length;
     };
     updateLength();

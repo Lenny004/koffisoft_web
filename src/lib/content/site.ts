@@ -1,13 +1,39 @@
 export const editorialPlaceholder = true;
 
-export const siteContent = {
+export interface SiteContent {
+  name: string;
+  contact: { email: string; phone: string; address: string; hours: string };
+  hero: { eyebrow: string; title: string; description: string; imageUrl: string | null };
+  about: {
+    title: string;
+    description: string;
+    mission: string;
+    vision: string;
+    team: { name: string; role: string; description: string }[];
+  };
+  social: { facebook: string | null; instagram: string | null; tikTok: string | null };
+  promotions: { title: string; description: string; label: string }[];
+  hikingStages: { title: string; description: string; image: string }[];
+}
+
+export const siteContent: SiteContent = {
+  name: 'Koffi-Soft',
   contact: {
     email: 'Por confirmar',
     phone: 'Por confirmar',
     address: 'Ruta Panorámica, El Salvador',
     hours: 'Horario por confirmar con el equipo de Koffi-Soft.',
   },
+  hero: {
+    eyebrow: 'Carta de la casa',
+    title: 'Descubre los favoritos del café y la cocina de montaña',
+    description: 'Platos, bebidas y postres para elegir con calma.',
+    imageUrl: null,
+  },
   about: {
+    title: 'Nosotros',
+    description:
+      'Koffi-Soft nace como un punto de encuentro para disfrutar la montaña con los cinco sentidos.',
     mission:
       'Crear pausas memorables alrededor del café, la cocina y el paisaje de montaña, con una atención cercana para cada visita.',
     vision:
@@ -30,6 +56,7 @@ export const siteContent = {
       },
     ],
   },
+  social: { facebook: null, instagram: null, tikTok: null },
   promotions: [
     {
       title: 'Próximamente en Koffi-Soft',

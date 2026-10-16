@@ -15,6 +15,7 @@ export const FORM_LIMITS = {
     mfaLabelMaxLength: 100, // UserMfaFactor.label @db.VarChar(100), MfaSetupDto @MaxLength(100).
   },
   contact: {
+    searchMaxLength: 120,
     nameMaxLength: 200, // ContactMessage.name_snapshot @db.VarChar(200).
     emailMaxLength: 200, // ContactMessage.email @db.VarChar(200).
     phoneMaxLength: 40, // ContactMessage.phone @db.VarChar(40).
@@ -28,6 +29,7 @@ export const FORM_LIMITS = {
     specialRequestsMaxLength: 10_000, // Reservation.special_requests @db.Text, DTO @MaxLength(10_000).
     partySizeMin: 1, // reservations.party_size CHECK (> 0), DTO @Min(1).
     partySizeMax: 100, // DTO de disponibilidad y creación pública @Max(100).
+    durationMinutesDefault: 120, // Duración de visita usada por el flujo público cuando no se indica otra.
     durationMinutesMin: 30, // DTO @Min(30).
     durationMinutesMax: 360, // DTO @Max(360).
   },

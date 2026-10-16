@@ -1,7 +1,9 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import { ArrowLeft } from '@lucide/svelte';
 
   import ProductDetail from '$lib/components/public/product-detail.svelte';
+  import SeoHead from '$lib/components/public/seo-head.svelte';
   import StatusMessage from '$lib/components/public/status-message.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
   import type { PageData } from './$types';
@@ -9,17 +11,10 @@
   let { data }: { data: PageData } = $props();
 </script>
 
-<svelte:head>
-  <title>{data.item?.item.nameEs ?? 'Detalle de la carta'} | Koffi-Soft</title>
-  <meta
-    name="description"
-    content={data.item?.item.descriptionEs ??
-      'Detalle de un ítem de la carta pública de Koffi-Soft.'}
-  />
-</svelte:head>
+{#if data.seo}<SeoHead metadata={data.seo} />{/if}
 
 <div class="menu-detail-page">
-  <Button href="/carta" variant="link" class="menu-detail-page__back">
+  <Button href={resolve('/carta')} variant="link" class="menu-detail-page__back">
     <ArrowLeft size={16} aria-hidden="true" /> Volver a la carta
   </Button>
 

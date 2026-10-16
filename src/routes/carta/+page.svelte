@@ -27,14 +27,6 @@
   );
 </script>
 
-<svelte:head>
-  <title>Carta | Koffi-Soft</title>
-  <meta
-    name="description"
-    content="Consulta la carta pública de Koffi-Soft, agrupada por categorías y filtrable por alérgenos."
-  />
-</svelte:head>
-
 <div class="menu-page">
   <div class="catalog-page__band">
     <CatalogHero
@@ -114,7 +106,7 @@
               {/if}
               <div class="catalog-grid">
                 {#each category.items as item (item.id)}
-                  <MenuItemCard {item} {category} categoryName={category.nameEs} />
+                  <MenuItemCard {item} categoryName={category.nameEs} />
                 {/each}
               </div>
             </section>
@@ -124,7 +116,7 @@
     {/if}
 
     <div class="menu-page__back">
-      <Button href="/" variant="link"
+      <Button href={resolve('/')} variant="link"
         ><ArrowLeft size={16} aria-hidden="true" /> Volver al inicio</Button
       >
     </div>

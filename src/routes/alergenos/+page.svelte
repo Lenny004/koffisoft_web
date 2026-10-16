@@ -24,14 +24,6 @@
   ];
 </script>
 
-<svelte:head>
-  <title>Alérgenos | Koffi-Soft</title>
-  <meta
-    name="description"
-    content="Selecciona alérgenos para preparar tu consulta de la carta Koffi-Soft."
-  />
-</svelte:head>
-
 <div class="allergens-page">
   <SectionHeading
     level="h1"

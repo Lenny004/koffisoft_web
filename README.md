@@ -30,10 +30,20 @@
 
 <!-- section:highlights -->
 
+- **Estadísticas sin cookies:** cada navegación envía un evento anónimo y no bloqueante; la API conserva solo agregados diarios por sede, recurso y dominio.
+
+- **Vista previa segura:** `/preview/:token` muestra contenido temporal sin
+  indexacion ni cache; ve [docs/preview-publico.md](docs/preview-publico.md).
+
+- **Formulario de contacto conectado:** envia mensajes a la API con validacion
+  server-side, honeypot, limite basico y estados de error claros.
+- **Contenido del sitio conectado:** hero, Nosotros, contacto, ubicación, horarios y redes llegan desde `GET /site` con fallback editorial seguro.
+- **SEO público:** metatags, Open Graph, Twitter, canonical, JSON-LD Restaurant, sitemap y robots se resuelven desde contenido publicado.
+
 ## 🌟 Aspectos destacados
 
 - **Identidad pública nueva**: recrea módulos del legacy con paleta café/crema, acento montaña, Fraunces, Manrope y Lucide.
-- **Portada y navegación pública**: presenta menú por categorías, favoritos, avisos importantes, promociones, reservas, eventos y páginas editoriales responsive.
+- **Portada y navegación pública**: presenta menú por categorías, favoritos, avisos importantes con CTA segura, promociones, reservas, eventos y páginas editoriales responsive.
 - **Carta conectada a la API**: muestra categorías, detalle de ítems, precios publicados y filtros por alérgeno sin datos ficticios.
 - **Solicitudes públicas**: consulta disponibilidad, solicita reservas, cotiza eventos y valida contacto mediante actions server-side.
 - **Verificación automatizada**: el CI ejecuta lint, typecheck, pruebas unitarias, build y pruebas E2E.
@@ -47,7 +57,7 @@
 
 Forma parte del sistema junto con `koffisoft_api`, responsable de PostgreSQL, Prisma, autenticación, trabajos en segundo plano y contratos HTTP, y `koffisoft_admin`, el panel privado que consume esos contratos. Las rutas consultan la API desde `+page.server.ts` y mantienen estados vacíos o de error cuando el servicio no responde. El legacy queda fuera de este árbol y solo sirve como referencia de migración. Este sitio no contiene PHP, credenciales ni acceso directo a PostgreSQL.
 
-**Stack:** SvelteKit 2.70.3, Svelte 5.57.1, TypeScript 5.9.3, Vite 7.3.6, Tailwind CSS 4.3.3, shadcn-svelte 1.7.0 sobre Bits UI 2.19.5, `@lucide/svelte` 1.51.0, `@fontsource-variable/fraunces` 5.2.5, `@fontsource-variable/manrope` 5.2.5, Vitest 5.0.3 y Playwright 1.63.0.
+**Stack:** SvelteKit 2.70.3, Svelte 5.57.1, TypeScript 5.9.3, Vite 7.3.6, Tailwind CSS 4.3.3, shadcn-svelte 1.7.0 sobre Bits UI 2.19.5, `@lucide/svelte` 1.51.0, Vitest 5.0.3 y Playwright 1.63.0. La interfaz usa las familias Fraunces y Manrope con fallback local.
 
 <!-- section:requirements -->
 
@@ -89,7 +99,7 @@ pnpm exec playwright install chromium
 pnpm dev
 ```
 
-Abre la dirección que muestre Vite. Con `API_BASE_URL` y `LOCATION_ID` configurados, la página inicial consulta los destacados reales y la navegación permite abrir `/carta`, `/reservas` y `/eventos`.
+Abre la dirección que muestre Vite. Con `API_BASE_URL` y `LOCATION_ID` configurados, la página inicial consulta los destacados reales, renderiza SEO editable y la navegación permite abrir `/carta`, `/reservas` y `/eventos`.
 
 <!-- section:configuration -->
 
@@ -107,6 +117,9 @@ No agregues tokens, contraseñas, cookies, claves privadas ni credenciales SMTP 
 
 <!-- section:structure -->
 
+La ruta `src/routes/preview/[token]/` esta aislada, consume un token de un
+solo uso y no presenta contenido editorial interno.
+
 ## 🗂️ Estructura del proyecto
 
 ```text
@@ -118,11 +131,12 @@ No agregues tokens, contraseñas, cookies, claves privadas ni credenciales SMTP 
 ├── docs/
 │   ├── sistema-diseno.md       # Tokens, tipografía y componentes públicos
 │   ├── reglas-documentacion.md # Reglas para documentar código
-│   └── paginas-publicas.md     # Rutas, contratos y formularios públicos
+│   ├── paginas-publicas.md     # Rutas, contratos y formularios públicos
+│   └── seo-publico.md          # Metatags, JSON-LD y feeds de descubrimiento
 ├── static/                     # Logos, fotografías y planos provisionales
 ├── src/
 │   ├── lib/                    # Tipos, cliente server-only y componentes UI compartidos
-│   ├── routes/                 # Ruta y layout del sitio público
+│   ├── routes/                 # Rutas, layout y feeds del sitio público
 │   ├── app.css                 # Tema Tailwind 4 y variables de shadcn-svelte
 │   ├── app.d.ts                # Declaraciones de tipos de la aplicación
 │   └── app.html                # Documento HTML base
@@ -173,7 +187,7 @@ pnpm format
 - `pnpm lint:css`: revisa los archivos CSS con Stylelint y la convención BEM.
 - `pnpm format`: aplica Prettier.
 
-Las funciones `load` y las acciones de formulario deben vivir junto a su ruta (`+page.ts`, `+page.server.ts` o `+layout.server.ts`) y consumir la API mediante contratos, sin acceso directo a PostgreSQL. El detalle del bloque público está en [docs/paginas-publicas.md](docs/paginas-publicas.md) y las reglas de documentación en [docs/reglas-documentacion.md](docs/reglas-documentacion.md).
+Las funciones `load` y las acciones de formulario deben vivir junto a su ruta (`+page.ts`, `+page.server.ts` o `+layout.server.ts`) y consumir la API mediante contratos, sin acceso directo a PostgreSQL. El detalle del bloque público está en [docs/paginas-publicas.md](docs/paginas-publicas.md), [docs/seo-publico.md](docs/seo-publico.md) y las reglas de documentación en [docs/reglas-documentacion.md](docs/reglas-documentacion.md).
 
 <!-- section:testing -->
 
@@ -186,7 +200,7 @@ pnpm test:e2e
 pnpm test:e2e:ui
 ```
 
-- `pnpm test` y `pnpm test:unit`: ejecutan las pruebas unitarias de `src/**/*.test.ts` con Vitest.
+- `pnpm test` y `pnpm test:unit`: ejecutan las pruebas unitarias de `src/**/*.test.ts` con Vitest, incluidas las validaciones defensivas de CTA de avisos y defaults SEO.
 - `pnpm test:e2e`: ejecuta las pruebas de `tests/` con Playwright y Chromium.
 - `pnpm test:e2e:ui`: abre la interfaz de Playwright para las pruebas E2E.
 
@@ -194,12 +208,16 @@ El workflow de [CI](.github/workflows/ci.yml) ejecuta lint, typecheck, pruebas u
 
 <!-- section:roadmap -->
 
+- [x] Bloque 4: filtros de vigencia y preview temporal sin indexacion.
+
 ## 🗺️ Hoja de ruta y estado
 
-El estado actual es Fase 0 con el primer bloque público conectado a la API y contenido operativo aún pendiente de confirmación.
+El sitio público tiene conectadas portada, carta, reservas, eventos y avisos
+importantes; el contenido operativo aún está pendiente de confirmación.
 
 - [x] Implementar el primer bloque público: portada, carta, reservas y eventos.
 - [x] Mostrar avisos importantes vigentes administrados desde el panel.
+- [x] Bloque 2: SEO editorial, metatags públicos y feeds sitemap/robots.
 - [x] Incorporar el sistema visual público y las rutas editoriales provisionales.
 - [ ] Incorporar contratos HTTP versionados cuando se apruebe el paquete privado `@koffisoft/contracts`.
 - [ ] Completar contenido operativo confirmado: contacto, ubicación, horarios, imágenes y promociones.

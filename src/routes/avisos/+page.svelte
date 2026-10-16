@@ -1,7 +1,12 @@
 <script lang="ts">
   import { resolve } from '$app/paths';
 
-  import { formatAnnouncementDate, formatAnnouncementMessage } from '$lib/content/announcements';
+  import {
+    formatAnnouncementDate,
+    formatAnnouncementMessage,
+    isExternalAnnouncementUrl,
+    isSafeAnnouncementCtaUrl,
+  } from '$lib/content/announcements';
   import StatusMessage from '$lib/components/public/status-message.svelte';
   import type { PageData } from './$types';
   import type { PublicImportantAnnouncement } from '$lib/api/types';
@@ -11,20 +16,11 @@
   function noticeDate(announcement: PublicImportantAnnouncement): string | null {
     return formatAnnouncementDate(announcement.startsAt ?? announcement.createdAt);
   }
-
-  function isExternalUrl(url: string): boolean {
-    return /^https?:\/\//iu.test(url);
-  }
 </script>
-
-<svelte:head>
-  <title>Aviso importante | Koffi-Soft</title>
-  <meta name="description" content="Consulta los avisos importantes publicados por Koffi-Soft." />
-</svelte:head>
 
 <div class="announcements-page">
   <header class="announcements-page__header">
-    <h1 class="announcements-page__title">Aviso importante</h1>
+    <h1 class="announcements-page__title">Avisos importantes</h1>
   </header>
 
   <section class="announcements-page__information" aria-label="Avisos vigentes">
@@ -42,13 +38,15 @@
     {:else}
       <div class="announcements-page__inner">
         {#each data.announcements as announcement (announcement.id)}
+          {@const displayDate = noticeDate(announcement)}
+          {@const paragraphs = formatAnnouncementMessage(announcement.message)}
           <article class="notice">
             <h2 class="notice__title">{announcement.title}</h2>
-            {#if noticeDate(announcement)}
-              <p class="notice__date">{noticeDate(announcement)}</p>
+            {#if displayDate}
+              <p class="notice__date">{displayDate}</p>
             {/if}
 
-            {#each formatAnnouncementMessage(announcement.message) as paragraph, paragraphIndex (paragraphIndex)}
+            {#each paragraphs as paragraph, paragraphIndex (paragraphIndex)}
               <p class="notice__paragraph">
                 {#each paragraph.lines as line, lineIndex (lineIndex)}
                   {#if lineIndex > 0}<br />{/if}
@@ -71,17 +69,16 @@
               </p>
             {/each}
 
-            {#if announcement.ctaLabel && announcement.ctaUrl}
+            {#if announcement.ctaLabel && announcement.ctaUrl && isSafeAnnouncementCtaUrl(announcement.ctaUrl)}
               <p class="notice__action">
-                {#if isExternalUrl(announcement.ctaUrl) || !announcement.ctaUrl.startsWith('/')}
+                {#if isExternalAnnouncementUrl(announcement.ctaUrl)}
                   <!-- resolve() rechaza URL absolutas y rutas que no empiezan por /. -->
                   <!-- eslint-disable svelte/no-navigation-without-resolve -->
                   <a
                     class="notice__link"
                     href={announcement.ctaUrl}
-                    rel={isExternalUrl(announcement.ctaUrl) ? 'noopener noreferrer' : undefined}
-                    target={isExternalUrl(announcement.ctaUrl) ? '_blank' : undefined}
-                    >{announcement.ctaLabel}</a
+                    rel="noopener noreferrer"
+                    target="_blank">{announcement.ctaLabel}</a
                   >
                   <!-- eslint-enable svelte/no-navigation-without-resolve -->
                 {:else}

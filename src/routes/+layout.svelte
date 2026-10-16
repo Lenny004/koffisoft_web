@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { afterNavigate } from '$app/navigation';
   import { resolve } from '$app/paths';
   import { page } from '$app/state';
   import { onMount } from 'svelte';
@@ -18,10 +19,34 @@
   } from '@lucide/svelte';
 
   import '../app.css';
+  import { createAnalyticsPayload } from '$lib/analytics';
+  import SeoHead from '$lib/components/public/seo-head.svelte';
+  import type { LayoutProps } from './$types';
 
-  let { children } = $props();
+  let { children, data }: LayoutProps = $props();
+  const content = $derived(data.siteContent);
+  const restaurantJsonLd = $derived<Record<string, unknown>>({
+    '@context': 'https://schema.org',
+    '@type': 'Restaurant',
+    name: content.name,
+    url: data.siteUrl,
+    image: data.seo?.ogImageUrl ?? `${data.siteUrl}/brand/logo-primary.png`,
+    description: content.hero.description,
+    ...(content.contact.address !== 'Por confirmar'
+      ? { address: { '@type': 'PostalAddress', streetAddress: content.contact.address } }
+      : {}),
+    ...(content.contact.phone !== 'Por confirmar' ? { telephone: content.contact.phone } : {}),
+    ...(content.social.facebook || content.social.instagram || content.social.tikTok
+      ? {
+          sameAs: [content.social.facebook, content.social.instagram, content.social.tikTok].filter(
+            (value): value is string => Boolean(value),
+          ),
+        }
+      : {}),
+  });
   let menuOpen = $state(false);
   let darkMode = $state(false);
+  let trackedPath = $state('');
 
   const navigation = [
     { href: '/', label: 'Inicio' },
@@ -47,16 +72,41 @@
     }
   }
 
+  function trackPageView(): void {
+    if (typeof window === 'undefined' || trackedPath === window.location.pathname) return;
+    const payload = createAnalyticsPayload(
+      window.location.pathname,
+      data.locationId,
+      document.referrer,
+    );
+    trackedPath = window.location.pathname;
+    if (!payload) return;
+
+    void fetch('/analytics/page-view', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload),
+      credentials: 'omit',
+      keepalive: true,
+    }).catch(() => {
+      // Las estadísticas son opcionales y nunca deben interrumpir la navegación.
+    });
+  }
+
   onMount(() => {
     darkMode = document.documentElement.dataset.theme === 'dark';
+    trackPageView();
   });
+
+  afterNavigate(trackPageView);
 </script>
 
 <svelte:window onkeydown={(event) => event.key === 'Escape' && (menuOpen = false)} />
 
+{#if data.seo}<SeoHead metadata={data.seo} jsonLd={restaurantJsonLd} />{/if}
+
 <svelte:head>
   <meta name="theme-color" content="#173a2a" />
-  <meta name="description" content="Koffi-Soft: café, cocina y montaña en la Ruta Panorámica." />
 </svelte:head>
 
 <div class="site-shell">
@@ -66,7 +116,7 @@
         <img class="site-header__logo" src="/brand/logo-primary.png" alt="Koffi-Soft" />
         <span class="site-header__brand-copy">
           <span class="site-header__name">Koffi-Soft</span>
-          <span class="site-header__tagline">Café y montaña</span>
+          <span class="site-header__tagline">{content.hero.eyebrow}</span>
         </span>
       </a>
 
@@ -132,17 +182,32 @@
     <div class="site-footer__inner">
       <div class="site-footer__identity">
         <img class="site-footer__logo" src="/brand/logo-light.png" alt="Koffi-Soft" />
-        <p class="site-footer__copy">Café, cocina y encuentros con vista a la montaña.</p>
+        <p class="site-footer__copy">{content.hero.description}</p>
         <div class="site-footer__social" aria-label="Redes sociales">
-          <a href="https://www.facebook.com" aria-label="Facebook de Koffi-Soft"
-            ><MessageCircle size={19} aria-hidden="true" /></a
-          >
-          <a href="https://www.instagram.com" aria-label="Instagram de Koffi-Soft"
-            ><Camera size={19} aria-hidden="true" /></a
-          >
-          <a href="https://www.tiktok.com" aria-label="TikTok de Koffi-Soft"
-            ><Music2 size={19} aria-hidden="true" /></a
-          >
+          {#if content.social.facebook}
+            <a
+              href={content.social.facebook}
+              aria-label="Facebook de Koffi-Soft"
+              rel="external noreferrer"
+              target="_blank"><MessageCircle size={19} aria-hidden="true" /></a
+            >
+          {/if}
+          {#if content.social.instagram}
+            <a
+              href={content.social.instagram}
+              aria-label="Instagram de Koffi-Soft"
+              rel="external noreferrer"
+              target="_blank"><Camera size={19} aria-hidden="true" /></a
+            >
+          {/if}
+          {#if content.social.tikTok}
+            <a
+              href={content.social.tikTok}
+              aria-label="TikTok de Koffi-Soft"
+              rel="external noreferrer"
+              target="_blank"><Music2 size={19} aria-hidden="true" /></a
+            >
+          {/if}
         </div>
       </div>
 
@@ -165,9 +230,9 @@
 
       <div class="site-footer__column site-footer__column--contact">
         <p class="site-footer__label">Ruta Panorámica</p>
-        <p><MapPin size={15} aria-hidden="true" /> El Salvador</p>
-        <p><Phone size={15} aria-hidden="true" /> Teléfono por confirmar</p>
-        <p><Mountain size={15} aria-hidden="true" /> Horario por confirmar</p>
+        <p><MapPin size={15} aria-hidden="true" /> {content.contact.address}</p>
+        <p><Phone size={15} aria-hidden="true" /> {content.contact.phone}</p>
+        <p><Mountain size={15} aria-hidden="true" /> {content.contact.hours}</p>
       </div>
     </div>
     <div class="site-footer__bottom">
