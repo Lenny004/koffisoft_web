@@ -44,8 +44,8 @@
 
 - **Identidad pública nueva**: recrea módulos del legacy con paleta café/crema, acento montaña, Fraunces, Manrope y Lucide.
 - **Portada y navegación pública**: presenta menú por categorías, favoritos, avisos importantes con CTA segura, promociones, reservas, eventos y páginas editoriales responsive.
-- **Carta conectada a la API**: muestra categorías, detalle de ítems, precios publicados y filtros por alérgeno sin datos ficticios.
-- **Solicitudes públicas**: consulta disponibilidad, solicita reservas, cotiza eventos y valida contacto mediante actions server-side.
+- **Carta conectada a la API**: muestra categorías, detalle de ítems, precios publicados y filtros buscables por categoría y alérgeno.
+- **Solicitudes públicas**: consulta disponibilidad, solicita reservas, cotiza eventos y valida contacto con Combobox accesible en las listas que crecen.
 - **Verificación automatizada**: el CI ejecuta lint, typecheck, pruebas unitarias, build y pruebas E2E.
 - **Frontera clara con la API**: el cliente server-only consume únicamente los endpoints públicos de `koffisoft_api`, sin conexiones directas a PostgreSQL.
 
@@ -157,7 +157,7 @@ solo uso y no presenta contenido editorial interno.
 └── vitest.config.ts            # Configuración de Vitest
 ```
 
-Las pruebas unitarias viven junto al código en `src/**/*.test.ts`; cubren el cliente de API, los mapeos de carta y la validación server-side. Las pruebas E2E se agrupan en `tests/`. Los componentes UI compartidos se ubican en `src/lib/components/ui/` y el cliente de API solo servidor en `src/lib/server/api/`.
+Las pruebas unitarias viven junto al código en `src/**/*.test.ts`; cubren el cliente de API, los mapeos de carta y la validación server-side. Las pruebas E2E se agrupan en `tests/`. Los componentes UI compartidos se ubican en `src/lib/components/ui/` (incluidos `Command`, `Popover` y `Combobox`) y el cliente de API solo servidor en `src/lib/server/api/`.
 
 <!-- section:development -->
 

@@ -43,7 +43,7 @@ Si se modifica una ruta o interacción, ejecutar además `pnpm test:e2e` despué
 
 ## Regla permanente de componentes y formularios
 
-- Usar siempre los componentes base de `src/lib/components/ui/`: `Button`, `Dialog`, `Card`, `Table`, `Badge`, `Alert` y `FormField`. No crear variantes ad hoc de botones, modales, tarjetas, tablas o estados.
+- Usar siempre los componentes base de `src/lib/components/ui/`: `Button`, `Dialog`, `Card`, `Table`, `Badge`, `Alert`, `FormField`, `Select` y `Combobox`. No crear variantes ad hoc de botones, modales, tarjetas, tablas o estados. Las listas extensas o que crecen usan `Combobox`; las listas cortas fijas pueden usar `Select` nativo.
 - Cada campo debe tener placeholder de ejemplo en español, tipo/inputmode/autocomplete correcto, límites de `src/lib/validation/limits.ts` alineados con la API, validación visible junto al campo y `maxlength`, `min`, `max`, `step` o `pattern` cuando aplique.
 - Los campos obligatorios deben usar `FormField` con `required`, mostrar `*` en la etiqueta y presentar la leyenda `* Campo obligatorio` en cada formulario.
 - Los modales deben usar la estructura base: header con título y cierre, body con scroll, footer alineado a la derecha con cancelar en `outline` y confirmar en `primary` o `destructive`; no usar colores o radios hardcodeados.

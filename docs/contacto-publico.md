@@ -1,9 +1,10 @@
 # Formulario publico de contacto
 
-La ruta `/contacto` valida nombre, correo, telefono y mensaje en el servidor
+La ruta `/contacto` valida nombre, correo, telefono, asunto y mensaje en el servidor
 de SvelteKit y entrega el formulario a `POST /contact` usando el cliente
-server-only. La sede se agrega desde `LOCATION_ID`; no se guarda estado del
-formulario en cookies ni en el navegador.
+server-only. El asunto usa el Combobox del contrato (`general`, `reservation`,
+`event`, `feedback`, `other`). La sede se agrega desde `LOCATION_ID`; no se guarda
+estado del formulario en cookies ni en el navegador.
 
 El campo honeypot `website` queda oculto para personas y ayuda a descartar
 automatizaciones. La API aplica ademas limite por IP y sede y deduplicacion

@@ -42,6 +42,7 @@ Las acciones y elementos informativos usan `@lucide/svelte`. Las redes del foote
 - `product-detail`: detalle de dos columnas con variantes, alérgenos y modificadores de API.
 - `allergen-selector`: botones con selección múltiple y `aria-pressed`.
 - `pagination`: navegación anterior/siguiente con estado textual.
+- `Combobox`: select con buscador sobre Command y Popover de shadcn-svelte; degradación a `<select>` nativo.
 
 Los componentes propios siguen BEM dentro de sus estilos Svelte. Los componentes generados de shadcn-svelte permanecen bajo `src/lib/components/ui/` y conservan sus nombres de variables.
 
@@ -69,7 +70,7 @@ Las imágenes de productos permanecen preparadas para una futura URL opcional `i
 
 ## Componentes y formularios
 
-`Button`, `Dialog`, `Card`, `Table`, `Badge`, `Alert` y `FormField` son la única fuente de UI compartida. Sus variantes, tamaños, radios, colores y estados se consumen desde tokens; las rutas no deben recrearlos con clases o estilos propios.
+`Button`, `Dialog`, `Card`, `Table`, `Badge`, `Alert`, `FormField`, `Select` y `Combobox` son la única fuente de UI compartida. Sus variantes, tamaños, radios, colores y estados se consumen desde tokens; las rutas no deben recrearlos con clases o estilos propios. `Combobox` cubre listas extensas o que crecen; `Select` nativo queda para listas cortas fijas.
 
 Todo formulario muestra la leyenda `* Campo obligatorio`. Cada campo usa `FormField`, etiqueta con `*` cuando corresponde, placeholder realista en español, mensaje de error junto al control y los límites documentados en `src/lib/validation/limits.ts`, que deben coincidir con la API. Los modales respetan header, body desplazable y footer con cancelar `outline` y confirmar `primary` o `destructive`.
 
