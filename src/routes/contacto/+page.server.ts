@@ -26,7 +26,6 @@ export const actions: Actions = {
       ).createContactMessage({
         ...validation.value,
         languageCode: 'es',
-        topic: 'general',
         website: String(formData.get('website') ?? ''),
       });
 

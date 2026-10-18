@@ -63,6 +63,7 @@ describe('validación server-side de formularios públicos', () => {
     const form = new FormData();
     form.set('name', 'Ana');
     form.set('email', 'ana@example.com');
+    form.set('topic', 'general');
     form.set('message', 'Hola');
 
     expect(validateContactForm(form)).toMatchObject({
@@ -75,6 +76,7 @@ describe('validación server-side de formularios públicos', () => {
     const form = new FormData();
     form.set('name', 'A'.repeat(201));
     form.set('email', 'ana@example.com');
+    form.set('topic', 'general');
     form.set('message', 'Un mensaje suficientemente largo.');
 
     expect(validateContactForm(form).errors.name).toContain('200');
@@ -98,6 +100,7 @@ describe('validación server-side de formularios públicos', () => {
     form.set('name', ' Ana ');
     form.set('email', 'ana@example.com');
     form.set('phone', '+503 0000-0000');
+    form.set('topic', 'reservation');
     form.set('message', 'Quisiera conocer el horario.');
 
     expect(validateContactForm(form)).toEqual({
@@ -105,9 +108,20 @@ describe('validación server-side de formularios públicos', () => {
         name: 'Ana',
         email: 'ana@example.com',
         phone: '+503 0000-0000',
+        topic: 'reservation',
         message: 'Quisiera conocer el horario.',
       },
       errors: {},
     });
+  });
+
+  it('rechaza un asunto de contacto fuera del contrato', () => {
+    const form = new FormData();
+    form.set('name', 'Ana');
+    form.set('email', 'ana@example.com');
+    form.set('topic', 'catering');
+    form.set('message', 'Quisiera conocer el horario.');
+
+    expect(validateContactForm(form).errors.topic).toContain('asunto');
   });
 });

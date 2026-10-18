@@ -5,10 +5,11 @@
   import StatusMessage from '$lib/components/public/status-message.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
   import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
+  import { Combobox } from '$lib/components/ui/combobox/index.js';
   import FormField from '$lib/components/ui/form-field.svelte';
   import { Input } from '$lib/components/ui/input/index.js';
-  import { Select } from '$lib/components/ui/select/index.js';
   import { Textarea } from '$lib/components/ui/textarea/index.js';
+  import { EVENT_TYPES } from '$lib/content/form-options';
   import { FORM_LIMITS, FORM_PATTERNS } from '$lib/validation/limits';
   import type { PublicPublishedEvent } from '$lib/api/types';
   import type { PageData } from './$types';
@@ -23,15 +24,7 @@
   type EventsPageData = PageData & { publishedEvents: PublicPublishedEvent[] };
 
   let { data, form }: { data: EventsPageData; form: EventActionForm } = $props();
-
-  const eventTypes = [
-    { value: 'Wedding', label: 'Boda' },
-    { value: 'Birthday', label: 'Cumpleaños' },
-    { value: 'Corporate', label: 'Evento corporativo' },
-    { value: 'Meeting', label: 'Reunión' },
-    { value: 'Anniversary', label: 'Aniversario' },
-    { value: 'Other', label: 'Otro' },
-  ];
+  let eventType = $state('');
 
   function eventDate(value: string): string {
     return new Intl.DateTimeFormat('es-SV', {
@@ -184,12 +177,17 @@
             required
             error={form?.errors?.eventType}
           >
-            <Select id="event-type" name="eventType" required>
-              <option value="">Selecciona una opción</option>
-              {#each eventTypes as eventType (eventType.value)}
-                <option value={eventType.value}>{eventType.label}</option>
-              {/each}
-            </Select>
+            <Combobox
+              id="event-type"
+              name="eventType"
+              bind:value={eventType}
+              required
+              invalid={Boolean(form?.errors?.eventType)}
+              placeholder="Ej. Boda"
+              searchPlaceholder="Buscar tipo de evento…"
+              emptyText="No encontramos ese tipo de evento."
+              options={[...EVENT_TYPES]}
+            />
           </FormField>
           <FormField
             id="event-title"

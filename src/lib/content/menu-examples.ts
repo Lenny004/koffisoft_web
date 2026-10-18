@@ -74,7 +74,10 @@ export const exampleMenu: PublicMenuResponse = {
       'Desayunos',
       'Huevos, tostadas y panes para empezar la mañana con calma.',
       [
-        exampleItem('huevos-de-la-casa', 'Huevos de la casa', '8.50', '/menu/editorial/04.jpg'),
+        exampleItem('huevos-de-la-casa', 'Huevos de la casa', '8.50', '/menu/editorial/04.jpg', {
+          code: 'EGG',
+          nameEs: 'Huevo',
+        }),
         exampleItem(
           'tostada-de-aguacate',
           'Tostada de aguacate',
@@ -96,7 +99,10 @@ export const exampleMenu: PublicMenuResponse = {
       'Bebidas calientes',
       'Café de la casa y chai para alargar la pausa.',
       [
-        exampleItem('latte-de-montana', 'Latte de montaña', '3.75', '/menu/editorial/01.jpg'),
+        exampleItem('latte-de-montana', 'Latte de montaña', '3.75', '/menu/editorial/01.jpg', {
+          code: 'MILK',
+          nameEs: 'Leche',
+        }),
         exampleItem('chai-de-la-casa', 'Chai de la casa', '4.25', '/menu/editorial/08.jpg'),
       ],
     ),

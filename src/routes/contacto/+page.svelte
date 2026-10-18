@@ -4,10 +4,12 @@
 
   import type { PageProps } from './$types';
   import StatusMessage from '$lib/components/public/status-message.svelte';
+  import { Combobox } from '$lib/components/ui/combobox/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import { Textarea } from '$lib/components/ui/textarea/index.js';
   import FormField from '$lib/components/ui/form-field.svelte';
+  import { CONTACT_TOPICS } from '$lib/content/form-options';
   import { FORM_LIMITS } from '$lib/validation/limits';
 
   type ContactActionForm = {
@@ -17,6 +19,7 @@
   } | null;
 
   let { form, data }: { form: ContactActionForm; data: PageProps['data'] } = $props();
+  let topic = $state('');
 </script>
 
 <div class="contact-page">
@@ -123,6 +126,19 @@
             placeholder="Ej. +503 7000 0000"
             maxlength={FORM_LIMITS.contact.phoneMaxLength}
             aria-invalid={Boolean(form?.errors?.phone)}
+          />
+        </FormField>
+        <FormField id="contact-topic" label="Asunto" required error={form?.errors?.topic}>
+          <Combobox
+            id="contact-topic"
+            name="topic"
+            bind:value={topic}
+            required
+            invalid={Boolean(form?.errors?.topic)}
+            placeholder="Ej. Consulta general"
+            searchPlaceholder="Buscar asunto…"
+            emptyText="No encontramos ese asunto."
+            options={[...CONTACT_TOPICS]}
           />
         </FormField>
         <FormField

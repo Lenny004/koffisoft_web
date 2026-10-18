@@ -1,4 +1,10 @@
-import type { CreateEventRequest, CreateReservationRequest, PublicEventType } from '$lib/api/types';
+import type {
+  CreateEventRequest,
+  CreateReservationRequest,
+  PublicContactTopic,
+  PublicEventType,
+} from '$lib/api/types';
+import { CONTACT_TOPIC_VALUES, EVENT_TYPE_VALUES } from '$lib/content/form-options';
 import { FORM_LIMITS, FORM_PATTERNS } from '$lib/validation/limits';
 
 export interface FormValidation<T> {
@@ -10,6 +16,7 @@ export interface ContactFormValues {
   name: string;
   email: string;
   phone?: string;
+  topic: PublicContactTopic;
   message: string;
 }
 
@@ -57,14 +64,8 @@ const timePattern = FORM_PATTERNS.time;
 const localDateTimePattern = /^\d{4}-\d{2}-\d{2}T([01]\d|2[0-3]):[0-5]\d$/u;
 const uuidPattern = FORM_PATTERNS.uuid;
 const EL_SALVADOR_OFFSET = '-06:00';
-const eventTypes: PublicEventType[] = [
-  'Wedding',
-  'Birthday',
-  'Corporate',
-  'Meeting',
-  'Anniversary',
-  'Other',
-];
+const eventTypes: readonly PublicEventType[] = EVENT_TYPE_VALUES;
+const contactTopics: readonly PublicContactTopic[] = CONTACT_TOPIC_VALUES;
 
 function text(formData: FormData, name: string): string {
   return String(formData.get(name) ?? '').trim();
@@ -136,6 +137,7 @@ export function validateContactForm(formData: FormData): FormValidation<ContactF
   const name = text(formData, 'name');
   const email = text(formData, 'email');
   const phone = optionalText(formData, 'phone');
+  const topic = text(formData, 'topic');
   const message = text(formData, 'message');
   const errors: Record<string, string> = {};
 
@@ -148,6 +150,9 @@ export function validateContactForm(formData: FormData): FormValidation<ContactF
     errors.email = `El correo no puede superar ${FORM_LIMITS.contact.emailMaxLength} caracteres.`;
   if (phone && phone.length > FORM_LIMITS.contact.phoneMaxLength)
     errors.phone = `El teléfono no puede superar ${FORM_LIMITS.contact.phoneMaxLength} caracteres.`;
+  if (!topic) errors.topic = 'El asunto es obligatorio.';
+  else if (!contactTopics.includes(topic as PublicContactTopic))
+    errors.topic = 'Selecciona un asunto válido.';
   if (!message) errors.message = 'El mensaje es obligatorio.';
   else if (message.length < FORM_LIMITS.contact.messageMinLength)
     errors.message = 'Escribe al menos 10 caracteres.';
@@ -156,7 +161,10 @@ export function validateContactForm(formData: FormData): FormValidation<ContactF
 
   if (Object.keys(errors).length > 0) return { value: null, errors };
 
-  return { value: { name, email, phone, message }, errors };
+  return {
+    value: { name, email, phone, topic: topic as PublicContactTopic, message },
+    errors,
+  };
 }
 
 /** Valida la solicitud pública y conserva los nombres del DTO que recibirá la API. */

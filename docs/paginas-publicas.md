@@ -16,7 +16,7 @@ Las rutas server-only leen estas variables desde `$env/dynamic/private`:
 | --------------- | ---------------------------------------------------------------------- | --------------------------------------------------------- |
 | `/`             | Categorías y destacados de `GET /menu`; avisos de `GET /announcements` | Navegación a carta, reservas, eventos y avisos            |
 | `/avisos`       | Avisos vigentes de `GET /announcements`                                | Lectura del aviso completo, con enlaces del texto         |
-| `/carta`        | Carta agrupada de `GET /menu`                                          | Filtros `category` y `allergen` por query params          |
+| `/carta`        | Carta agrupada de `GET /menu`                                          | Combobox de `category` y `allergen` por query params      |
 | `/carta/[slug]` | Detalle de `GET /menu/items/{slug}`                                    | Variantes, precio, alérgenos y modificadores publicados   |
 | `/reservas`     | `GET /reservations/availability` bajo demanda                          | Actions `availability` y `default` para solicitar reserva |
 | `/eventos`      | `GET /events/catalog`                                                  | Action `default` para solicitar cotización                |
@@ -31,22 +31,24 @@ destinos protocol-relative antes de crear el enlace.
 
 Estas páginas no inventan contratos. El contenido institucional está en `src/lib/content/site.ts` y los módulos legales en `src/lib/content/legal.ts`. Ambos quedan marcados por `editorialPlaceholder` hasta que exista información aprobada:
 
-| Ruta           | Alcance                                                                                              |
-| -------------- | ---------------------------------------------------------------------------------------------------- |
-| `/promociones` | Tarjetas preparadas para un futuro catálogo de promociones; sin precios ni vigencias ficticias       |
-| `/alergenos`   | Selector visual local con selección múltiple; no simula resultados de menú                           |
-| `/contacto`    | Form action con validación server-side; confirma la entrada, pero no envía a un endpoint inexistente |
-| `/nosotros`    | Misión, visión y equipo editorial provisional                                                        |
-| `/senderismo`  | Recorrido por etapas con fotografías provisionales                                                   |
-| `/ubicacion`   | Mapa de referencia y horario provisional                                                             |
-| `/legal`       | Aviso legal y condiciones de uso, en cláusulas numeradas provisionales                               |
-| `/privacidad`  | Política de privacidad provisional                                                                   |
-| `/cookies`     | Política de cookies y almacenamiento local provisional                                               |
-| `/condiciones` | Condiciones provisionales de solicitudes de reserva y eventos                                        |
+| Ruta           | Alcance                                                                                          |
+| -------------- | ------------------------------------------------------------------------------------------------ |
+| `/promociones` | Tarjetas preparadas para un futuro catálogo de promociones; sin precios ni vigencias ficticias   |
+| `/alergenos`   | Selector visual local con selección múltiple; no simula resultados de menú                       |
+| `/contacto`    | Form action con validación server-side y envío a `POST /contact`, incluido el asunto contractual |
+| `/nosotros`    | Misión, visión y equipo editorial provisional                                                    |
+| `/senderismo`  | Recorrido por etapas con fotografías provisionales                                               |
+| `/ubicacion`   | Mapa de referencia y horario provisional                                                         |
+| `/legal`       | Aviso legal y condiciones de uso, en cláusulas numeradas provisionales                           |
+| `/privacidad`  | Política de privacidad provisional                                                               |
+| `/cookies`     | Política de cookies y almacenamiento local provisional                                           |
+| `/condiciones` | Condiciones provisionales de solicitudes de reserva y eventos                                    |
 
 ## Formularios
 
 `/reservas`, `/eventos` y `/contacto` usan `use:enhance`, pero mantienen `POST` y actions server-side como fallback sin JavaScript. La validación se centraliza en `src/lib/server/validation.ts`.
+
+Las listas que crecen (asunto de contacto, tipo de evento, zona de reserva, categoría y alérgeno de la carta) usan el Combobox accesible. El select nativo permanece como degradación sin JavaScript y para listas cortas fijas.
 
 Las fechas de eventos se convierten desde `datetime-local` al offset `-06:00` de la sede. Las solicitudes no guardan tokens en `localStorage`; la única preferencia local del shell es el tema visual.
 

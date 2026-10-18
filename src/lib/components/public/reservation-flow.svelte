@@ -15,6 +15,7 @@
   } from '$lib/content/reservation-turns';
   import type { PublicAvailabilityResponse } from '$lib/api/types';
   import { Button } from '$lib/components/ui/button/index.js';
+  import { Combobox, type ComboboxOption } from '$lib/components/ui/combobox/index.js';
   import FormField from '$lib/components/ui/form-field.svelte';
   import { Input } from '$lib/components/ui/input/index.js';
   import { Textarea } from '$lib/components/ui/textarea/index.js';
@@ -66,6 +67,18 @@
   );
   const partyLabel = $derived(partySize === 1 ? '1 persona' : `${partySize} personas`);
   const openSpaces = $derived(availability?.spaces.filter((space) => space.available) ?? []);
+  const spaceOptions = $derived<ComboboxOption[]>([
+    { value: 'any', label: 'Sin preferencia', keywords: ['cualquiera', 'zona'] },
+    ...(availability?.spaces ?? []).map((space) => ({
+      value: space.id,
+      label: space.available
+        ? `${space.nameEs} (hasta ${space.seatedCapacity})`
+        : `${space.nameEs} (no disponible)`,
+      disabled: !space.available,
+      keywords: [space.code, space.nameEn],
+    })),
+  ]);
+  const spaceValue = $derived(spaceChoice === 'unset' ? '' : spaceChoice);
 
   $effect(() => {
     if (form?.kind === 'error') step = 'details';
@@ -314,33 +327,20 @@
     {:else if step === 'space'}
       <div class="booking-panel__step">
         <h3 class="booking-panel__heading">Seleccione la zona</h3>
-        <div class="slot-grid" role="group" aria-label="Zona preferida">
-          <button
-            class="choice-chip choice-chip--slot"
-            class:is-selected={spaceChoice === 'any'}
-            type="button"
-            aria-pressed={spaceChoice === 'any'}
-            onclick={() => selectSpace('any')}
-          >
-            <span class="choice-chip__label">Sin preferencia</span>
-            <span class="choice-chip__time">Cualquier zona libre</span>
-          </button>
-          {#each availability?.spaces ?? [] as space (space.id)}
-            <button
-              class="choice-chip choice-chip--slot"
-              class:is-selected={spaceChoice === space.id}
-              type="button"
-              aria-pressed={spaceChoice === space.id}
-              disabled={!space.available}
-              onclick={() => selectSpace(space.id)}
-            >
-              <span class="choice-chip__label">{space.nameEs}</span>
-              <span class="choice-chip__time">
-                {space.available ? `Hasta ${space.seatedCapacity}` : 'No disponible'}
-              </span>
-            </button>
-          {/each}
-        </div>
+        <FormField id="reservation-space" label="Zona preferida" required>
+          <Combobox
+            id="reservation-space"
+            required
+            placeholder="Ej. Terraza o sin preferencia"
+            searchPlaceholder="Buscar zona…"
+            emptyText="No encontramos esa zona."
+            options={spaceOptions}
+            value={spaceValue}
+            onValueChange={(next) => {
+              if (next) selectSpace(next);
+            }}
+          />
+        </FormField>
         <button class="booking-back" type="button" onclick={() => goTo('time')}>Regresar</button>
       </div>
     {:else}

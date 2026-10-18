@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { editorialImageForSlug, getCategoryImage, getMenuItemImage } from './menu';
+import { exampleMenu } from './menu-examples';
+import {
+  editorialImageForSlug,
+  getCategoryImage,
+  getMenuItemImage,
+  listMenuAllergens,
+} from './menu';
 
 describe('mapeo de imágenes editoriales', () => {
   it('selecciona una imagen de categoría por slug o nombre', () => {
@@ -20,5 +26,13 @@ describe('mapeo de imágenes editoriales', () => {
     expect(getMenuItemImage({ slug: 'latte', imageUrl: '/media/latte.jpg' })).toBe(
       '/media/latte.jpg',
     );
+  });
+
+  it('lista alérgenos únicos de la carta ordenados por nombre', () => {
+    expect(listMenuAllergens(exampleMenu).map((allergen) => allergen.code)).toEqual([
+      'GLUTEN',
+      'EGG',
+      'MILK',
+    ]);
   });
 });
