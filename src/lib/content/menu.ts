@@ -1,4 +1,4 @@
-import type { PublicMenuCategory, PublicMenuItem } from '$lib/api/types';
+import type { PublicMenuCategory, PublicMenuItem, PublicMenuResponse } from '$lib/api/types';
 
 /** Imágenes editoriales provisionales; los precios y disponibilidad siguen viniendo de la API. */
 export const categoryImages: Record<string, string> = {
@@ -55,4 +55,23 @@ export function getCategoryImage(category: Pick<PublicMenuCategory, 'slug' | 'na
 
 export function getMenuItemImage(item: Pick<PublicMenuItem, 'slug' | 'imageUrl'>): string {
   return item.imageUrl ?? editorialImageForSlug(item.slug);
+}
+
+/** Extrae alérgenos únicos de la carta para el filtro buscable del catálogo. */
+export function listMenuAllergens(menu: PublicMenuResponse): { code: string; nameEs: string }[] {
+  const allergens = new Map<string, string>();
+
+  for (const category of menu.categories) {
+    for (const item of category.items) {
+      for (const variant of item.variants) {
+        for (const allergen of variant.allergens) {
+          if (!allergens.has(allergen.code)) allergens.set(allergen.code, allergen.nameEs);
+        }
+      }
+    }
+  }
+
+  return [...allergens.entries()]
+    .map(([code, nameEs]) => ({ code, nameEs }))
+    .sort((left, right) => left.nameEs.localeCompare(right.nameEs, 'es'));
 }

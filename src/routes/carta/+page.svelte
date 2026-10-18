@@ -7,12 +7,33 @@
   import MenuItemCard from '$lib/components/public/menu-item-card.svelte';
   import StatusMessage from '$lib/components/public/status-message.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
+  import { Combobox, type ComboboxOption } from '$lib/components/ui/combobox/index.js';
   import FormField from '$lib/components/ui/form-field.svelte';
-  import { Input } from '$lib/components/ui/input/index.js';
-  import { FORM_LIMITS } from '$lib/validation/limits';
   import type { PageData } from './$types';
 
   let { data }: { data: PageData } = $props();
+  let categoryFilter = $state('');
+  let allergenFilter = $state('');
+
+  $effect.pre(() => {
+    categoryFilter = data.filters.category;
+    allergenFilter = data.filters.allergen;
+  });
+
+  const categoryOptions = $derived<ComboboxOption[]>(
+    data.navigation.map((category) => ({
+      value: category.slug,
+      label: category.nameEs,
+      keywords: [category.slug, category.nameEn],
+    })),
+  );
+  const allergenOptions = $derived<ComboboxOption[]>(
+    data.allergens.map((allergen) => ({
+      value: allergen.code,
+      label: allergen.nameEs,
+      keywords: [allergen.code],
+    })),
+  );
 
   const activeCategory = $derived(
     data.navigation.find((category) => category.slug === data.filters.category) ?? null,
@@ -49,20 +70,34 @@
     allergen={data.filters.allergen}
   >
     {#snippet aside()}
-      <details class="catalog-filter" open={data.filters.allergen !== ''}>
+      <details
+        class="catalog-filter"
+        open={Boolean(data.filters.allergen || data.filters.category)}
+      >
         <summary class="catalog-filter__toggle">Filtrar</summary>
         <form class="catalog-filter__panel" method="GET">
-          {#if data.filters.category}
-            <input type="hidden" name="category" value={data.filters.category} />
-          {/if}
+          <FormField id="menu-category" label="Categoría">
+            <Combobox
+              id="menu-category"
+              name="category"
+              bind:value={categoryFilter}
+              allowEmpty
+              placeholder="Toda la carta"
+              searchPlaceholder="Buscar categoría…"
+              emptyText="No encontramos esa categoría."
+              options={categoryOptions}
+            />
+          </FormField>
           <FormField id="menu-allergen" label="Alérgeno">
-            <Input
+            <Combobox
               id="menu-allergen"
               name="allergen"
-              value={data.filters.allergen}
-              placeholder="Ej. GLUTEN"
-              maxlength={FORM_LIMITS.menu.allergenMaxLength}
-              autocomplete="off"
+              bind:value={allergenFilter}
+              allowEmpty
+              placeholder="Todos los alérgenos"
+              searchPlaceholder="Buscar alérgeno…"
+              emptyText="No encontramos ese alérgeno."
+              options={allergenOptions}
             />
           </FormField>
           <div class="catalog-filter__actions">
@@ -161,7 +196,7 @@
     z-index: var(--z-dropdown);
     display: grid;
     gap: var(--space-sm);
-    inline-size: min(18rem, 80vw);
+    inline-size: min(20rem, 80vw);
     padding: var(--space-md);
     background: var(--surface-raised);
     border: 1px solid var(--border);

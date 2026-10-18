@@ -1,6 +1,7 @@
 import type { PageServerLoad } from './$types';
 
 import { exampleMenu, filterExampleMenu } from '$lib/content/menu-examples';
+import { listMenuAllergens } from '$lib/content/menu';
 import { createApiClient } from '$lib/server/api/client';
 
 /** Conserva los filtros de URL y transforma un fallo externo en un estado renderizable. */
@@ -27,6 +28,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
         descriptionEs: category.descriptionEs,
         descriptionEn: category.descriptionEn,
       })),
+      allergens: listMenuAllergens(catalog),
       filters,
       preview: false,
       errorMessage: null,
@@ -43,6 +45,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
         descriptionEs: category.descriptionEs,
         descriptionEn: category.descriptionEn,
       })),
+      allergens: listMenuAllergens(exampleMenu),
       filters,
       preview: true,
       errorMessage: null,
