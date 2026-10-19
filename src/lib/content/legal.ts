@@ -426,6 +426,7 @@ export const legalDocuments: LegalDocument[] = [
   },
 ];
 
+/** Devuelve el documento legal estático que corresponde a la ruta solicitada. */
 export function getLegalDocument(href: LegalDocument['href']): LegalDocument {
   const document = legalDocuments.find((item) => item.href === href);
   if (!document) {

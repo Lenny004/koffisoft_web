@@ -53,6 +53,7 @@ export function isSafeAnnouncementCtaUrl(value: string): boolean {
   }
 }
 
+/** Indica si la URL usa http(s) absoluto, frente a rutas internas del sitio. */
 export function isExternalAnnouncementUrl(value: string): boolean {
   try {
     const parsed = new URL(value);
@@ -62,6 +63,7 @@ export function isExternalAnnouncementUrl(value: string): boolean {
   }
 }
 
+/** Parte una línea en texto y enlaces detectando URLs sin interpretar HTML. */
 function linkifyLine(line: string): AnnouncementTextSegment[] {
   const segments: AnnouncementTextSegment[] = [];
   let cursor = 0;
@@ -81,6 +83,7 @@ function linkifyLine(line: string): AnnouncementTextSegment[] {
   return segments;
 }
 
+/** Acumula texto adyacente en el último segmento plano para no fragmentar palabras. */
 function pushText(segments: AnnouncementTextSegment[], value: string): void {
   const previous = segments.at(-1);
   if (previous?.kind === 'text') {
@@ -90,6 +93,7 @@ function pushText(segments: AnnouncementTextSegment[], value: string): void {
   segments.push({ kind: 'text', value });
 }
 
+/** Separa signos de puntuación finales del href para no incluirlos en el enlace. */
 function splitTrailingPunctuation(raw: string): { href: string; trailing: string } {
   const trailing = raw.match(trailingPunctuation)?.[0] ?? '';
   return { href: raw.slice(0, raw.length - trailing.length), trailing };

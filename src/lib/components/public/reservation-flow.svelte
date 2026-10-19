@@ -1,4 +1,8 @@
 <script lang="ts">
+  /**
+   * Asistente por pasos para reservar mesa: consulta disponibilidad vía form action
+   * y envía la solicitud final al servidor de la sede.
+   */
   import { deserialize, enhance } from '$app/forms';
   import { resolve } from '$app/paths';
   import { ArrowRight, MapPin } from '@lucide/svelte';
@@ -84,6 +88,7 @@
     if (form?.kind === 'error') step = 'details';
   });
 
+  /** Indica si el paso del asistente puede abrirse según los datos ya elegidos. */
   function canOpen(target: BookingStep): boolean {
     if (target === 'party') return true;
     if (target === 'date') return partySize > 0;
@@ -92,10 +97,12 @@
     return spaceChoice !== 'unset';
   }
 
+  /** Cambia el paso activo cuando las precondiciones de `canOpen` se cumplen. */
   function goTo(target: BookingStep): void {
     if (canOpen(target)) step = target;
   }
 
+  /** Descarta hora, zona y respuesta de disponibilidad al modificar personas o fecha. */
   function clearAvailability(): void {
     time = '';
     spaceChoice = 'unset';
@@ -103,6 +110,7 @@
     availabilityMessage = '';
   }
 
+  /** Fija el tamaño del grupo, invalida disponibilidad previa y avanza a la fecha. */
   function selectParty(value: number): void {
     if (value !== partySize) {
       partySize = value;
@@ -111,6 +119,7 @@
     step = 'date';
   }
 
+  /** Registra la fecha de visita, limpia la hora consultada y abre la selección de turno. */
   function selectDate(value: string): void {
     if (value !== date) {
       date = value;
@@ -119,6 +128,7 @@
     step = 'time';
   }
 
+  /** Pide espacios libres al action `availability` y avanza solo si hay capacidad. */
   async function selectTime(value: string): Promise<void> {
     if (availabilityLoading) return;
 
@@ -169,6 +179,7 @@
     }
   }
 
+  /** Lee el valor del input o textarea que disparó el evento de formulario. */
   function fieldValue(event: Event): string {
     const target = event.currentTarget;
     return target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement
@@ -176,6 +187,7 @@
       : '';
   }
 
+  /** Guarda la zona preferida (o “sin preferencia”) y abre el paso de datos de contacto. */
   function selectSpace(value: 'any' | string): void {
     spaceChoice = value;
     step = 'details';

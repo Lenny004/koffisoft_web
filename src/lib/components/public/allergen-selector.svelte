@@ -1,4 +1,8 @@
 <script lang="ts">
+  /**
+   * Grilla de botones conmutables para filtrar platos por alérgeno en la carta.
+   * Notifica al padre la lista de códigos seleccionados mediante `onChange`.
+   */
   import { Bean, CircleAlert, Egg, Fish, Leaf, Milk, Nut, Wheat } from '@lucide/svelte';
 
   export type AllergenOption = { code: string; label: string };
@@ -15,6 +19,7 @@
 
   const icons = [Wheat, Milk, Egg, Fish, Nut, Nut, Wheat, Fish, Leaf, Bean, Leaf, CircleAlert];
 
+  /** Añade o quita un código de alérgeno y propaga el arreglo actualizado al contenedor. */
   function toggle(code: string): void {
     onChange(
       selected.includes(code)

@@ -67,15 +67,18 @@ const EL_SALVADOR_OFFSET = '-06:00';
 const eventTypes: readonly PublicEventType[] = EVENT_TYPE_VALUES;
 const contactTopics: readonly PublicContactTopic[] = CONTACT_TOPIC_VALUES;
 
+/** Lee y recorta un campo de texto del FormData del formulario público. */
 function text(formData: FormData, name: string): string {
   return String(formData.get(name) ?? '').trim();
 }
 
+/** Igual que `text`, pero devuelve undefined cuando el campo queda vacío. */
 function optionalText(formData: FormData, name: string): string | undefined {
   const value = text(formData, name);
   return value || undefined;
 }
 
+/** Parsea un entero del formulario; null si falta o no es un número entero. */
 function integer(formData: FormData, name: string): number | null {
   const rawValue = text(formData, name);
   if (!rawValue) return null;
@@ -84,6 +87,7 @@ function integer(formData: FormData, name: string): number | null {
   return Number.isInteger(value) ? value : null;
 }
 
+/** Comprueba que la cadena sea YYYY-MM-DD y corresponda a una fecha real en UTC. */
 function validCalendarDate(value: string): boolean {
   if (!datePattern.test(value)) return false;
 
@@ -91,10 +95,12 @@ function validCalendarDate(value: string): boolean {
   return Number.isFinite(date.valueOf()) && date.toISOString().startsWith(value);
 }
 
+/** Valida fecha y hora local sin zona (input datetime-local) antes de enviar a la API. */
 function validLocalDateTime(value: string): boolean {
   return localDateTimePattern.test(value) && validCalendarDate(value.slice(0, 10));
 }
 
+/** Registra error de campo obligatorio cuando el valor normalizado está vacío. */
 function addRequired(
   errors: Record<string, string>,
   values: Record<string, string>,
@@ -104,6 +110,7 @@ function addRequired(
   if (!values[name]) errors[name] = `${label} es obligatorio.`;
 }
 
+/** Valida tamaño del grupo y duración compartidos entre disponibilidad y reserva completa. */
 function validateReservationCore(
   formData: FormData,
   errors: Record<string, string>,
@@ -228,6 +235,7 @@ export function validateReservationForm(
   };
 }
 
+/** Convierte datetime-local a ISO con offset fijo de El Salvador para el DTO de eventos. */
 function toElSalvadorIso(value: string): string {
   return `${value}:00${EL_SALVADOR_OFFSET}`;
 }

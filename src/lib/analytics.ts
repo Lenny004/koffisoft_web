@@ -11,6 +11,7 @@ export interface PublicAnalyticsPayload {
   isPreview: false;
 }
 
+/** Clasifica la ruta visitada para analytics según detalle de carta, evento, aviso o página genérica. */
 export function analyticsResource(pathname: string): {
   resourceType: PublicAnalyticsResourceType;
   resourceKey: string;
@@ -27,6 +28,7 @@ export function analyticsResource(pathname: string): {
   return { resourceType: 'page', resourceKey: pageKeyForPath(pathname) ?? pathname };
 }
 
+/** Arma el cuerpo enviado al endpoint de page-view; omite rutas de vista previa. */
 export function createAnalyticsPayload(
   pathname: string,
   locationId: string,

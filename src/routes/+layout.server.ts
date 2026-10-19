@@ -6,6 +6,7 @@ import { siteContent } from '$lib/content/site';
 import { createApiClient } from '$lib/server/api/client';
 import { defaultSeo, pageKeyForPath } from '$lib/seo';
 
+/** Hidrata layout con contenido de sede, SEO por ruta y respaldo local si la API falla. */
 export const load: LayoutServerLoad = async ({ fetch, url }) => {
   const pageKey = pageKeyForPath(url.pathname);
   const fallbackSeo = pageKey ? defaultSeo(pageKey, url.origin) : null;

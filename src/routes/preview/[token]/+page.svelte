@@ -1,4 +1,7 @@
 <script lang="ts">
+  /**
+   * Vista previa privada (no indexable) de avisos, platos o eventos obtenidos por token.
+   */
   import { CalendarDays, Megaphone, Utensils } from '@lucide/svelte';
 
   import { Badge } from '$lib/components/ui/badge/index.js';
@@ -15,18 +18,21 @@
   let { data }: { data: PageData } = $props();
   const preview = $derived(data.preview);
 
+  /** Devuelve el título de página según el tipo de recurso incluido en la respuesta de preview. */
   function resourceTitle(): string {
     if (preview.resourceType === 'announcement') return 'Vista previa de aviso';
     if (preview.resourceType === 'menu_item') return 'Vista previa de plato';
     return 'Vista previa de evento';
   }
 
+  /** Selecciona el icono de Lucide que representa el tipo de recurso en la cabecera. */
   function resourceIcon() {
     if (preview.resourceType === 'announcement') return Megaphone;
     if (preview.resourceType === 'menu_item') return Utensils;
     return CalendarDays;
   }
 
+  /** Acepta solo URLs de CTA validadas para enlaces externos en la vista previa. */
   function safeCtaUrl(value: unknown): string | null {
     return typeof value === 'string' && isSafeAnnouncementCtaUrl(value) ? value : null;
   }

@@ -50,22 +50,35 @@ export class ApiConfigurationError extends ApiClientError {
 }
 
 export interface PublicApiClient {
+  /** Carta pública de la sede con filtros opcionales de categoría y alérgeno. */
   getPublicMenu(query?: PublicMenuQuery): Promise<PublicMenuResponse>;
+  /** Detalle de un ítem por slug dentro del contexto de sede y filtros de listado. */
   getPublicMenuItem(slug: string, query?: PublicMenuQuery): Promise<PublicMenuDetailResponse>;
+  /** Consulta cupos para fecha, hora, grupo y espacio antes de confirmar reserva. */
   getAvailability(request: ReservationAvailabilityRequest): Promise<PublicAvailabilityResponse>;
+  /** Crea una solicitud de reserva con los datos validados del formulario público. */
   createReservation(request: CreateReservationRequest): Promise<PublicReservationResponse>;
+  /** Catálogo de tipos y espacios disponibles para cotizar eventos. */
   getEventCatalog(): Promise<PublicEventCatalogResponse>;
+  /** Eventos publicados visibles en la vitrina pública. */
   getPublishedEvents(): Promise<PublicPublishedEvent[]>;
+  /** Envía una solicitud de cotización de evento a la API. */
   createEventRequest(request: ApiCreateEventRequest): Promise<PublicEventRequestResponse>;
+  /** Registra un mensaje del formulario de contacto. */
   createContactMessage(request: CreateContactMessageRequest): Promise<PublicContactMessageResponse>;
+  /** Avisos marcados como importantes para la sede configurada. */
   getImportantAnnouncements(): Promise<PublicImportantAnnouncement[]>;
+  /** Perfil, ubicación y horarios editoriales de la sede. */
   getSiteContent(): Promise<PublicSiteContent>;
+  /** Metadatos SEO por tipo de recurso y clave (página, ítem, evento, aviso). */
   getSeo(resourceType: SeoResourceType, resourceKey: string): Promise<PublicSeoMetadata>;
+  /** Contenido de vista previa por token sin exigir LOCATION_ID. */
   getPreview(token: string): Promise<PublicPreviewResponse>;
 }
 
 type ApiFetch = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 
+/** Lee base URL y sede desde variables de entorno privadas de SvelteKit. */
 function getDefaultConfig(): ApiClientConfig {
   return {
     baseUrl: env.API_BASE_URL ?? '',
@@ -73,6 +86,7 @@ function getDefaultConfig(): ApiClientConfig {
   };
 }
 
+/** Resuelve rutas relativas contra la base y añade query params omitiendo valores vacíos. */
 function buildApiUrl(
   baseUrl: string,
   path: string,
@@ -93,6 +107,7 @@ function buildApiUrl(
   return url.toString();
 }
 
+/** Extrae mensaje legible del cuerpo JSON de error de Nest u otros formatos conocidos. */
 function readErrorMessage(status: number, body: unknown): string {
   if (typeof body === 'object' && body !== null && 'message' in body) {
     const message = (body as { message?: unknown }).message;
@@ -115,6 +130,7 @@ export function createApiClient(
 ): PublicApiClient {
   const config = { ...getDefaultConfig(), ...suppliedConfig };
 
+  /** Petición JSON con validación de config, timeout, cabeceras y errores tipados. */
   async function request<T>(
     path: string,
     init: RequestInit = {},
@@ -172,11 +188,13 @@ export function createApiClient(
     buildApiUrl(config.baseUrl, 'menu', { locationId: config.locationId, ...query });
 
   return {
+    /** Implementación de carta pública con query de sede y filtros. */
     getPublicMenu(query = {}) {
       return request<PublicMenuResponse>(
         locationQuery({ category: query.category, allergen: query.allergen }),
       );
     },
+    /** Detalle de ítem codificando el slug en la ruta de menú. */
     getPublicMenuItem(slug, query = {}) {
       return request<PublicMenuDetailResponse>(
         buildApiUrl(config.baseUrl, `menu/items/${encodeURIComponent(slug)}`, {
@@ -186,6 +204,7 @@ export function createApiClient(
         }),
       );
     },
+    /** Disponibilidad vía GET con parámetros de fecha, hora y capacidad. */
     getAvailability(requestData) {
       return request<PublicAvailabilityResponse>(
         buildApiUrl(config.baseUrl, 'reservations/availability', {
@@ -200,44 +219,52 @@ export function createApiClient(
         }),
       );
     },
+    /** POST de reserva inyectando locationId en el cuerpo junto al DTO. */
     createReservation(requestData) {
       return request<PublicReservationResponse>(buildApiUrl(config.baseUrl, 'reservations', {}), {
         method: 'POST',
         body: JSON.stringify({ locationId: config.locationId, ...requestData }),
       });
     },
+    /** Catálogo de eventos scoped a la sede actual. */
     getEventCatalog() {
       return request<PublicEventCatalogResponse>(
         buildApiUrl(config.baseUrl, 'events/catalog', { locationId: config.locationId }),
       );
     },
+    /** Listado de eventos publicados para la sede. */
     getPublishedEvents() {
       return request<PublicPublishedEvent[]>(
         buildApiUrl(config.baseUrl, 'events/public', { locationId: config.locationId }),
       );
     },
+    /** POST de solicitud de evento con locationId en el payload. */
     createEventRequest(requestData: ApiCreateEventRequest) {
       return request<PublicEventRequestResponse>(buildApiUrl(config.baseUrl, 'events', {}), {
         method: 'POST',
         body: JSON.stringify({ locationId: config.locationId, ...requestData }),
       });
     },
+    /** POST del formulario de contacto hacia el endpoint público. */
     createContactMessage(requestData) {
       return request<PublicContactMessageResponse>(buildApiUrl(config.baseUrl, 'contact', {}), {
         method: 'POST',
         body: JSON.stringify({ locationId: config.locationId, ...requestData }),
       });
     },
+    /** Avisos importantes de la sede para portada y listados. */
     getImportantAnnouncements() {
       return request<PublicImportantAnnouncement[]>(
         buildApiUrl(config.baseUrl, 'announcements', { locationId: config.locationId }),
       );
     },
+    /** Contenido editorial y datos de contacto de la ubicación. */
     getSiteContent() {
       return request<PublicSiteContent>(
         buildApiUrl(config.baseUrl, 'site', { locationId: config.locationId }),
       );
     },
+    /** SEO remoto por recurso; usado desde layout y páginas de detalle. */
     getSeo(resourceType: SeoResourceType, resourceKey: string) {
       return request<PublicSeoMetadata>(
         buildApiUrl(config.baseUrl, 'seo', {
@@ -247,6 +274,7 @@ export function createApiClient(
         }),
       );
     },
+    /** Vista previa de publicación; no valida UUID de sede en la config. */
     getPreview(token: string) {
       return request<PublicPreviewResponse>(
         buildApiUrl(config.baseUrl, `publication/preview/${encodeURIComponent(token)}`, {}),

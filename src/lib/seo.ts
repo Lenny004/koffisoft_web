@@ -109,11 +109,13 @@ const PATH_TO_PAGE: Record<string, string> = {
   '/condiciones': 'conditions',
 };
 
+/** Mapea la ruta pública a la clave SEO de página; las fichas de carta usan metadatos propios. */
 export function pageKeyForPath(pathname: string): string | null {
   if (/^\/carta\/[^/]+$/u.test(pathname)) return null;
   return PATH_TO_PAGE[pathname] ?? 'home';
 }
 
+/** Metadatos locales de respaldo cuando la API de SEO no responde o aún no publicó la página. */
 export function defaultSeo(pageKey: string, siteUrl: string): SeoMetadata {
   const page = PAGE_DEFAULTS[pageKey] ?? PAGE_DEFAULTS.home;
   const canonicalUrl = new URL(page.path, `${siteUrl.replace(/\/$/u, '')}/`).toString();

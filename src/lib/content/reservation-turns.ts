@@ -49,10 +49,12 @@ export function addCalendarDays(isoDate: string, days: number): string {
   return date.toISOString().slice(0, 10);
 }
 
+/** Fecha civil de hoy en la zona horaria de la sede, formato YYYY-MM-DD. */
 export function todayInElSalvador(now: Date = new Date()): string {
   return new Intl.DateTimeFormat('en-CA', { timeZone: TIME_ZONE }).format(now);
 }
 
+/** Etiqueta corta de la fecha de visita para selectores y resumen de reserva. */
 export function formatVisitDate(isoDate: string): string {
   const date = new Date(`${isoDate}T12:00:00-06:00`);
   return new Intl.DateTimeFormat('es-SV', {
@@ -62,6 +64,7 @@ export function formatVisitDate(isoDate: string): string {
   }).format(date);
 }
 
+/** Descompone la fecha de visita en día de semana, día y mes para la UI del calendario. */
 export function formatVisitDateParts(isoDate: string): {
   weekday: string;
   day: string;

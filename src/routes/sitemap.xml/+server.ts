@@ -4,6 +4,7 @@ import { env } from '$env/dynamic/private';
 
 const API_TIMEOUT_MS = 8_000;
 
+/** Proxy del sitemap XML generado por la API con timeout y respuesta 503 ante fallos. */
 export const GET: RequestHandler = async ({ fetch }) => {
   if (!env.API_BASE_URL) {
     return new Response('Sitemap no disponible.\n', {

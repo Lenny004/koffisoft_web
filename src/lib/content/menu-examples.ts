@@ -1,5 +1,6 @@
 import type { PublicMenuCategory, PublicMenuItem, PublicMenuResponse } from '$lib/api/types';
 
+/** Construye un ítem de carta de ejemplo con una variante y alérgeno opcional. */
 function exampleItem(
   slug: string,
   nameEs: string,
@@ -46,6 +47,7 @@ function exampleItem(
   };
 }
 
+/** Agrupa ítems de ejemplo bajo una categoría con slug y descripción editorial. */
 function exampleCategory(
   slug: string,
   nameEs: string,
@@ -118,6 +120,7 @@ export const exampleMenu: PublicMenuResponse = {
   ],
 };
 
+/** Filtra la carta de ejemplo por categoría y código de alérgeno, sin llamar a la API. */
 export function filterExampleMenu(
   menu: PublicMenuResponse,
   filters: { category?: string; allergen?: string },

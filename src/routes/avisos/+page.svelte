@@ -1,4 +1,7 @@
 <script lang="ts">
+  /**
+   * Lista avisos importantes publicados por la sede con fechas y enlaces seguros en el mensaje.
+   */
   import { resolve } from '$app/paths';
 
   import {
@@ -13,6 +16,7 @@
 
   let { data }: { data: PageData } = $props();
 
+  /** Elige la fecha de inicio o de creación del aviso y la formatea para mostrar. */
   function noticeDate(announcement: PublicImportantAnnouncement): string | null {
     return formatAnnouncementDate(announcement.startsAt ?? announcement.createdAt);
   }

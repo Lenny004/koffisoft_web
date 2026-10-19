@@ -1,4 +1,7 @@
 <script lang="ts">
+  /**
+   * Barra lateral de categorías de la carta con enlaces que conservan el filtro de alérgeno activo.
+   */
   import { resolve } from '$app/paths';
   import type { Snippet } from 'svelte';
 
@@ -24,6 +27,7 @@
     aside?: Snippet;
   }>();
 
+  /** Arma la URL de `/carta` con la categoría y el alérgeno vigentes en la consulta. */
   function categoryHref(slug: string = ''): string {
     const params = new URLSearchParams();
     if (slug) params.set('category', slug);

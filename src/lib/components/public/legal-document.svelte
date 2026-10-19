@@ -1,4 +1,7 @@
 <script lang="ts">
+  /**
+   * Renderiza un documento legal estático (privacidad, cookies, etc.) con índice entre módulos.
+   */
   import { resolve } from '$app/paths';
 
   import { editorialPlaceholder } from '$lib/content/site';
@@ -11,6 +14,7 @@
 
   let { document } = $props<{ document: LegalDocument }>();
 
+  /** Discrimina un fragmento de párrafo con enlace interno frente a texto plano. */
   function isLink(part: LegalInline): part is { text: string; href: LegalHref } {
     return typeof part !== 'string';
   }

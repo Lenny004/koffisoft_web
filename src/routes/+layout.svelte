@@ -1,4 +1,7 @@
 <script lang="ts">
+  /**
+   * Layout raíz del sitio público: cabecera, pie, tema claro/oscuro, SEO y analítica de páginas.
+   */
   import { afterNavigate } from '$app/navigation';
   import { resolve } from '$app/paths';
   import { page } from '$app/state';
@@ -57,10 +60,12 @@
     { href: '/avisos', label: 'Avisos' },
   ] as const;
 
+  /** Marca el enlace de navegación que coincide con la ruta actual (inicio exacto, resto por prefijo). */
   function isActive(href: string): boolean {
     return href === '/' ? page.url.pathname === '/' : page.url.pathname.startsWith(href);
   }
 
+  /** Alterna el tema en `document.documentElement` y persiste la preferencia en localStorage. */
   function toggleTheme(): void {
     darkMode = !darkMode;
     const theme = darkMode ? 'dark' : 'light';
@@ -72,6 +77,7 @@
     }
   }
 
+  /** Envía una vista de página al endpoint de analítica, una vez por pathname, sin bloquear la UI. */
   function trackPageView(): void {
     if (typeof window === 'undefined' || trackedPath === window.location.pathname) return;
     const payload = createAnalyticsPayload(

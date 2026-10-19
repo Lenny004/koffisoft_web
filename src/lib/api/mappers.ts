@@ -33,6 +33,7 @@ export function getDisplayVariant(item: PublicMenuItem): PublicMenuVariant | nul
   return item.variants.find((variant) => variant.isDefault) ?? item.variants[0] ?? null;
 }
 
+/** Formatea el precio de una variante con locale es-SV o un fallback legible si falla Intl. */
 export function formatMenuPrice(variant: PublicMenuVariant | null): string {
   if (!variant) return 'Precio no disponible';
 
@@ -65,6 +66,7 @@ export function formatMenuPriceLabel(item: PublicMenuItem): string {
   return hasRange ? `Desde ${formatted}` : formatted;
 }
 
+/** Resume horarios activos de la sede agrupados por día de la semana. */
 function formatHours(content: PublicSiteContent): string {
   const active = content.hours.filter((hour) => hour.active);
   if (!active.length) return 'Horario por confirmar.';
@@ -81,6 +83,7 @@ function formatHours(content: PublicSiteContent): string {
     .join(' · ');
 }
 
+/** Adapta el DTO público de la API al modelo estático usado por layout y páginas de contenido. */
 export function mapSiteContent(content: PublicSiteContent): SiteContent {
   const profile = content.profile;
   const location = content.location;

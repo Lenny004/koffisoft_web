@@ -1,4 +1,7 @@
 <script lang="ts">
+  /**
+   * Catálogo de espacios y paquetes de eventos, agenda publicada y formulario de cotización.
+   */
   import { enhance } from '$app/forms';
   import { ArrowRight, CalendarDays, Users, Utensils } from '@lucide/svelte';
 
@@ -26,6 +29,7 @@
   let { data, form }: { data: EventsPageData; form: EventActionForm } = $props();
   let eventType = $state('');
 
+  /** Formatea instantes ISO del API en locale de El Salvador para las tarjetas de agenda. */
   function eventDate(value: string): string {
     return new Intl.DateTimeFormat('es-SV', {
       dateStyle: 'medium',

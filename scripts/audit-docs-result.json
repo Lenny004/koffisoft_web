@@ -1,0 +1,799 @@
+{
+  "summary": {
+    "files": 121,
+    "completo": 31,
+    "parcial": 0,
+    "pendiente": 0,
+    "sinFunciones": 90
+  },
+  "report": [
+    {
+      "rel": "src/app.d.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/analytics.ts",
+      "total": 2,
+      "missing": 0,
+      "documented": 2,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/lib/api/mappers.ts",
+      "total": 6,
+      "missing": 0,
+      "documented": 6,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/lib/api/types.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/public/allergen-selector.svelte",
+      "total": 1,
+      "missing": 0,
+      "documented": 1,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/lib/components/public/catalog-hero.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/public/catalog-rail.svelte",
+      "total": 1,
+      "missing": 0,
+      "documented": 1,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/lib/components/public/category-card.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/public/legal-document.svelte",
+      "total": 1,
+      "missing": 0,
+      "documented": 1,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/lib/components/public/menu-item-card.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/public/pagination.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/public/product-detail.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/public/reservation-flow.svelte",
+      "total": 8,
+      "missing": 0,
+      "documented": 8,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/lib/components/public/section-heading.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/public/seo-head.svelte",
+      "total": 1,
+      "missing": 0,
+      "documented": 1,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/lib/components/public/status-message.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/alert/alert.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/alert/index.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/badge/badge.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/badge/index.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/button/button.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/button/index.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/card/card-content.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/card/card-description.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/card/card-header.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/card/card-title.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/card/card.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/card/index.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/combobox/combobox.svelte",
+      "total": 4,
+      "missing": 0,
+      "documented": 4,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/lib/components/ui/combobox/index.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/combobox/types.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/command/command-dialog.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/command/command-empty.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/command/command-group.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/command/command-input.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/command/command-item.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/command/command-link-item.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/command/command-list.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/command/command-loading.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/command/command-separator.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/command/command-shortcut.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/command/command.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/command/index.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/dialog/body.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/dialog/close.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/dialog/content.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/dialog/description.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/dialog/footer.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/dialog/header.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/dialog/index.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/dialog/root.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/dialog/title.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/dialog/trigger.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/form-field.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/input/index.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/input/input.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/label/index.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/label/label.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/popover/index.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/popover/popover-close.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/popover/popover-content.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/popover/popover-portal.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/popover/popover-trigger.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/popover/popover.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/select/index.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/select/select.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/table/body.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/table/caption.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/table/cell.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/table/empty.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/table/footer.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/table/head.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/table/header.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/table/index.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/table/pagination.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/table/root.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/table/row.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/textarea/index.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/components/ui/textarea/textarea.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/content/announcements.ts",
+      "total": 7,
+      "missing": 0,
+      "documented": 7,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/lib/content/form-options.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/content/legal.ts",
+      "total": 1,
+      "missing": 0,
+      "documented": 1,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/lib/content/menu-examples.ts",
+      "total": 3,
+      "missing": 0,
+      "documented": 3,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/lib/content/menu.ts",
+      "total": 5,
+      "missing": 0,
+      "documented": 5,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/lib/content/reservation-turns.ts",
+      "total": 4,
+      "missing": 0,
+      "documented": 4,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/lib/content/site.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/seo.ts",
+      "total": 2,
+      "missing": 0,
+      "documented": 2,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/lib/server/api/client.ts",
+      "total": 29,
+      "missing": 0,
+      "documented": 29,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/lib/server/validation.ts",
+      "total": 12,
+      "missing": 0,
+      "documented": 12,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/lib/utils.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/lib/validation/limits.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/routes/+layout.server.ts",
+      "total": 1,
+      "missing": 0,
+      "documented": 1,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/routes/+layout.svelte",
+      "total": 3,
+      "missing": 0,
+      "documented": 3,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/routes/+page.server.ts",
+      "total": 1,
+      "missing": 0,
+      "documented": 1,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/routes/+page.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/routes/alergenos/+page.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/routes/analytics/page-view/+server.ts",
+      "total": 1,
+      "missing": 0,
+      "documented": 1,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/routes/avisos/+page.server.ts",
+      "total": 1,
+      "missing": 0,
+      "documented": 1,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/routes/avisos/+page.svelte",
+      "total": 1,
+      "missing": 0,
+      "documented": 1,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/routes/carta/+page.server.ts",
+      "total": 1,
+      "missing": 0,
+      "documented": 1,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/routes/carta/+page.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/routes/carta/[slug]/+page.server.ts",
+      "total": 1,
+      "missing": 0,
+      "documented": 1,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/routes/carta/[slug]/+page.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/routes/condiciones/+page.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/routes/contacto/+page.server.ts",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/routes/contacto/+page.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/routes/cookies/+page.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/routes/eventos/+page.server.ts",
+      "total": 1,
+      "missing": 0,
+      "documented": 1,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/routes/eventos/+page.svelte",
+      "total": 1,
+      "missing": 0,
+      "documented": 1,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/routes/legal/+page.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/routes/nosotros/+page.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/routes/preview/[token]/+page.server.ts",
+      "total": 1,
+      "missing": 0,
+      "documented": 1,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/routes/preview/[token]/+page.svelte",
+      "total": 3,
+      "missing": 0,
+      "documented": 3,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/routes/privacidad/+page.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/routes/promociones/+page.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/routes/reservas/+page.server.ts",
+      "total": 1,
+      "missing": 0,
+      "documented": 1,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/routes/reservas/+page.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/routes/robots.txt/+server.ts",
+      "total": 1,
+      "missing": 0,
+      "documented": 1,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/routes/senderismo/+page.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    },
+    {
+      "rel": "src/routes/sitemap.xml/+server.ts",
+      "total": 1,
+      "missing": 0,
+      "documented": 1,
+      "status": "completo",
+      "missingNames": []
+    },
+    {
+      "rel": "src/routes/ubicacion/+page.svelte",
+      "total": 0,
+      "missing": 0,
+      "status": "sin-funciones"
+    }
+  ]
+}

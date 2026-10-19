@@ -1,4 +1,7 @@
 <script lang="ts">
+  /**
+   * Metadatos Open Graph, Twitter y canonical compartidos por las páginas públicas.
+   */
   import type { SeoMetadata } from '$lib/seo';
 
   let {
@@ -9,6 +12,7 @@
     jsonLd?: Record<string, unknown>;
   } = $props();
 
+  /** Serializa JSON-LD como fragmento HTML seguro para inyectar con `{@html}`. */
   function jsonLdScript(value: Record<string, unknown>): string {
     const openTag = `${String.fromCharCode(60)}script type="application/ld+json">`;
     const closeTag = `${String.fromCharCode(60)}/script>`;

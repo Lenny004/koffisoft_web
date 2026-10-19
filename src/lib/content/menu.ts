@@ -31,11 +31,13 @@ export const editorialImages = [
   '/menu/editorial/08.jpg',
 ] as const;
 
+/** Elige una imagen editorial estable a partir del slug cuando el ítem no trae foto. */
 export function editorialImageForSlug(slug: string): string {
   const total = [...slug].reduce((sum, char) => sum + char.charCodeAt(0), 0);
   return editorialImages[total % editorialImages.length];
 }
 
+/** Normaliza nombres de categoría a slug ASCII para emparejar claves de imágenes. */
 function normalize(value: string): string {
   return value
     .normalize('NFD')
@@ -45,6 +47,7 @@ function normalize(value: string): string {
     .replace(/(^-|-$)/gu, '');
 }
 
+/** Resuelve la imagen de cabecera de categoría por slug o nombre normalizado. */
 export function getCategoryImage(category: Pick<PublicMenuCategory, 'slug' | 'nameEs'>): string {
   return (
     categoryImages[category.slug] ??
@@ -53,6 +56,7 @@ export function getCategoryImage(category: Pick<PublicMenuCategory, 'slug' | 'na
   );
 }
 
+/** Prefiere la URL de la API y cae en una imagen editorial determinista por slug. */
 export function getMenuItemImage(item: Pick<PublicMenuItem, 'slug' | 'imageUrl'>): string {
   return item.imageUrl ?? editorialImageForSlug(item.slug);
 }

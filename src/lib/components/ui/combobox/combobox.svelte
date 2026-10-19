@@ -1,4 +1,7 @@
 <script lang="ts">
+  /**
+   * Combobox accesible: select nativo sin JS y, tras hidratar, búsqueda con Command/Popover.
+   */
   import CheckIcon from '@lucide/svelte/icons/check';
   import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';
   import { onMount, tick } from 'svelte';
@@ -50,21 +53,25 @@
     enhanced = true;
   });
 
+  /** Actualiza el valor enlazado y notifica al padre mediante `onValueChange`. */
   function emit(next: string): void {
     value = next;
     onValueChange?.(next);
   }
 
+  /** Cierra el popover y devuelve el foco al botón disparador para continuar con teclado. */
   function closeAndFocusTrigger(): void {
     open = false;
     void tick().then(() => triggerRef?.focus());
   }
 
+  /** Confirma una opción (permitiendo vaciar si `allowEmpty`) y cierra el desplegable. */
   function choose(next: string): void {
     emit(allowEmpty && next === value ? '' : next);
     closeAndFocusTrigger();
   }
 
+  /** Propaga cambios del `<select>` nativo usado antes de la mejora progresiva. */
   function handleNativeChange(event: Event): void {
     const target = event.currentTarget;
     if (target instanceof HTMLSelectElement) emit(target.value);

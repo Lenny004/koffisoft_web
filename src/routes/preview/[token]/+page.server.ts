@@ -3,6 +3,7 @@ import type { PageServerLoad } from './$types';
 
 import { ApiClientError, createApiClient } from '$lib/server/api/client';
 
+/** Carga borradores por token con noindex y errores HTTP acordes a caducidad o caída de API. */
 export const load: PageServerLoad = async ({ fetch, params, setHeaders }) => {
   setHeaders({
     'cache-control': 'no-store',
